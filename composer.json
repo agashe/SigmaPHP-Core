@@ -1,0 +1,27 @@
+{
+    "name": "agashe/sigmaphp-core",
+    "description": "SigmaPHP Framework Core Components",
+	"keywords": ["SigmaPHP", "framework"],
+    "type": "library",
+	"license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "SigmaPHP\\Core\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Mohamed Yousef",
+            "email": "engineer.mohamed.yossef@gmail.com"
+        }
+    ],
+    "require": {
+        "robmorgan/phinx": "^0.12.12",
+        "ryangjchandler/standalone-blade": "^0.1.0",
+        "bramus/router": "~1.6",
+        "envms/fluentpdo": "2.*"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^9.5"
+    }
+}
