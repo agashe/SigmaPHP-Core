@@ -1,6 +1,6 @@
 <?php
 
-namespace SigmaPHP\Controllers;
+namespace SigmaPHP\Core\Controllers;
 
 use RyanChandler\Blade\Blade;
 

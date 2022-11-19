@@ -2,10 +2,6 @@
 
 require '../vendor/autoload.php';
 
-// Load Environment Variables
-$dotenv = \Dotenv\Dotenv::createImmutable('../'); 
-$dotenv->load();
-
 // Load app config
 $appConfig = require '../config/app.php';
 
