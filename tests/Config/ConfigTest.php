@@ -4,6 +4,9 @@ use PHPUnit\Framework\TestCase;
 
 use SigmaPHP\Core\Config\Config;
 
+/**
+ * Config Test
+ */
 class ConfigTest extends TestCase
 {
     /**
@@ -50,7 +53,7 @@ class ConfigTest extends TestCase
     public function testGetConfig()
     {
         $this->config->set('hello', 'world');
-        $this->assertEquals($this->config->get('hello'), 'world');
+        $this->assertEquals('world', $this->config->get('hello'));
     }
 
     /**
