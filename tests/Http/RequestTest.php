@@ -57,6 +57,8 @@ class RequestTest extends TestCase
      */
     public function testReturnNullIfKeyNotFoundInGetRequest()
     {
+        $_GET = [];
+
         $this->assertNull($this->request->get('hello'));
     }
 
@@ -93,6 +95,8 @@ class RequestTest extends TestCase
      */
     public function testReturnNullIfKeyNotFoundInPostRequest()
     {
+        $_POST = [];
+
         $this->assertNull($this->request->post('hello'));
     }
 
