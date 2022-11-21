@@ -51,11 +51,11 @@ class RequestTest extends TestCase
     }
     
     /**
-     * Test return null if key not found in GET request.
+     * Test returns null if key not found in GET request.
      *
      * @return void
      */
-    public function testReturnNullIfKeyNotFoundInGetRequest()
+    public function testReturnsNullIfKeyNotFoundInGetRequest()
     {
         $_GET = [];
 
@@ -89,11 +89,11 @@ class RequestTest extends TestCase
     }
     
     /**
-     * Test return null if key not found in POST request.
+     * Test returns null if key not found in POST request.
      *
      * @return void
      */
-    public function testReturnNullIfKeyNotFoundInPostRequest()
+    public function testReturnsNullIfKeyNotFoundInPostRequest()
     {
         $_POST = [];
 
@@ -145,11 +145,11 @@ class RequestTest extends TestCase
     }
     
     /**
-     * Test return null if key not found in FILES request.
+     * Test returns null if key not found in FILES request.
      *
      * @return void
      */
-    public function testReturnNullIfKeyNotFoundInFilesRequest()
+    public function testReturnsNullIfKeyNotFoundInFilesRequest()
     {
         $this->assertNull($this->request->files('hello'));
     }
