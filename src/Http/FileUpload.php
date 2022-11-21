@@ -2,12 +2,12 @@
 
 namespace SigmaPHP\Core\Http;
 
-use SigmaPHP\Core\Interfaces\Http\FilesUploadInterface;
+use SigmaPHP\Core\Interfaces\Http\FileUploadInterface;
 
 /**
- * FilesUpload Class
+ * FileUpload Class
  */
-class FilesUpload implements FilesUploadInterface
+class FileUpload implements FileUploadInterface
 {
     /**
      * @var string $path
@@ -15,7 +15,7 @@ class FilesUpload implements FilesUploadInterface
     private $path;
 
     /**
-     * FilesUpload Constructor
+     * FileUpload Constructor
      */
     public function __constructor($path)
     {

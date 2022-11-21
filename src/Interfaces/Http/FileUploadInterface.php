@@ -3,9 +3,9 @@
 namespace SigmaPHP\Core\Interfaces\Http;
 
 /**
- * FilesUpload Interface
+ * FileUpload Interface
  */
-interface FilesUploadInterface
+interface FileUploadInterface
 {
     /**
      * Upload File.
