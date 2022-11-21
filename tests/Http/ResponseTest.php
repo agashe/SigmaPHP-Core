@@ -130,4 +130,21 @@ class ResponseTest extends TestCase
         
         ob_clean(); // clear output
     }
+
+    /**
+     * Test json response.
+     *
+     * @runInSeparateProcess
+     * @return void
+     */
+    public function testJsonResponse()
+    {
+        $message = [
+            'data' => 'hello world'
+        ];
+
+        $this->response->responseJSON(json_encode($message));
+        
+        $this->expectOutputString('{"data":"hello world"}');        
+    }
 }
