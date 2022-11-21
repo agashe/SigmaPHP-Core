@@ -12,12 +12,12 @@ class FileUpload implements FileUploadInterface
     /**
      * @var string $path
      */
-    private $path;
+    public $path;
 
     /**
      * FileUpload Constructor
      */
-    public function __constructor($path)
+    public function __construct($path)
     {
         $this->path = $path;
     }
