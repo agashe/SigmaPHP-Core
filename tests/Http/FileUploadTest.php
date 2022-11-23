@@ -98,12 +98,12 @@ class FileUploadTest extends TestCase
     }
 
     /**
-     * Test fileUploader returns false if file could not be saved.
+     * Test throws exception if file could not be saved.
      *
      * @runInSeparateProcess
      * @return void
      */
-    public function testFileUploaderReturnsFalseIfFileCouldNotBeSaved()
+    public function testThrowsExceptionIfFileCouldNotBeSaved()
     {
         $this->expectException(\Exception::class);
         $this->fileUploader->upload($this->testFile);
