@@ -26,18 +26,15 @@ class FileUploadTest extends TestCase
      */
     public function setUp(): void
     {
-        $this->fileUploader = new FileUpload('uploads/');
-
-        // create dummy file
-        file_put_contents('tmp/file12345', 'hello world');
-
         $this->testFile = [
             'name' => 'test.txt',
             'type' => 'text/plain',
-            'tmp_name' => 'tmp/file12345',
+            'tmp_name' => dirname(__DIR__, 2) . '/file12345',
             'size' => 101,
             'error' => UPLOAD_ERR_OK
         ];
+
+        $this->fileUploader = new FileUpload(dirname(__DIR__, 2) . '/uploads');
     }
    
     /**
@@ -48,8 +45,30 @@ class FileUploadTest extends TestCase
      */
     public function testFileIsUploaded()
     {
-        var_dump($_SERVER['DOCUMENT_ROOT']);
-        $this->assertTrue($this->fileUploader->upload($this->testFile));
+        // create dummy file
+        if (!is_dir('uploads')) {
+            mkdir('uploads');
+        }
+
+        if (!file_exists('file12345')) {
+            file_put_contents('file12345', 'hello world');
+        }
+
+        $this->fileUploader->upload($this->testFile);
+        $this->assertTrue(file_exists('uploads/test.txt'));
+
+        // remove the dummy file
+        if (file_exists('uploads/test.txt')) {
+            unlink('uploads/test.txt');
+        }
+
+        if (is_dir('uploads')) {
+            rmdir('uploads');
+        }
+
+        if (file_exists('file12345')) {
+            unlink('file12345');
+        }
     }
 
     /**
@@ -87,6 +106,7 @@ class FileUploadTest extends TestCase
     public function testFileUploaderReturnsFalseIfFileCouldNotBeSaved()
     {
         $this->expectException(\Exception::class);
-        $this->assertFalse($this->fileUploader->upload($this->testFile));
+        $this->fileUploader->upload($this->testFile);
+        $this->assertFalse(file_exists('uploads/test.txt'));
     }
 }

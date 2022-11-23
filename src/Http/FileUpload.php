@@ -34,17 +34,10 @@ class FileUpload implements FileUploadInterface
             throw new \Exception("Error : No uploads path was provided");
         }
 
-        if (empty($file)) {
+        if (empty($file) || !file_exists($file["tmp_name"])) {
             throw new \Exception("Error : File doesn't exist");
         }
 
-        try {
-            move_uploaded_file($file["tmp_name"], $this->path.$file["name"]);
-            return true;
-        } catch (\Exception $e) {
-            throw new $e;
-        }
-
-        return false;
+        return rename($file["tmp_name"], $this->path.'/'.$file["name"]);
     }
 }
