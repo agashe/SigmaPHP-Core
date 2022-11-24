@@ -12,7 +12,7 @@ class FileUpload implements FileUploadInterface
     /**
      * @var string $path
      */
-    public $path;
+    private $path;
 
     /**
      * FileUpload Constructor
