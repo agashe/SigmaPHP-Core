@@ -3,11 +3,12 @@
 namespace SigmaPHP\Models;
 
 use Envms\FluentPDO\Query as Query;
+use Doctrine\Inflector\InflectorFactory;
 
 /**
  * Base Model
  */
-class Model
+class BaseModel
 {
     /**
      * @var object $connection
@@ -35,7 +36,7 @@ class Model
     protected $fields;
 
     /**
-     * Model Constructor
+     * BaseModel Constructor
      */
     public function __construct()
     {
@@ -56,7 +57,8 @@ class Model
                 (-1 * (strlen($class) - strrpos($class, '\\') - 1))
             );            
 
-            $this->table = (strtolower($tableName) . 's');
+            $inflector = InflectorFactory::create()->build();
+            $this->table = $inflector->pluralize(strtolower($tableName));
         }
         
         // check if table exists
@@ -74,10 +76,13 @@ class Model
 
             $tableExists->execute();
 
-            if ($tableExists->fetch() == false)
-                throw new \Exception("Error : table {$this->table} doesn't exist");
-            else
+            if ($tableExists->fetch() == false) {
+                throw new \Exception(
+                    "Error : table {$this->table} doesn't exist"
+                );
+            } else {
                 $this->tableExists = true;
+            }
         }
 
         // fetch fields
@@ -94,7 +99,8 @@ class Model
             ");
 
             $tableFields->execute();
-            $this->fields = explode(',', $tableFields->fetchAll()[0]['FIELDS']);
+            $this->fields = explode(',', 
+                $tableFields->fetchAll()[0]['FIELDS']);
 
             // remove the id field to avoid
             // errors in queries
@@ -148,15 +154,20 @@ class Model
     private function validateParams($fields, $values)
     {
         if ($fields == '*') {
-            if (empty($this->fields))
-                throw new \Exception("Error : No fields were provided to the model");
-            else
+            if (empty($this->fields)) {
+                throw new \Exception(
+                    "Error : No fields were provided to the model"
+                );
+            } else {
                 $fields = $this->fields;
+            }
         }
         
         if (is_array($fields) && is_array($values) && 
-            (count($fields) != count($values)))
+            (count($fields) != count($values))
+        ) {
             throw new \Exception("Error : Fields and values are mismatched");
+        }
         
         return array_combine($fields, $values);
     }

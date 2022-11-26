@@ -14,6 +14,6 @@ class BaseController
      */
     public function __construct()
     {
-        $this->sharedTemplatesVariables = [];
+
     }
 }
