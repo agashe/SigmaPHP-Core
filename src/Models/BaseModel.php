@@ -1,14 +1,15 @@
 <?php
 
-namespace SigmaPHP\Models;
+namespace SigmaPHP\Core\Models;
 
+use SigmaPHP\Core\Interfaces\Models\BaseModelInterface;
 use Envms\FluentPDO\Query as Query;
 use Doctrine\Inflector\InflectorFactory;
 
 /**
  * Base Model
  */
-class BaseModel
+class BaseModel implements BaseModelInterface
 {
     /**
      * @var object $connection
@@ -38,17 +39,29 @@ class BaseModel
     /**
      * BaseModel Constructor
      */
-    public function __construct()
+    public function __construct($dbConfigs = [])
     {
+        // validate configs
+        if (empty($dbConfigs)) {
+            throw new \Exception("Error : no database configs were provided");
+        }
+        
+        foreach (['host', 'name', 'user', 'pass'] as $config) {
+            if (!isset($dbConfigs['db_'.$config]) || 
+                empty($dbConfigs['db_'.$config])) {
+                throw new \Exception("Error : missing database {$config}");
+            }
+        }
+
         // create new PDO connection
         $this->connection = new \PDO(
-            "mysql:host={$_ENV['DB_HOST']};
-            dbname={$_ENV['DB_NAME']}",
-            $_ENV['DB_USER'],
-            $_ENV['DB_PASS'],
+            "mysql:host={$dbConfigs['db_host']};
+            dbname={$dbConfigs['db_name']}",
+            $dbConfigs['db_user'],
+            $dbConfigs['db_pass']
         );
 
-        // set table name if wasn't provided
+        // set table name if it wasn't provided
         if (empty($this->table)) {
             $class = get_called_class();
             
@@ -69,7 +82,7 @@ class BaseModel
                 FROM 
                     INFORMATION_SCHEMA.TABLES
                 WHERE 
-                    TABLE_SCHEMA = '{$_ENV['DB_NAME']}'
+                    TABLE_SCHEMA = '{$dbConfigs['db_name']}'
                 AND
                     TABLE_NAME = '{$this->table}'
             ");
@@ -93,7 +106,7 @@ class BaseModel
             FROM 
                 INFORMATION_SCHEMA.COLUMNS
             WHERE 
-                TABLE_SCHEMA = '{$_ENV['DB_NAME']}'
+                TABLE_SCHEMA = '{$dbConfigs['db_name']}'
             AND
                 TABLE_NAME = '{$this->table}'
             ");
