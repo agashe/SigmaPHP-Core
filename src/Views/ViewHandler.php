@@ -3,7 +3,7 @@
 namespace SigmaPHP\Core\Views;
 
 use SigmaPHP\Core\Interfaces\Views\ViewHandlerInterface;
-use RyanChandler\Blade\Blade;
+use Jenssegers\Blade\Blade;
 
 /**
  * View Handler Class

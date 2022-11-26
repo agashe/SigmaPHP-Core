@@ -17,7 +17,7 @@
     ],
     "require": {
         "robmorgan/phinx": "^0.12.12",
-        "ryangjchandler/standalone-blade": "^0.1.0",
+        "jenssegers/blade": "1.*",
         "bramus/router": "~1.6",
         "envms/fluentpdo": "2.*"
     },
