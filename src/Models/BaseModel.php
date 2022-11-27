@@ -63,15 +63,7 @@ class BaseModel implements BaseModelInterface
 
         // set table name if it wasn't provided
         if (empty($this->table)) {
-            $class = get_called_class();
-            
-            $tableName = substr(
-                $class, 
-                (-1 * (strlen($class) - strrpos($class, '\\') - 1))
-            );            
-
-            $inflector = InflectorFactory::create()->build();
-            $this->table = $inflector->pluralize(strtolower($tableName));
+            $this->table = $this->createTableName(get_called_class());
         }
         
         // check if table exists
@@ -122,6 +114,23 @@ class BaseModel implements BaseModelInterface
 
         // create new FluentPDO instance
         $this->db = new Query($this->connection);
+    }
+
+    /**
+     * Create table name.
+     *
+     * @param string $className
+     * @return string
+     */
+    protected function createTableName($className)
+    {
+        $tableName = substr(
+            $className, 
+            (-1 * (strlen($className) - strrpos($className, '\\') - 1))
+        );            
+
+        $inflector = InflectorFactory::create()->build();
+        return $inflector->pluralize($inflector->tableize($tableName));
     }
 
     /**
