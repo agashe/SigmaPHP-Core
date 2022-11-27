@@ -14,17 +14,17 @@ class BaseModel implements BaseModelInterface
     /**
      * @var object $connection
      */
-    private $connection;
+    protected $connection;
 
     /**
      * @var object $db
      */
-    private $db;
+    protected $db;
 
     /**
      * @var bool $tableExists
      */
-    private $tableExists;
+    protected $tableExists;
 
     /**
      * @var string $table
@@ -67,49 +67,15 @@ class BaseModel implements BaseModelInterface
         }
         
         // check if table exists
-        if (!$this->tableExists) {
-            $tableExists = $this->connection->prepare("
-                SELECT
-                    TABLE_NAME
-                FROM 
-                    INFORMATION_SCHEMA.TABLES
-                WHERE 
-                    TABLE_SCHEMA = '{$dbConfigs['db_name']}'
-                AND
-                    TABLE_NAME = '{$this->table}'
-            ");
-
-            $tableExists->execute();
-
-            if ($tableExists->fetch() == false) {
-                throw new \Exception(
-                    "Error : table {$this->table} doesn't exist"
-                );
-            } else {
-                $this->tableExists = true;
-            }
+        if (!$this->checkTableExists($dbConfigs['db_name'])) {
+            throw new \Exception(
+                "Error : table {$this->table} doesn't exist"
+            );
         }
 
         // fetch fields
         if (empty($this->fields)) {
-            $tableFields = $this->connection->prepare("
-            SELECT
-                GROUP_CONCAT(COLUMN_NAME) AS FIELDS
-            FROM 
-                INFORMATION_SCHEMA.COLUMNS
-            WHERE 
-                TABLE_SCHEMA = '{$dbConfigs['db_name']}'
-            AND
-                TABLE_NAME = '{$this->table}'
-            ");
-
-            $tableFields->execute();
-            $this->fields = explode(',', 
-                $tableFields->fetchAll()[0]['FIELDS']);
-
-            // remove the id field to avoid
-            // errors in queries
-            unset($this->fields[0]);
+            $this->fields = $this->fetchTableFields($dbConfigs['db_name']);
         }
 
         // create new FluentPDO instance
@@ -131,6 +97,59 @@ class BaseModel implements BaseModelInterface
 
         $inflector = InflectorFactory::create()->build();
         return $inflector->pluralize($inflector->tableize($tableName));
+    }
+
+    /**
+     * Check if table exists.
+     *
+     * @param string $dbName
+     * @return bool
+     */
+    protected function checkTableExists($dbName)
+    {
+        $tableExists = $this->connection->prepare("
+            SELECT
+                TABLE_NAME
+            FROM 
+                INFORMATION_SCHEMA.TABLES
+            WHERE 
+                TABLE_SCHEMA = '{$dbName}'
+            AND
+                TABLE_NAME = '{$this->table}'
+        ");
+
+        $tableExists->execute();
+
+        return ($tableExists->fetch() != false);
+    }
+
+    /**
+     * Fetch table fields.
+     *
+     * @param string $dbName
+     * @return array
+     */
+    protected function fetchTableFields($dbName)
+    {
+        $tableFields = $this->connection->prepare("
+        SELECT
+            GROUP_CONCAT(COLUMN_NAME) AS FIELDS
+        FROM 
+            INFORMATION_SCHEMA.COLUMNS
+        WHERE 
+            TABLE_SCHEMA = '{$dbName}'
+        AND
+            TABLE_NAME = '{$this->table}'
+        ");
+
+        $tableFields->execute();
+        $fields = explode(',', $tableFields->fetchAll()[0]['FIELDS']);
+
+        // remove the id field to avoid
+        // errors in queries
+        unset($fields[0]);
+
+        return array_values($fields);
     }
 
     /**

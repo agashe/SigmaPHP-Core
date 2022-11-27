@@ -58,7 +58,7 @@ class BaseModelTest extends TestCase
     private function createTestTable()
     {
         $testTable = $this->connectToDatabase()->prepare("
-            CREATE TABLE IF NOT EXISTS basemodels (
+            CREATE TABLE IF NOT EXISTS base_models (
                 id INT(11) AUTO_INCREMENT PRIMARY KEY,
                 name VARCHAR(25) NOT NULL,
                 email VARCHAR(50) NOT NULL
@@ -76,7 +76,7 @@ class BaseModelTest extends TestCase
     private function dropTestTable()
     {
         $testTable = $this->connectToDatabase()->prepare("
-            Drop TABLE basemodels;
+            Drop TABLE base_models;
         ");
 
         $testTable->execute();
@@ -175,5 +175,32 @@ class BaseModelTest extends TestCase
 
         $this->assertEquals('base_models',
             $testBaseModel->getTableName('\BaseModel'));
+    }
+
+    /**
+     * Test auto extracted fields are correct.
+     *
+     * @runInSeparateProcess
+     * @return void
+     */
+    public function testAutoExtractedFieldsAreCorrect()
+    {
+        $this->createTestTable();
+
+        $testBaseModel = new class($this->dbConfigs) extends BaseModel {
+            public function __construct($dbConfigs) {
+                $this->table = 'base_models';
+                $this->db_name = $dbConfigs['db_name'];
+                parent::__construct($dbConfigs);
+            }
+            public function getTableFields() {
+                return $this->fetchTableFields($this->db_name);
+            }
+        };
+
+        $this->assertEquals(['name', 'email'],
+            $testBaseModel->getTableFields());
+
+        $this->dropTestTable();
     }
 }
