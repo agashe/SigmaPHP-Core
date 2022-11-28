@@ -5,7 +5,7 @@ namespace SigmaPHP\Core\Controllers;
 // todo
 
 /**
- * Base Controller 
+ * Base Controller Class
  */
 class BaseController
 {

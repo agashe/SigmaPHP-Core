@@ -38,4 +38,12 @@ interface ConfigInterface
      * @return bool
      */
     public function has($key);
+
+    /**
+     * Set errors display.
+     * 
+     * @param string $env
+     * @return bool
+     */
+    public function setErrorsDisplay($env);
 }

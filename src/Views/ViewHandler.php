@@ -30,7 +30,7 @@ class ViewHandler implements ViewHandlerInterface
     }
 
     /**
-     * Render html template
+     * Render html template.
      * 
      * @param string $templateName
      * @param array $variables

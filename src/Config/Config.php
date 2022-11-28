@@ -65,4 +65,17 @@ class Config implements ConfigInterface
     {
         return (bool) $this->configs[$key];
     }
+
+    /**
+     * Set errors display.
+     * 
+     * @param string $env
+     * @return bool
+     */
+    public function setErrorsDisplay($env)
+    {        
+        ini_set('display_errors', ($env != 'production'));
+        ini_set('display_startup_errors', ($env != 'production'));
+        error_reporting(($env == 'production')? 0 : 'E_ALL');
+    }
 }

@@ -7,7 +7,7 @@ use Envms\FluentPDO\Query as Query;
 use Doctrine\Inflector\InflectorFactory;
 
 /**
- * Base Model
+ * Base Model Class
  */
 class BaseModel implements BaseModelInterface
 {

@@ -8,7 +8,7 @@ namespace SigmaPHP\Core\Interfaces\Views;
 interface ViewHandlerInterface
 {
     /**
-     * Render html template
+     * Render html template.
      * 
      * @param string $templateName
      * @param array $variables
