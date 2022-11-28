@@ -14,17 +14,12 @@ class BaseModel implements BaseModelInterface
     /**
      * @var object $connection
      */
-    protected $connection;
+    private $connection;
 
     /**
      * @var object $db
      */
-    protected $db;
-
-    /**
-     * @var bool $tableExists
-     */
-    protected $tableExists;
+    private $db;
 
     /**
      * @var string $table
@@ -153,7 +148,7 @@ class BaseModel implements BaseModelInterface
     }
 
     /**
-     * Fetch all rows
+     * Fetch all rows.
      *
      * @return array
      */
@@ -163,18 +158,18 @@ class BaseModel implements BaseModelInterface
     }
 
     /**
-     * Find row by id
+     * Find row by id.
      *
-     * @param int $value
+     * @param int $id
      * @return array
      */
-    final public function find($value)
+    final public function find($id)
     {
-        return $this->db->from($this->table, $value)->fetch();
+        return $this->db->from($this->table, $id)->fetch();
     }
 
     /**
-     * Find row by field's value
+     * Find row by field's value.
      *
      * @param string $field
      * @param int $value
@@ -194,14 +189,13 @@ class BaseModel implements BaseModelInterface
      */
     private function validateParams($fields, $values)
     {
-        if ($fields == '*') {
-            if (empty($this->fields)) {
-                throw new \Exception(
-                    "Error : No fields were provided to the model"
-                );
-            } else {
-                $fields = $this->fields;
-            }
+        if (empty($this->fields) || !is_array($fields)) {
+            throw new \Exception(
+                "Error : No fields were provided to the model"
+            );
+        } 
+        else if ($fields == '*') {
+            $fields = $this->fields;
         }
         
         if (is_array($fields) && is_array($values) && 
@@ -214,7 +208,7 @@ class BaseModel implements BaseModelInterface
     }
 
     /**
-     * Create new row
+     * Create new row.
      *
      * @param array|string $fields
      * @param array $values
@@ -229,7 +223,7 @@ class BaseModel implements BaseModelInterface
     }
     
     /**
-     * Update row by id
+     * Update row by id.
      *
      * @param int $id
      * @param array|string $fields
@@ -237,7 +231,13 @@ class BaseModel implements BaseModelInterface
      * @return bool
      */
     final public function update($id, $fields, $values)
-    {        
+    {
+        if (empty($id)) {
+            throw new \Exception(
+                "Error : No id was provided for update"
+            );
+        }
+
         return $this->db->update(
             $this->table,
             $this->validateParams($fields, $values),
@@ -246,18 +246,24 @@ class BaseModel implements BaseModelInterface
     }
     
     /**
-     * Delete row by id
+     * Delete row by id.
      *
      * @param int $id
      * @return bool
      */
     final public function delete($id)
     {
+        if (empty($id)) {
+            throw new \Exception(
+                "Error : No id was provided for delete"
+            );
+        }
+
         return $this->db->deleteFrom($this->table, $id)->execute();
     }
 
     /**
-     * Create custom query
+     * Create custom query.
      *
      * @param string $statement
      * @return mixed
