@@ -23,6 +23,23 @@ class Config implements ConfigInterface
     }
 
     /**
+     * Load all config files.
+     * 
+     * @return array
+     */
+    public function load($path)
+    {
+        if ($handle = opendir($path)) {
+            while (($file = readdir($handle))) {
+                if (in_array($file, ['.', '..'])) continue;
+                $this->configs[$file] = require $path . '/' . $file;
+            }
+        
+            closedir($handle);
+        }
+    }
+
+    /**
      * Get all config values.
      * 
      * @return array

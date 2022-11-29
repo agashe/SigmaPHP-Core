@@ -1,6 +1,6 @@
 <?php
 
-namespace SigmaPHP\Core\Interfaces\Kernal;
+namespace SigmaPHP\Core\Interfaces\App;
 
 /**
  * Kernal Interface

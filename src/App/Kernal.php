@@ -2,7 +2,9 @@
 
 namespace SigmaPHP\Core\App;
 
-use SigmaPHP\Core\Interfaces\Kernal\KernalInterface;
+use SigmaPHP\Core\Interfaces\App\KernalInterface;
+use SigmaPHP\Core\Config\Config;
+use SigmaPHP\Core\Router\Router;
 
 /**
  * Kernal Class
@@ -10,11 +12,22 @@ use SigmaPHP\Core\Interfaces\Kernal\KernalInterface;
 class Kernal implements KernalInterface
 {
     /**
+     * @var string $configPath
+     */
+    private $configPath;
+
+    /**
+     * @var SigmaPHP\Core\Config\Config $configManager
+     */
+    private $configManager;
+
+    /**
      * Kernal Constructor
      */
-    public function __construct()
+    public function __construct($configPath)
     {
-        // todo
+        $this->configPath = $configPath;
+        $this->configManager = new Config();
     }
 
     /**
@@ -24,6 +37,13 @@ class Kernal implements KernalInterface
      */
     final public function init()
     {
+        // load all config files
+        $this->configManager->load($this->configPath);
 
+        // load the routes
+        $router = new Router($this->configManager->get('app')['routes_path']);
+
+        // run the app
+        $router->start();
     }
 }

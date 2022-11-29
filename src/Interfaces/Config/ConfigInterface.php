@@ -8,6 +8,13 @@ namespace SigmaPHP\Core\Interfaces\Config;
 interface ConfigInterface
 {
     /**
+     * Load all config files.
+     * 
+     * @return array
+     */
+    public function load($path);
+
+    /**
      * Get all config values.
      * 
      * @return array
