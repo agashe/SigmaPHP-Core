@@ -13,7 +13,7 @@ class ConsoleManager
      * @param string $command
      * @return void
      */
-    public function execute($command)
+    final public function execute($command)
     {
         switch ($command) {
             case 'version':
@@ -26,6 +26,10 @@ class ConsoleManager
 
             case 'run':
                 exec('cd public; php -S localhost:8888');
+                break;
+
+            case 'generate:app-secret-key':
+                // ToDo
                 break;
 
             case 'create:migration':
