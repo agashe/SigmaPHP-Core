@@ -5,7 +5,7 @@ namespace SigmaPHP\Core\Http;
 use SigmaPHP\Core\Interfaces\Http\FileUploadInterface;
 
 /**
- * FileUpload Class
+ * File Upload Class
  */
 class FileUpload implements FileUploadInterface
 {
