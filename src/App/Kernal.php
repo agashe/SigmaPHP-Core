@@ -42,7 +42,8 @@ class Kernal implements KernalInterface
 
         // load the routes
         $router = new Router($this->configManager->get('app')['routes_path']);
-
+        $router->loadRoutes();
+        
         // run the app
         $router->start();
     }

@@ -32,7 +32,8 @@ class Config implements ConfigInterface
         if ($handle = opendir($path)) {
             while (($file = readdir($handle))) {
                 if (in_array($file, ['.', '..'])) continue;
-                $this->configs[$file] = require $path . '/' . $file;
+                $this->configs[str_replace('.php', '', $file)] = 
+                    require $path . '/' . $file;
             }
         
             closedir($handle);

@@ -9,6 +9,7 @@ use SigmaPHP\Core\Http\Response;
 use SigmaPHP\Core\Http\Cookie;
 use SigmaPHP\Core\Http\Session;
 use SigmaPHP\Core\Http\FileUpload;
+use SigmaPHP\Core\Views\ViewHandler;
 
 /**
  * Base Controller Class
@@ -46,12 +47,17 @@ class BaseController implements BaseControllerInterface
     protected $filesUploader;
 
     /**
+     * @var SigmaPHP\Core\Views\ViewHandler $views
+     */
+    protected $views;
+
+    /**
      * Controller Constructor
      */
     public function __construct()
     {
         $this->config = new Config();
-        $this->config->load(dirname(__DIR__, 3) . '/configs');
+        $this->config->load(dirname(__DIR__, 5) . '/config');
 
         $this->request = new Request();
         $this->response = new Response();
@@ -59,6 +65,11 @@ class BaseController implements BaseControllerInterface
         $this->sessions = new Session();
         $this->filesUploader = new FileUpload(
             $this->config->get('app')['upload_path']
+        );
+
+        $this->views = new ViewHandler(
+            $this->config->get('app')['views_path'],
+            $this->config->get('app')['cache_path']
         );
     }
 }
