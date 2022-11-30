@@ -17,7 +17,7 @@ class ConsoleManager
     {
         switch ($command) {
             case 'version':
-                print("SigmaPHP framework version 0.1.0");
+                print("SigmaPHP framework version 0.1.0\n");
                 break;
 
             case 'help':
