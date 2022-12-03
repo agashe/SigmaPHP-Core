@@ -94,6 +94,6 @@ class Config implements ConfigInterface
     {        
         ini_set('display_errors', ($env != 'production'));
         ini_set('display_startup_errors', ($env != 'production'));
-        error_reporting(($env == 'production')? 0 : 'E_ALL');
+        error_reporting(($env == 'production')? 0 : E_ALL);
     }
 }
