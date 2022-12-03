@@ -39,6 +39,11 @@ class Kernal implements KernalInterface
     {
         // load all config files
         $this->configManager->load($this->configPath);
+        
+        // set error display
+        $this->configManager->setErrorsDisplay(
+            $this->configManager->get('env')
+        );
 
         // load the routes
         $router = new Router($this->configManager->get('app')['routes_path']);

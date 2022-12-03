@@ -46,7 +46,7 @@ class Helper implements HelperInterface
         return openssl_encrypt(
             $text,
             'aes128',
-            $this->env('APP-SECRET-KEY'),
+            $this->env('APP_SECRET_KEY'),
             0,
             $salt
         );
@@ -64,7 +64,7 @@ class Helper implements HelperInterface
         return openssl_decrypt(
             $text,
             'aes128',
-            $this->env('APP-SECRET-KEY'),
+            $this->env('APP_SECRET_KEY'),
             0,
             $salt
         );
