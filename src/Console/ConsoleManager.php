@@ -220,37 +220,70 @@ class ConsoleManager
     /**
      * Create new controller.
      * 
+     * @param string $controllerName
      * @return void
      */
-    private function createController()
+    private function createController($controllerName)
     {
-        exec(
-            $this->dbConsoleCommand() . " " . "seed:run"
-        );
+        $path = dirname(__DIR__, 2) . '/src/Models/';
+
+        $content = <<< MODEL_CONTENT
+            <?php
+            
+            namespace SigmaPHP\Controllers;
+
+            use SigmaPHP\Core\Controllers\BaseController;
+
+            class $controllerName extends BaseController
+            {
+                /**
+                 * $controllerName Constructor
+                 */
+                public function __construct()
+                {
+                    parent::__construct();
+                }
+            }
+        MODEL_CONTENT;
+
+        file_put_contents($path . $controllerName . '.php', '');
     }
 
     /**
      * Create new data model.
      * 
+     * @param string $modelName
      * @return void
      */
-    private function createModel()
+    private function createModel($modelName)
     {
-        exec(
-            $this->dbConsoleCommand() . " " . "seed:run"
-        );
+        $path = dirname(__DIR__, 2) . '/src/Models/';
+
+        $content = <<< MODEL_CONTENT
+            <?php
+                namespace SigmaPHP\Models;
+
+                use SigmaPHP\Core\Models\BaseModel;
+
+                class $modelName extends BaseModel
+                {
+                    
+                }
+        MODEL_CONTENT;
+
+        file_put_contents($path . $modelName . '.php', '');
     }
 
     /**
      * Create new html view.
      * 
+     * @param string $viewName
      * @return void
      */
-    private function createView()
+    private function createView($viewName)
     {
-        exec(
-            $this->dbConsoleCommand() . " " . "seed:run"
-        );
+        $path = dirname(__DIR__, 2) . '/src/Views/';
+        file_put_contents($path . $viewName . '.php', '');
     }
 
     /**
@@ -260,8 +293,15 @@ class ConsoleManager
      */
     private function clearCache()
     {
-        exec(
-            $this->dbConsoleCommand() . " " . "seed:run"
-        );
+        $path = dirname(__DIR__, 2) . '/storage/cache';
+        
+        if ($handle = opendir($path)) {
+            while (($file = readdir($handle))) {
+                if (in_array($file, ['.', '..'])) continue;
+                unlink($file);
+            }
+        
+            closedir($handle);
+        }
     }
 }
