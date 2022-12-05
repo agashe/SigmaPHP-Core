@@ -38,39 +38,39 @@ class ConsoleManager
                 break;
 
             case 'create:migration':
-                // ToDo
+                $this->createMigrationFile($argument);
                 break;
 
             case 'create:seeder':
-                // ToDo
-                break;
-
-            case 'create:controller':
-                // ToDo
-                break;
-
-            case 'create:model':
-                // ToDo
-                break;
-
-            case 'create:view':
-                // ToDo
+                $this->createSeeder($argument);
                 break;
 
             case 'migrate':
-                // ToDo
+                $this->migrate();
                 break;
 
             case 'rollback':
-                // ToDo
+                $this->rollback();
                 break;
 
             case 'seed':
-                // ToDo
+                $this->seed();
+                break;
+
+            case 'create:controller':
+                $this->createController($argument);
+                break;
+
+            case 'create:model':
+                $this->createModel($argument);
+                break;
+
+            case 'create:view':
+                $this->createView($argument);
                 break;
 
             case 'clear':
-                // ToDo
+                $this->clearCache();
                 break;
 
             default:
@@ -142,5 +142,126 @@ class ConsoleManager
         } catch (\Exception $e) {
             echo $e;
         }
+    }
+
+
+    /**
+     * Return the CLI command for the database handler.
+     * 
+     * @return string
+     */
+    private function dbConsoleCommand()
+    {
+        return "./vendor/bin/phinx --configuration config/database.php";
+    }
+    
+    /**
+     * Create new migration file.
+     * 
+     * @param string $fileName
+     * @return void
+     */
+    private function createMigrationFile($fileName)
+    {
+        exec(
+            $this->dbConsoleCommand() . " " . "create {$fileName}"
+        );
+    }
+
+    /**
+     * Create new seeder.
+     * 
+     * @param string $seederName
+     * @return void
+     */
+    private function createSeeder($seederName)
+    {
+        exec(
+            $this->dbConsoleCommand() . " " . "seed:create {$seederName}"
+        );
+    }
+
+    /**
+     * Migrate the database.
+     * 
+     * @return void
+     */
+    private function migrate()
+    {
+        exec(
+            $this->dbConsoleCommand() . " " . "migrate"
+        );
+    }
+
+    /**
+     * Rollback the database.
+     * 
+     * @return void
+     */
+    private function rollback()
+    {
+        exec(
+            $this->dbConsoleCommand() . " " . "rollback"
+        );
+    }
+
+    /**
+     * Seed the database.
+     * 
+     * @return void
+     */
+    private function seed()
+    {
+        exec(
+            $this->dbConsoleCommand() . " " . "seed:run"
+        );
+    }
+
+    /**
+     * Create new controller.
+     * 
+     * @return void
+     */
+    private function createController()
+    {
+        exec(
+            $this->dbConsoleCommand() . " " . "seed:run"
+        );
+    }
+
+    /**
+     * Create new data model.
+     * 
+     * @return void
+     */
+    private function createModel()
+    {
+        exec(
+            $this->dbConsoleCommand() . " " . "seed:run"
+        );
+    }
+
+    /**
+     * Create new html view.
+     * 
+     * @return void
+     */
+    private function createView()
+    {
+        exec(
+            $this->dbConsoleCommand() . " " . "seed:run"
+        );
+    }
+
+    /**
+     * Clear views cache.
+     * 
+     * @return void
+     */
+    private function clearCache()
+    {
+        exec(
+            $this->dbConsoleCommand() . " " . "seed:run"
+        );
     }
 }
