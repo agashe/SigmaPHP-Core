@@ -10,8 +10,8 @@ interface ConsoleManagerInterface
     /**
      * Execute console commands.
      * 
-     * @param string $command
+     * @param string $input
      * @return void
      */
-    public function execute($command);
+    public function execute($input);
 }
