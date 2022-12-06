@@ -73,6 +73,10 @@ class ConsoleManager
                 $this->clearCache();
                 break;
 
+            case 'test':
+                $this->runTests();
+                break;
+
             default:
                 $this->commandNotFound();
                 break;
@@ -303,5 +307,15 @@ class ConsoleManager
         
             closedir($handle);
         }
+    }
+
+    /**
+     * Run test units.
+     * 
+     * @return void
+     */
+    private function runTests()
+    {
+        exec("./vendor/bin/phpunit tests");
     }
 }
