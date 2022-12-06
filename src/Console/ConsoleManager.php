@@ -133,16 +133,16 @@ class ConsoleManager
         $key  = str_replace('"', 'C', $key);
 
         try {
-            $envFile = file_get_Contents(dirname(__DIR__, 2) . '/.env');
+            $envFile = file_get_Contents(dirname(__DIR__, 5) . '/.env');
             
             if (strpos($envFile, 'APP_KEY') !== FALSE) {
                 $oldKey = substr($envFile, strpos($envFile, 'APP_KEY') + 8, 32);
                 $envFile = str_replace($oldKey, $key, $envFile);
             } else {
-                $envFile .= 'APP_KEY=' . $key;
+                $envFile .= 'APP_SECRET_KEY="' . $key .'"';
             }
 
-            file_put_contents(dirname(__DIR__, 2) . '/.env', $envFile);
+            file_put_contents(dirname(__DIR__, 5) . '/.env', $envFile);
         } catch (\Exception $e) {
             echo $e;
         }
@@ -152,11 +152,13 @@ class ConsoleManager
     /**
      * Return the CLI command for the database handler.
      * 
+     * @param string $command
      * @return string
      */
-    private function dbConsoleCommand()
+    private function dbConsoleCommand($command)
     {
-        return "./vendor/bin/phinx --configuration config/database.php";
+        return 
+            "./vendor/bin/phinx {$command} --configuration config/database.php";
     }
     
     /**
@@ -168,7 +170,7 @@ class ConsoleManager
     private function createMigrationFile($fileName)
     {
         exec(
-            $this->dbConsoleCommand() . " " . "create {$fileName}"
+            $this->dbConsoleCommand("create {$fileName}")
         );
     }
 
@@ -181,7 +183,7 @@ class ConsoleManager
     private function createSeeder($seederName)
     {
         exec(
-            $this->dbConsoleCommand() . " " . "seed:create {$seederName}"
+            $this->dbConsoleCommand("seed:create {$seederName}")
         );
     }
 
@@ -193,7 +195,7 @@ class ConsoleManager
     private function migrate()
     {
         exec(
-            $this->dbConsoleCommand() . " " . "migrate"
+            $this->dbConsoleCommand("migrate")
         );
     }
 
@@ -205,7 +207,7 @@ class ConsoleManager
     private function rollback()
     {
         exec(
-            $this->dbConsoleCommand() . " " . "rollback"
+            $this->dbConsoleCommand("rollback")
         );
     }
 
@@ -217,7 +219,7 @@ class ConsoleManager
     private function seed()
     {
         exec(
-            $this->dbConsoleCommand() . " " . "seed:run"
+            $this->dbConsoleCommand("seed:run")
         );
     }
 
@@ -229,28 +231,28 @@ class ConsoleManager
      */
     private function createController($controllerName)
     {
-        $path = dirname(__DIR__, 2) . '/src/Models/';
+        $path = dirname(__DIR__, 5) . '/src/Controllers/';
 
         $content = <<< MODEL_CONTENT
-            <?php
-            
-            namespace SigmaPHP\Controllers;
+        <?php
+        
+        namespace SigmaPHP\Controllers;
 
-            use SigmaPHP\Core\Controllers\BaseController;
+        use SigmaPHP\Core\Controllers\BaseController;
 
-            class $controllerName extends BaseController
+        class $controllerName extends BaseController
+        {
+            /**
+             * $controllerName Constructor
+             */
+            public function __construct()
             {
-                /**
-                 * $controllerName Constructor
-                 */
-                public function __construct()
-                {
-                    parent::__construct();
-                }
+                parent::__construct();
             }
+        }
         MODEL_CONTENT;
 
-        file_put_contents($path . $controllerName . '.php', '');
+        file_put_contents($path . $controllerName . '.php', $content);
     }
 
     /**
@@ -261,21 +263,22 @@ class ConsoleManager
      */
     private function createModel($modelName)
     {
-        $path = dirname(__DIR__, 2) . '/src/Models/';
+        $path = dirname(__DIR__, 5) . '/src/Models/';
 
         $content = <<< MODEL_CONTENT
-            <?php
-                namespace SigmaPHP\Models;
+        <?php
+        
+        namespace SigmaPHP\Models;
 
-                use SigmaPHP\Core\Models\BaseModel;
+        use SigmaPHP\Core\Models\BaseModel;
 
-                class $modelName extends BaseModel
-                {
-                    
-                }
+        class $modelName extends BaseModel
+        {
+            
+        }
         MODEL_CONTENT;
 
-        file_put_contents($path . $modelName . '.php', '');
+        file_put_contents($path . $modelName . '.php', $content);
     }
 
     /**
@@ -286,7 +289,7 @@ class ConsoleManager
      */
     private function createView($viewName)
     {
-        $path = dirname(__DIR__, 2) . '/src/Views/';
+        $path = dirname(__DIR__, 5) . '/src/Views/';
         file_put_contents($path . $viewName . '.php', '');
     }
 
@@ -297,7 +300,7 @@ class ConsoleManager
      */
     private function clearCache()
     {
-        $path = dirname(__DIR__, 2) . '/storage/cache';
+        $path = dirname(__DIR__, 5) . '/storage/cache';
         
         if ($handle = opendir($path)) {
             while (($file = readdir($handle))) {
