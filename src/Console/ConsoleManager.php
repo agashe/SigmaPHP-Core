@@ -290,7 +290,7 @@ class ConsoleManager
     private function createView($viewName)
     {
         $path = dirname(__DIR__, 5) . '/src/Views/';
-        file_put_contents($path . $viewName . '.php', '');
+        file_put_contents($path . $viewName . '.blade.php', '');
     }
 
     /**
