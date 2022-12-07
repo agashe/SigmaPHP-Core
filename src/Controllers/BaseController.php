@@ -52,12 +52,12 @@ class BaseController implements BaseControllerInterface
     protected $views;
 
     /**
-     * Controller Constructor
+     * BaseController Constructor
      */
     public function __construct()
     {
         $this->config = new Config();
-        $this->config->load(dirname(__DIR__, 5) . '/config');
+        $this->config->load();
 
         $this->request = new Request();
         $this->response = new Response();

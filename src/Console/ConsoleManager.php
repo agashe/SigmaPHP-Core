@@ -3,12 +3,26 @@
 namespace SigmaPHP\Core\Console;
 
 use PassGen\PassGen;
+use SigmaPHP\Core\Config\Config;
 
 /**
  * Console Manager Class
  */
 class ConsoleManager
 {
+    /**
+     * @var SigmaPHP\Core\Config\Config $config
+     */
+    private $config;
+
+    /**
+     * ConsoleManager Constructor
+     */
+    public function __construct()
+    {
+        $this->config = new Config();
+    }
+
     /**
      * Execute console commands.
      * 
@@ -96,7 +110,7 @@ class ConsoleManager
         exec($command, $output);
 
         foreach ($output as $line) {
-            echo $line . '\n\r';
+            print($line . "\n\r");
         }
     }
 
@@ -199,17 +213,21 @@ class ConsoleManager
         $key  = str_replace('"', 'C', $key);
 
         try {
-            $envFile = file_get_Contents(dirname(__DIR__, 5) . '/.env');
+            $envFile = file_get_Contents($this->config->getFullPath('.env'));
             
-            if (strpos($envFile, 'APP_KEY') !== FALSE) {
-                $oldKey = substr($envFile, strpos($envFile, 'APP_KEY') + 8, 32);
+            if (strpos($envFile, 'APP_SECRET_KEY') !== FALSE) {
+                $oldKey = substr(
+                    $envFile, 
+                    strpos($envFile, 'APP_SECRET_KEY') + 15, 
+                    32
+                );
+
                 $envFile = str_replace($oldKey, $key, $envFile);
             } else {
                 $envFile .= 'APP_SECRET_KEY="' . $key .'"';
             }
 
-            file_put_contents(dirname(__DIR__, 5) . '/.env', $envFile);
-
+            file_put_contents($this->config->getFullPath('.env'), $envFile);
             echo "\033[32m App secret key was generated successfully";
         } catch (\Exception $e) {
             echo "\033[31m $e";
@@ -293,7 +311,7 @@ class ConsoleManager
      */
     private function createController($controllerName)
     {
-        $path = dirname(__DIR__, 5) . '/src/Controllers/';
+        $path = $this->config->getFullPath('src/Controllers/');
 
         $content = <<< MODEL_CONTENT
         <?php
@@ -330,7 +348,7 @@ class ConsoleManager
      */
     private function createModel($modelName)
     {
-        $path = dirname(__DIR__, 5) . '/src/Models/';
+        $path = $this->config->getFullPath('src/Models/');
 
         $content = <<< MODEL_CONTENT
         <?php
@@ -361,7 +379,7 @@ class ConsoleManager
      */
     private function createView($viewName)
     {
-        $path = dirname(__DIR__, 5) . '/src/Views/';
+        $path = $this->config->getFullPath('src/Views/');
 
         try {
             file_put_contents($path . $viewName . '.blade.php', '');
@@ -378,7 +396,7 @@ class ConsoleManager
      */
     private function clearCache()
     {
-        $path = dirname(__DIR__, 5) . '/storage/cache';
+        $path = $this->config->getFullPath('storage/cache');
         
         try {
             if ($handle = opendir($path)) {

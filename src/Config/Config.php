@@ -23,12 +23,26 @@ class Config implements ConfigInterface
     }
 
     /**
+     * Get full path for file/folder , relevant to 
+     * the framework base path (outside vendor).
+     * 
+     * @param string $dis
+     * @return string
+     */
+    public function getFullPath($dis)
+    {
+        return dirname(__DIR__, 5) . '/' . $dis;
+    }
+
+    /**
      * Load all config files.
      * 
      * @return array
      */
-    public function load($path)
+    public function load()
     {
+        $path = $this->getFullPath('config');
+
         if ($handle = opendir($path)) {
             while (($file = readdir($handle))) {
                 if (in_array($file, ['.', '..'])) continue;

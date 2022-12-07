@@ -12,11 +12,6 @@ use SigmaPHP\Core\Router\Router;
 class Kernal implements KernalInterface
 {
     /**
-     * @var string $configPath
-     */
-    private $configPath;
-
-    /**
      * @var SigmaPHP\Core\Config\Config $configManager
      */
     private $configManager;
@@ -24,9 +19,8 @@ class Kernal implements KernalInterface
     /**
      * Kernal Constructor
      */
-    public function __construct($configPath)
+    public function __construct()
     {
-        $this->configPath = $configPath;
         $this->configManager = new Config();
     }
 
@@ -38,7 +32,7 @@ class Kernal implements KernalInterface
     final public function init()
     {
         // load all config files
-        $this->configManager->load($this->configPath);
+        $this->configManager->load();
         
         // set error display
         $this->configManager->setErrorsDisplay(

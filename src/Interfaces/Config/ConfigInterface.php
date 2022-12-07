@@ -8,11 +8,20 @@ namespace SigmaPHP\Core\Interfaces\Config;
 interface ConfigInterface
 {
     /**
+     * Get full path for file/folder , relevant to 
+     * the framework base path (outside vendor).
+     * 
+     * @param string $dis
+     * @return string
+     */
+    public function getFullPath($dis);
+
+    /**
      * Load all config files.
      * 
      * @return array
      */
-    public function load($path);
+    public function load();
 
     /**
      * Get all config values.
