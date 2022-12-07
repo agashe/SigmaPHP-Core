@@ -26,14 +26,14 @@ class ConsoleManager
                 break;
 
             case 'help':
-                # code...
+                $this->help();
                 break;
 
             case 'run':
                 $this->runServer($argument);
                 break;
 
-            case 'generate:app-secret-key':
+            case 'create:secret-key':
                 $this->generateAppSecretKey();
                 break;
 
@@ -69,7 +69,7 @@ class ConsoleManager
                 $this->createView($argument);
                 break;
 
-            case 'clear':
+            case 'clear:cache':
                 $this->clearCache();
                 break;
 
@@ -96,7 +96,7 @@ class ConsoleManager
         exec($command, $output);
 
         foreach ($output as $line) {
-            echo $line;
+            echo $line . '\n\r';
         }
     }
 
@@ -120,6 +120,55 @@ class ConsoleManager
     private function version()
     {
         print("SigmaPHP framework version 0.1.0\n\r");
+    }
+    
+    /**
+     * Print help menu.
+     * 
+     * @return void
+     */
+    private function help()
+    {
+        $helpContent = <<< HELP
+        These are all available commands with SigmaPHP CLI Tool:
+
+            clear:cache
+                Clear views cache.
+            create:controller {controller name}
+                Create controller.
+            create:migration {migration name}
+                Create migration file.
+            create:model {model name}
+                Create model.
+            create:secret-key
+                Generate app secret key , and save it into .env file.
+            create:seeder {seeder name}
+                Create seeder file. 
+            create:view {view name}
+                Create view.
+            help
+                Print all available commands (this menu).
+            migrate
+                Run migration files.
+            rollback
+                Rollback latest migration.
+            run
+                Run the app with PHP built in server on port 8888.
+            seed
+                Run seeders.
+            test
+                Run unit tests.
+            version
+                Print the current version of SigmaPHP Framework.
+
+        Examples:
+            - php sigma-cli version
+            - php sigma-cli create:view my-view
+            - php sigma-cli create:mode MyModel
+            - php sigma-cli clear:cache
+        HELP;
+
+        print($helpContent);
     }
 
     /**
