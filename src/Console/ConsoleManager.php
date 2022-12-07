@@ -84,6 +84,23 @@ class ConsoleManager
     }
 
     /**
+     * Execute the command and print its output.
+     *
+     * @param string $command
+     * @return void
+     */
+    private function executeCommand($command)
+    {
+        $output = [];
+
+        exec($command, $output);
+
+        foreach ($output as $line) {
+            echo $line;
+        }
+    }
+
+    /**
      * Default error message.
      * 
      * @return void
@@ -113,7 +130,7 @@ class ConsoleManager
      */
     private function runServer($port = 8888)
     {
-        exec("cd public; php -S localhost:$port");
+        $this->executeCommand("cd public; php -S localhost:$port");
     }
 
     /**
@@ -143,8 +160,10 @@ class ConsoleManager
             }
 
             file_put_contents(dirname(__DIR__, 5) . '/.env', $envFile);
+
+            echo "\033[32m App secret key was generated successfully";
         } catch (\Exception $e) {
-            echo $e;
+            echo "\033[31m $e";
         }
     }
 
@@ -169,7 +188,7 @@ class ConsoleManager
      */
     private function createMigrationFile($fileName)
     {
-        exec(
+        $this->executeCommand(
             $this->dbConsoleCommand("create {$fileName}")
         );
     }
@@ -182,7 +201,7 @@ class ConsoleManager
      */
     private function createSeeder($seederName)
     {
-        exec(
+        $this->executeCommand(
             $this->dbConsoleCommand("seed:create {$seederName}")
         );
     }
@@ -194,9 +213,7 @@ class ConsoleManager
      */
     private function migrate()
     {
-        exec(
-            $this->dbConsoleCommand("migrate")
-        );
+        $this->executeCommand($this->dbConsoleCommand("migrate"));
     }
 
     /**
@@ -206,9 +223,7 @@ class ConsoleManager
      */
     private function rollback()
     {
-        exec(
-            $this->dbConsoleCommand("rollback")
-        );
+        $this->executeCommand($this->dbConsoleCommand("rollback"));
     }
 
     /**
@@ -218,9 +233,7 @@ class ConsoleManager
      */
     private function seed()
     {
-        exec(
-            $this->dbConsoleCommand("seed:run")
-        );
+        $this->executeCommand($this->dbConsoleCommand("seed:run"));
     }
 
     /**
@@ -252,7 +265,12 @@ class ConsoleManager
         }
         MODEL_CONTENT;
 
-        file_put_contents($path . $controllerName . '.php', $content);
+        try {
+            file_put_contents($path . $controllerName . '.php', $content);
+            echo "\033[32m {$controllerName} was created successfully";
+        } catch (\Exception $e) {
+            echo "\033[31m $e";
+        }
     }
 
     /**
@@ -278,7 +296,12 @@ class ConsoleManager
         }
         MODEL_CONTENT;
 
-        file_put_contents($path . $modelName . '.php', $content);
+        try {
+            file_put_contents($path . $modelName . '.php', $content);
+            echo "\033[32m {$modelName} was created successfully";
+        } catch (\Exception $e) {
+            echo "\033[31m $e";
+        }
     }
 
     /**
@@ -290,7 +313,13 @@ class ConsoleManager
     private function createView($viewName)
     {
         $path = dirname(__DIR__, 5) . '/src/Views/';
-        file_put_contents($path . $viewName . '.blade.php', '');
+
+        try {
+            file_put_contents($path . $viewName . '.blade.php', '');
+            echo "\033[32m {$viewName} was created successfully";
+        } catch (\Exception $e) {
+            echo "\033[31m $e";
+        }
     }
 
     /**
@@ -302,13 +331,19 @@ class ConsoleManager
     {
         $path = dirname(__DIR__, 5) . '/storage/cache';
         
-        if ($handle = opendir($path)) {
-            while (($file = readdir($handle))) {
-                if (in_array($file, ['.', '..'])) continue;
-                unlink($file);
+        try {
+            if ($handle = opendir($path)) {
+                while (($file = readdir($handle))) {
+                    if (in_array($file, ['.', '..'])) continue;
+                    unlink($path . '/'. $file);
+                }
+                
+                closedir($handle);
             }
-        
-            closedir($handle);
+
+            echo "\033[32m Cache was cleared successfully";
+        } catch (\Exception $e) {
+            echo "\033[31m $e";
         }
     }
 
@@ -319,6 +354,6 @@ class ConsoleManager
      */
     private function runTests()
     {
-        exec("./vendor/bin/phpunit tests");
+        $this->executeCommand("./vendor/bin/phpunit tests");
     }
 }
