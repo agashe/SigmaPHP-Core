@@ -31,7 +31,7 @@ class ConsoleManager
      */
     final public function execute($input)
     {
-        $command = $input[1];
+        $command = $input[1] ?? 'help';
         $argument = $input[2] ?? null;
 
         switch ($command) {
@@ -110,7 +110,7 @@ class ConsoleManager
         exec($command, $output);
 
         foreach ($output as $line) {
-            print($line . "\n\r");
+            print($line . PHP_EOL);
         }
     }
 
@@ -121,9 +121,12 @@ class ConsoleManager
      */
     private function commandNotFound()
     {
-        $message = "Invalid command.\n\r";
-        $message .= "Type 'php sigma-cli help' command for help.\n\r";
-        print($message);
+        $message = <<< NotFound
+        Invalid command.
+        Type 'php sigma-cli help' command for help.
+        NotFound;
+
+        print($message . PHP_EOL);
     }
 
     /**
@@ -133,7 +136,7 @@ class ConsoleManager
      */
     private function version()
     {
-        print("SigmaPHP framework version 0.1.0\n\r");
+        print("SigmaPHP framework version 0.1.0" . PHP_EOL);
     }
     
     /**
@@ -182,7 +185,7 @@ class ConsoleManager
             - php sigma-cli clear:cache
         HELP;
 
-        print($helpContent);
+        print($helpContent . PHP_EOL);
     }
 
     /**
@@ -228,9 +231,9 @@ class ConsoleManager
             }
 
             file_put_contents($this->config->getFullPath('.env'), $envFile);
-            echo "\033[32m App secret key was generated successfully";
+            echo "\033[32m App secret key was generated successfully" . PHP_EOL;
         } catch (\Exception $e) {
-            echo "\033[31m $e";
+            echo "\033[31m $e" . PHP_EOL;
         }
     }
 
@@ -304,6 +307,24 @@ class ConsoleManager
     }
 
     /**
+     * Create new file.
+     * 
+     * @param string $path
+     * @param string $name
+     * @param string $content
+     * @return void
+     */
+    private function createFile($path, $name, $content)
+    {
+        try {
+            file_put_contents($path . $name, $content);
+            echo "\033[32m {$name} was created successfully" . PHP_EOL;
+        } catch (\Exception $e) {
+            echo "\033[31m $e" . PHP_EOL;
+        }
+    }
+
+    /**
      * Create new controller.
      * 
      * @param string $controllerName
@@ -332,12 +353,7 @@ class ConsoleManager
         }
         MODEL_CONTENT;
 
-        try {
-            file_put_contents($path . $controllerName . '.php', $content);
-            echo "\033[32m {$controllerName} was created successfully";
-        } catch (\Exception $e) {
-            echo "\033[31m $e";
-        }
+        $this->createFile($path, $controllerName . '.php', $content);
     }
 
     /**
@@ -363,12 +379,7 @@ class ConsoleManager
         }
         MODEL_CONTENT;
 
-        try {
-            file_put_contents($path . $modelName . '.php', $content);
-            echo "\033[32m {$modelName} was created successfully";
-        } catch (\Exception $e) {
-            echo "\033[31m $e";
-        }
+        $this->createFile($path, $modelName . '.php', $content);
     }
 
     /**
@@ -381,12 +392,7 @@ class ConsoleManager
     {
         $path = $this->config->getFullPath('src/Views/');
 
-        try {
-            file_put_contents($path . $viewName . '.blade.php', '');
-            echo "\033[32m {$viewName} was created successfully";
-        } catch (\Exception $e) {
-            echo "\033[31m $e";
-        }
+        $this->createFile($path, $viewName . '.blade.php', '');
     }
 
     /**
@@ -408,9 +414,9 @@ class ConsoleManager
                 closedir($handle);
             }
 
-            echo "\033[32m Cache was cleared successfully";
+            echo "\033[32m Cache was cleared successfully" . PHP_EOL;
         } catch (\Exception $e) {
-            echo "\033[31m $e";
+            echo "\033[31m $e" . PHP_EOL;
         }
     }
 

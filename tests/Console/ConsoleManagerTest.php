@@ -37,7 +37,7 @@ class ConsoleManagerTest extends TestCase
         ];
 
         $this->consoleManager->execute($input);
-        $this->expectOutputString("SigmaPHP framework version 0.1.0\n\r");
+        $this->expectOutputString("SigmaPHP framework version 0.1.0\n");
     }
     
     /**
@@ -54,8 +54,8 @@ class ConsoleManagerTest extends TestCase
 
         $this->consoleManager->execute($input);
 
-        $expectedMessage = "Invalid command.\n\r";
-        $expectedMessage .= "Type 'php sigma-cli help' command for help.\n\r";
+        $expectedMessage = "Invalid command.\n";
+        $expectedMessage .= "Type 'php sigma-cli help' command for help.\n";
 
         $this->expectOutputString($expectedMessage);
     }
