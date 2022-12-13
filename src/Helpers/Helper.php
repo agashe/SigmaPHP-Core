@@ -28,10 +28,18 @@ class Helper implements HelperInterface
      */
     final public function url($route)
     {
-        $https = isset($_SERVER['HTTPS']) && 
-            $_SERVER['HTTPS'] != 'off' ? 'https' : 'http';
-        
-        return "{$https}://" . $_SERVER['SERVER_NAME'] . $route;
+        $url = '';
+
+        if (!empty($this->env('APP_URL'))) {
+            $url = $this->env('APP_URL') . '/' . $route;
+        } else {
+            $https = isset($_SERVER['HTTPS']) && 
+                $_SERVER['HTTPS'] != 'off' ? 'https' : 'http';
+            
+            $url = "{$https}://" . $_SERVER['SERVER_NAME'] . '/' . $route;
+        }
+
+        return $url;
     }
 
     /**

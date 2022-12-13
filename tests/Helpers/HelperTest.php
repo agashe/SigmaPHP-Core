@@ -37,17 +37,33 @@ class HelperTest extends TestCase
     }
 
     /**
-     * Test generate URL from path.
+     * Test generate URL from path using the provided app url.
      *
      * @return void
      */
-    public function testGenerateUrlFromPath()
+    public function testGenerateUrlFromPathUsingTheProvidedAppUrl()
     {
+        $_ENV['APP_URL'] = 'http://localhost';
         $_SERVER['SERVER_NAME'] = 'localhost';
 
         $expected = 'http://localhost/test';
 
-        $this->assertEquals($expected, $this->helper->url('/test'));
+        $this->assertEquals($expected, $this->helper->url('test'));
+    }
+    
+    /**
+     * Test generate URL from path using the server name.
+     *
+     * @return void
+     */
+    public function testGenerateUrlFromPathUsingTheServerName()
+    {
+        $_ENV['APP_URL'] = '';
+        $_SERVER['SERVER_NAME'] = 'localhost';
+
+        $expected = 'http://localhost/test';
+
+        $this->assertEquals($expected, $this->helper->url('test'));
     }
     
     /**
@@ -57,7 +73,7 @@ class HelperTest extends TestCase
      */
     public function testEncryptText()
     {
-        $_ENV['APP-SECRET-KEY'] = 'super secret key';
+        $_ENV['APP_SECRET_KEY'] = 'super secret key';
 
         $expected = 'Aua30ZjVa7sRdmIGi8i+lw==';
 
@@ -74,7 +90,7 @@ class HelperTest extends TestCase
      */
     public function testDecryptText()
     {
-        $_ENV['APP-SECRET-KEY'] = 'super secret key';
+        $_ENV['APP_SECRET_KEY'] = 'super secret key';
 
         $expected = 'test';
 
