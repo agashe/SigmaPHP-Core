@@ -61,7 +61,10 @@ class Router implements RouterInterface
     {
         foreach ($this->routes as $route) {
             $this->routerEngine
-                ->{$route['method']}($route['uri'], $route['controller']);
+                ->{$route['method']}(
+                    $route['uri'], 
+                    "{$route['controller']}@{$route['action']}"
+                );
         }
         
         $this->routerEngine->run();

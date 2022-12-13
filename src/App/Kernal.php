@@ -43,7 +43,7 @@ class Kernal implements KernalInterface
         
         // set error display
         $this->configManager->setErrorsDisplay(
-            $this->configManager->get('env')
+            $this->configManager->get('app')['env']
         );
 
         // load the routes

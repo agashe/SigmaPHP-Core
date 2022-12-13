@@ -44,7 +44,7 @@ class ConsoleManager
                 break;
 
             case 'run':
-                $this->runServer($argument);
+                $this->runServer($argument ?? 8888);
                 break;
 
             case 'create:secret-key':
