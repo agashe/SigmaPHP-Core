@@ -82,6 +82,10 @@ class ConsoleManager
             case 'create:view':
                 $this->createView($argument);
                 break;
+            
+            case 'create:uploads':
+                $this->createUploadsFolder();
+                break;
 
             case 'clear:cache':
                 $this->clearCache();
@@ -161,6 +165,8 @@ class ConsoleManager
                 Generate app secret key , and save it into .env file.
             create:seeder {seeder name}
                 Create seeder file. 
+            create:uploads
+                Create uploads folder.
             create:view {view name}
                 Create view.
             help
@@ -393,6 +399,39 @@ class ConsoleManager
         $path = $this->config->getFullPath('src/Views/');
 
         $this->createFile($path, $viewName . '.blade.php', '');
+    }
+
+    /**
+     * Create uploads folder.
+     * 
+     * @return void
+     */
+    private function createUploadsFolder()
+    {
+        $storagePath = $this->config->getFullPath('storage/');
+        $publicPath = $this->config->getFullPath('public/');
+
+        try {
+            if (!is_dir($storagePath . 'uploads')) {
+                mkdir($storagePath . 'uploads');
+            }
+
+            if (!is_dir($publicPath . 'uploads')) {
+                $result = $this->executeCommand(
+                    "ln -s " . $storagePath . 'uploads/ ' .
+                        $publicPath . 'uploads'
+                );
+
+                if ($result) {
+                    echo "\033[32m Uploads folder was created successfully" .
+                        PHP_EOL;
+                }
+            } else {
+                echo "Uploads folder already exists" . PHP_EOL;
+            }
+        } catch (\Exception $e) {
+            echo "\033[31m $e" . PHP_EOL;
+        }
     }
 
     /**
