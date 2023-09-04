@@ -1,16 +1,21 @@
-<?php 
+<?php
 
 use PHPUnit\Framework\TestCase;
-
 use SigmaPHP\Core\Models\BaseModel;
+
+require 'TestModel.php';
 
 /**
  * Base Model Test
- * 
- * ? Please note : for this test unit we will need a real 
- * ? database connection with empty test database to run our tests.
- * ? I know this's not the best idea , but i personally believe it's
- * ? more reliable.
+ *
+ * Please note : for this test unit we will need a real
+ * database connection with empty test database to run our tests.
+ * I know this's not the best idea , but i personally believe it's
+ * more reliable.
+ *
+ * Remember to copy database.config.php to config/database.php
+ * before running this test unit , and of course you will need
+ * to open that file to add your database credentials.
  */
 class BaseModelTest extends TestCase
 {
@@ -20,48 +25,73 @@ class BaseModelTest extends TestCase
     private $dbConfigs;
 
     /**
+     * @var Model $model
+     */
+    private $model;
+
+    /**
      * BaseModelTest SetUp
      *
      * @return void
      */
     public function setUp(): void
     {
-        // add your database configs
+        // add your database configs to phpunit.xml
+        // and to database.config.php for the SigmaPHP-DB
+        // package to work properly
         $this->dbConfigs = [
-            'db_host' => 'localhost',
-            'db_name' => 'db_test',
-            'db_user' => 'root',
-            'db_pass' => '12345678'
+            'host' => $GLOBALS['DB_HOST'],
+            'name' => $GLOBALS['DB_NAME'],
+            'user' => $GLOBALS['DB_USER'],
+            'pass' => $GLOBALS['DB_PASS'],
+            'port' => $GLOBALS['DB_PORT'],
         ];
+
+        // create test table
+        $this->createTestTable('test_models');
+
+        // create new test model instance
+        $this->model = new TestModel();
     }
-    
+
+    /**
+     * DbTestCase TearDown
+     *
+     * @return void
+     */
+    public function tearDown(): void
+    {
+        $this->dropTestTable('test_models');
+    }
+
     /**
      * Connect to database.
-     * 
+     *
      * @return \PDO
      */
     private function connectToDatabase()
     {
         return new \PDO(
-            "mysql:host={$this->dbConfigs['db_host']};
-            dbname={$this->dbConfigs['db_name']}",
-            $this->dbConfigs['db_user'],
-            $this->dbConfigs['db_pass']
+            "mysql:host={$this->dbConfigs['host']};
+            dbname={$this->dbConfigs['name']}",
+            $this->dbConfigs['user'],
+            $this->dbConfigs['pass']
         );
     }
 
     /**
      * Create test table.
      *
+     * @param string $name
      * @return void
      */
-    private function createTestTable()
+    private function createTestTable($name = 'test')
     {
         $testTable = $this->connectToDatabase()->prepare("
-            CREATE TABLE IF NOT EXISTS base_models (
+            CREATE TABLE IF NOT EXISTS {$name} (
                 id INT(11) AUTO_INCREMENT PRIMARY KEY,
-                name VARCHAR(25) NOT NULL,
-                email VARCHAR(50) NOT NULL
+                name VARCHAR(25),
+                email VARCHAR(50)
             );
         ");
 
@@ -71,138 +101,37 @@ class BaseModelTest extends TestCase
     /**
      * Drop test table.
      *
+     * @param string $name
      * @return void
      */
-    private function dropTestTable()
+    private function dropTestTable($name = 'test')
     {
         $testTable = $this->connectToDatabase()->prepare("
-            Drop TABLE IF EXISTS base_models;
+            Drop TABLE IF EXISTS {$name};
         ");
 
         $testTable->execute();
     }
 
     /**
-     * Test throws exception if no database configs was provided.
+     * Insert dummy data into test table.
      *
-     * @runInSeparateProcess
      * @return void
      */
-    public function testThrowsExceptionIfNoDatabaseConfigsWasProvided()
+    private function populateTestTable()
     {
-        $this->dropTestTable();
-        $this->expectException(\Exception::class);
-        $baseModel = new BaseModel();
-    }
-    
-    /**
-     * Test throws exception if no database host was provided.
-     *
-     * @runInSeparateProcess
-     * @return void
-     */
-    public function testThrowsExceptionIfNoDatabaseHostWasProvided()
-    {
-        unset($this->dbConfigs['db_host']);
-        $this->expectException(\Exception::class);
-        $baseModel = new BaseModel($this->dbConfigs);
-    }
+        $addTestData = $this->connectToDatabase()->prepare("
+            INSERT INTO test_models
+                (name, email)
+            VALUES
+                ('test1', 'test1@test.local'),
+                ('foo2', 'test2@test.local'),
+                ('test3', 'test3@test.local'),
+                ('foo4', 'test4@test.local'),
+                ('test5', 'test5@test.local');
+        ");
 
-    /**
-     * Test throws exception if no database name was provided.
-     *
-     * @runInSeparateProcess
-     * @return void
-     */
-    public function testThrowsExceptionIfNoDatabaseNameWasProvided()
-    {
-        unset($this->dbConfigs['db_name']);
-        $this->expectException(\Exception::class);
-        $baseModel = new BaseModel($this->dbConfigs);
-    }
-    
-    /**
-     * Test throws exception if no database user was provided.
-     *
-     * @runInSeparateProcess
-     * @return void
-     */
-    public function testThrowsExceptionIfNoDatabaseUserWasProvided()
-    {
-        unset($this->dbConfigs['db_user']);
-        $this->expectException(\Exception::class);
-        $baseModel = new BaseModel($this->dbConfigs);
-    }
-
-    /**
-     * Test throws exception if no database pass was provided.
-     *
-     * @runInSeparateProcess
-     * @return void
-     */
-    public function testThrowsExceptionIfNoDatabasePassWasProvided()
-    {
-        unset($this->dbConfigs['db_pass']);
-        $this->expectException(\Exception::class);
-        $baseModel = new BaseModel($this->dbConfigs);
-    }
-
-    /**
-     * Test throws exception if table does not exist.
-     *
-     * @runInSeparateProcess
-     * @return void
-     */
-    public function testThrowsExceptionIfTableWasDoesNotExist()
-    {
-        $this->expectException(\Exception::class);
-        $baseModel = new BaseModel($this->dbConfigs);
-    }
-
-    /**
-     * Test auto generated table name is correct.
-     *
-     * @runInSeparateProcess
-     * @return void
-     */
-    public function testAutoGeneratedTableNameIsCorrect()
-    {
-        $testBaseModel = new class($this->dbConfigs) extends BaseModel {
-            public function __construct() {}
-            public function getTableName($class) {
-                return $this->createTableName($class);
-            }
-        };
-
-        $this->assertEquals('base_models',
-            $testBaseModel->getTableName('\BaseModel'));
-    }
-
-    /**
-     * Test auto extracted fields are correct.
-     *
-     * @runInSeparateProcess
-     * @return void
-     */
-    public function testAutoExtractedFieldsAreCorrect()
-    {
-        $this->createTestTable();
-
-        $testBaseModel = new class($this->dbConfigs) extends BaseModel {
-            public function __construct($dbConfigs) {
-                $this->table = 'base_models';
-                $this->db_name = $dbConfigs['db_name'];
-                parent::__construct($dbConfigs);
-            }
-            public function getTableFields() {
-                return $this->fetchTableFields($this->db_name);
-            }
-        };
-
-        $this->assertEquals(['name', 'email'],
-            $testBaseModel->getTableFields());
-
-        $this->dropTestTable();
+        $addTestData->execute();
     }
 
     /**
@@ -213,74 +142,25 @@ class BaseModelTest extends TestCase
      */
     public function testInsertData()
     {
-        $this->createTestTable();
+        // first : using the create method
+        $testCreateModel = $this->model->create([
+            'name' => 'test1',
+            'email' => 'test1@test.com',
+        ]);
 
-        $testBaseModel = new class($this->dbConfigs) extends BaseModel {
-            public function __construct($dbConfigs) {
-                $this->table = 'base_models';
-                parent::__construct($dbConfigs);
-            }
-        };
-
-        $testBaseModel->create(['name', 'email'], ['test', 'test@test']);
+        // second : using the save method
+        $testSaveModel = new TestModel();
+        $testSaveModel->name = 'test2';
+        $testSaveModel->email = 'test1@test.com';
+        $testSaveModel->save();
 
         $testTable = $this->connectToDatabase()->prepare("
-            SELECT * FROM base_models;
+            SELECT * FROM test_models;
         ");
 
         $testTable->execute();
 
-        $this->assertEquals(1, count($testTable->fetchAll()));
-
-        $this->dropTestTable();
-    }
-
-    /**
-     * Test throws exception if no fields were provided to be inserted.
-     *
-     * @runInSeparateProcess
-     * @return void
-     */
-    public function testThrowsExceptionIfNoFieldsWereProvidedToBeInserted()
-    {
-        $this->expectException(\Exception::class);
-
-        $this->createTestTable();
-
-        $testBaseModel = new class($this->dbConfigs) extends BaseModel {
-            public function __construct($dbConfigs) {
-                $this->table = 'base_models';
-                parent::__construct($dbConfigs);
-            }
-        };
-
-        $this->dropTestTable();
-
-        $testBaseModel->create(null, ['test', 'test@test']);
-    }
-
-    /**
-     * Test throws exception if insert fields and values are mismatched.
-     *
-     * @runInSeparateProcess
-     * @return void
-     */
-    public function testThrowsExceptionIfInsertFieldsAndValuesAreMismatched()
-    {
-        $this->expectException(\Exception::class);
-        
-        $this->createTestTable();
-
-        $testBaseModel = new class($this->dbConfigs) extends BaseModel {
-            public function __construct($dbConfigs) {
-                $this->table = 'base_models';
-                parent::__construct($dbConfigs);
-            }
-        };
-
-        $this->dropTestTable();
-
-        $testBaseModel->create(['name'], ['test', 'test@test']);
+        $this->assertEquals(2, count($testTable->fetchAll()));
     }
 
     /**
@@ -291,100 +171,19 @@ class BaseModelTest extends TestCase
      */
     public function testUpdateData()
     {
-        $this->createTestTable();
+        $this->populateTestTable();
 
-        $testBaseModel = new class($this->dbConfigs) extends BaseModel {
-            public function __construct($dbConfigs) {
-                $this->table = 'base_models';
-                parent::__construct($dbConfigs);
-            }
-        };
-
-        $testBaseModel->create(['name', 'email'], ['bad', 'test@test']);
-
-        $testBaseModel->update(1, ['name'], ['good']);
+        $testUpdateModel = $this->model->find(1);
+        $testUpdateModel->name = 'updated_name';
+        $testUpdateModel->save();
 
         $testTable = $this->connectToDatabase()->prepare("
-            SELECT * FROM base_models;
+            SELECT * FROM test_models;
         ");
 
         $testTable->execute();
 
-        $this->assertEquals('good', $testTable->fetchAll()[0]['name']);
-
-        $this->dropTestTable();
-    }
-
-    /**
-     * Test throws exception if no id was provided to be updated.
-     *
-     * @runInSeparateProcess
-     * @return void
-     */
-    public function testThrowsExceptionIfNoIdWasProvidedToBeUpdated()
-    {
-        $this->expectException(\Exception::class);
-
-        $this->createTestTable();
-
-        $testBaseModel = new class($this->dbConfigs) extends BaseModel {
-            public function __construct($dbConfigs) {
-                $this->table = 'base_models';
-                parent::__construct($dbConfigs);
-            }
-        };
-
-        $this->dropTestTable();
-
-        $testBaseModel->update(null, ['name'], ['test']);
-    }
-
-    /**
-     * Test throws exception if no fields were provided to be updated.
-     *
-     * @runInSeparateProcess
-     * @return void
-     */
-    public function testThrowsExceptionIfNoFieldsWereProvidedToBeUpdated()
-    {
-        $this->expectException(\Exception::class);
-
-        $this->createTestTable();
-
-        $testBaseModel = new class($this->dbConfigs) extends BaseModel {
-            public function __construct($dbConfigs) {
-                $this->table = 'base_models';
-                parent::__construct($dbConfigs);
-            }
-        };
-
-        $this->dropTestTable();
-
-        $testBaseModel->update(1, null, ['test', 'test@test']);
-    }
-
-    /**
-     * Test throws exception if update fields and values are mismatched.
-     *
-     * @runInSeparateProcess
-     * @return void
-     */
-    public function testThrowsExceptionIfUpdateFieldsAndValuesAreMismatched()
-    {
-        $this->expectException(\Exception::class);
-        
-        $this->createTestTable();
-
-        $testBaseModel = new class($this->dbConfigs) extends BaseModel {
-            public function __construct($dbConfigs) {
-                $this->table = 'base_models';
-                parent::__construct($dbConfigs);
-            }
-        };
-
-        $this->dropTestTable();
-
-        $testBaseModel->update(1, ['name'], ['test', 'test@test']);
+        $this->assertEquals('updated_name', $testTable->fetch()['name']);
     }
 
     /**
@@ -395,52 +194,18 @@ class BaseModelTest extends TestCase
      */
     public function testDeleteData()
     {
-        $this->createTestTable();
+        $this->populateTestTable();
 
-        $testBaseModel = new class($this->dbConfigs) extends BaseModel {
-            public function __construct($dbConfigs) {
-                $this->table = 'base_models';
-                parent::__construct($dbConfigs);
-            }
-        };
-
-        $testBaseModel->create(['name', 'email'], ['test', 'test@test']);
-
-        $testBaseModel->delete(1);
+        $testDeleteModel = $this->model->find(1);
+        $testDeleteModel->delete();
 
         $testTable = $this->connectToDatabase()->prepare("
-            SELECT * FROM base_models;
+            SELECT * FROM test_models;
         ");
 
         $testTable->execute();
 
-        $this->assertEquals(0, count($testTable->fetchAll()));
-
-        $this->dropTestTable();
-    }
-
-    /**
-     * Test throws exception if no id was provided to be deleted.
-     *
-     * @runInSeparateProcess
-     * @return void
-     */
-    public function testThrowsExceptionIfNoIdWasProvidedToBeDeleted()
-    {
-        $this->expectException(\Exception::class);
-
-        $this->createTestTable();
-
-        $testBaseModel = new class($this->dbConfigs) extends BaseModel {
-            public function __construct($dbConfigs) {
-                $this->table = 'base_models';
-                parent::__construct($dbConfigs);
-            }
-        };
-
-        $this->dropTestTable();
-
-        $testBaseModel->delete(null);
+        $this->assertEquals(4, count($testTable->fetchAll()));
     }
 
     /**
@@ -451,21 +216,11 @@ class BaseModelTest extends TestCase
      */
     public function testFetchAllData()
     {
-        $this->createTestTable();
+        $this->populateTestTable();
 
-        $testBaseModel = new class($this->dbConfigs) extends BaseModel {
-            public function __construct($dbConfigs) {
-                $this->table = 'base_models';
-                parent::__construct($dbConfigs);
-            }
-        };
+        $testFetchAllModels = $this->model->all();
 
-        $testBaseModel->create(['name', 'email'], ['test1', 'test@test']);
-        $testBaseModel->create(['name', 'email'], ['test2', 'test@test']);
-
-        $this->assertEquals(2, count($testBaseModel->all()));
-
-        $this->dropTestTable();
+        $this->assertEquals(5, count($testFetchAllModels));
     }
 
     /**
@@ -476,21 +231,11 @@ class BaseModelTest extends TestCase
      */
     public function testFindDataById()
     {
-        $this->createTestTable();
+        $this->populateTestTable();
 
-        $testBaseModel = new class($this->dbConfigs) extends BaseModel {
-            public function __construct($dbConfigs) {
-                $this->table = 'base_models';
-                parent::__construct($dbConfigs);
-            }
-        };
+        $testFetchModel = $this->model->find(3);
 
-        $testBaseModel->create(['name', 'email'], ['test1', 'test@test']);
-        $testBaseModel->create(['name', 'email'], ['test2', 'test@test']);
-
-        $this->assertEquals('test1', $testBaseModel->find(1)['name']);
-
-        $this->dropTestTable();
+        $this->assertEquals('test3', $testFetchModel->name);
     }
 
     /**
@@ -501,22 +246,11 @@ class BaseModelTest extends TestCase
      */
     public function testFindDataByField()
     {
-        $this->createTestTable();
+        $this->populateTestTable();
 
-        $testBaseModel = new class($this->dbConfigs) extends BaseModel {
-            public function __construct($dbConfigs) {
-                $this->table = 'base_models';
-                parent::__construct($dbConfigs);
-            }
-        };
+        $testFetchModel = $this->model->findBy('email', 'test3@test.local');
 
-        $testBaseModel->create(['name', 'email'], ['test1', 'test@test']);
-        $testBaseModel->create(['name', 'email'], ['test2', 'test@test']);
-
-        $this->assertEquals('test2', $testBaseModel
-            ->findBy('name', 'test2')['name']);
-
-        $this->dropTestTable();
+        $this->assertEquals('test3', $testFetchModel->name);
     }
 
     /**
@@ -527,21 +261,12 @@ class BaseModelTest extends TestCase
      */
     public function testQueryData()
     {
-        $this->createTestTable();
+        $this->populateTestTable();
 
-        $testBaseModel = new class($this->dbConfigs) extends BaseModel {
-            public function __construct($dbConfigs) {
-                $this->table = 'base_models';
-                parent::__construct($dbConfigs);
-            }
-        };
+        $testModelsCount = $this->model
+            ->where('name', 'like', 'foo%')
+            ->count();
 
-        $testBaseModel->create(['name', 'email'], ['test1', 'test@test']);
-        $testBaseModel->create(['name', 'email'], ['test2', 'test@test']);
-
-        $this->assertEquals('test2', $testBaseModel
-            ->query()->where('name', 'test2')->fetch()['name']);
-
-        $this->dropTestTable();
+        $this->assertEquals(2, $testModelsCount);
     }
 }

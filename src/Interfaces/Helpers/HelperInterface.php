@@ -11,9 +11,18 @@ interface HelperInterface
      * Get the value of an environment variable.
      * 
      * @param string $key
+     * @param string $default
      * @return string|null
      */
-    public function env($key);
+    public function env($key, $default = null);
+
+    /**
+     * Get the value of config option.
+     * 
+     * @param string $optionName
+     * @return mixed
+     */
+    public function config($optionName);
 
     /**
      * Generate URL from route or path.

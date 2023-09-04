@@ -37,6 +37,56 @@ class HelperTest extends TestCase
     }
 
     /**
+     * Test get config value.
+     *
+     * @return void
+     */
+    public function testGetConfigValue()
+    {
+        // create dummy config file
+        if (!is_dir('config')) {
+            mkdir('config');
+        }
+
+        if (!file_exists('config/app.php')) {
+            file_put_contents(
+                'config/app.php', 
+                '<?php return ["api" => ["version" => "all_good"]];'
+            );
+        }
+
+        $this->assertEquals(
+            'all_good',
+            $this->helper->config('app.api.version')
+        );
+
+        // // remove the dummy config file
+        // if (file_exists('config/app.php')) {
+        //     unlink('config/app.php');
+        // }
+
+        // if (is_dir('config')) {
+        //     rmdir('config');
+        // }
+
+        // if (file_exists('app.php')) {
+        //     unlink('app.php');
+        // }
+    }
+
+    /**
+     * Test env method will return the default value if the
+     * if the key does'nt exists.
+     *
+     * @return void
+     */
+    public function testEnvMethodWillReturnTheDefaultValue()
+    {
+        $this->assertEquals('default_value', 
+            $this->helper->env('unknown', 'default_value'));
+    }
+
+    /**
      * Test generate URL from path using the provided app url.
      *
      * @return void

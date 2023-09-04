@@ -1,0 +1,16 @@
+<?php
+        
+namespace SigmaPHP\Controllers;
+
+use SigmaPHP\Core\Controllers\BaseController;
+
+class $controllerName extends BaseController
+{
+    /**
+        * $controllerName Constructor
+        */
+    public function __construct()
+    {
+        parent::__construct();
+    }
+}

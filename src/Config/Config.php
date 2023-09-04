@@ -31,7 +31,13 @@ class Config implements ConfigInterface
      */
     public function getFullPath($dis)
     {
-        return dirname(__DIR__, 5) . '/' . $dis;
+        $basePath = dirname(
+            (new \ReflectionClass(
+                \Composer\Autoload\ClassLoader::class
+            ))->getFileName()
+        , 3);
+
+        return $basePath . '/' . $dis;
     }
 
     /**
@@ -42,7 +48,7 @@ class Config implements ConfigInterface
     public function load()
     {
         $path = $this->getFullPath('config');
-
+        var_dump($path);
         if ($handle = opendir($path)) {
             while (($file = readdir($handle))) {
                 if (in_array($file, ['.', '..'])) continue;

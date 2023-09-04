@@ -3,9 +3,9 @@
 namespace SigmaPHP\Core\Interfaces\App;
 
 /**
- * Kernal Interface
+ * Kernel Interface
  */
-interface KernalInterface
+interface KernelInterface
 {
     /**
      * Load configs, routes then run the app.

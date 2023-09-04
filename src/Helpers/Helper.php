@@ -3,6 +3,7 @@
 namespace SigmaPHP\Core\Helpers;
 
 use SigmaPHP\Core\Interfaces\Helpers\HelperInterface;
+use SigmaPHP\Core\Config\Config;
 
 /**
  * Helper Class
@@ -10,14 +11,65 @@ use SigmaPHP\Core\Interfaces\Helpers\HelperInterface;
 class Helper implements HelperInterface
 {
     /**
+     * @var SigmaPHP\Core\Config\Config $config
+     */
+    private $config;
+
+    /**
+     * Helper Constructor
+     */
+    public function __construct()
+    {
+        $this->config = new Config();
+        $this->config->load();
+    }
+
+    /**
      * Get the value of an environment variable.
      * 
      * @param string $key
+     * @param string $default
      * @return string|null
      */
-    final public function env($key)
+    public function env($key, $default = null)
     {
-        return $_ENV[$key] ?? null;
+        return $_ENV[$key] ?? $default;
+    }
+
+    /**
+     * Get the value of config option.
+     * 
+     * @param string $optionName
+     * @return mixed
+     */
+    public function config($optionName)
+    {
+        $values = null;
+        $optionNameParts = explode('.', $optionName);
+
+        if (!count($optionNameParts)) {
+            return $values;
+        }
+
+        $configOptions = $this->config->get($optionNameParts[0]);
+
+        if (!is_array($configOptions)) {
+            return $configOptions;
+        }
+
+        unset($optionNameParts[0]);
+
+        // loop through the remaining parts of the config's name
+        // so for example if the required config is 'app.api.version'
+        // then this loop will check for $values['api'] then in the
+        // next loop $values['version']
+        
+        $values = $configOptions;
+        foreach ($optionNameParts as $part) {
+            $values = $values[$part];
+        }
+ 
+        return $values;
     }
 
     /**

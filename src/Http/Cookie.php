@@ -2,6 +2,7 @@
 
 namespace SigmaPHP\Core\Http;
 
+use SigmaPHP\Core\Exceptions\InvalidArgumentException;
 use SigmaPHP\Core\Interfaces\Http\CookieInterface;
 
 /**
@@ -26,7 +27,11 @@ class Cookie implements CookieInterface
     ) {
         if (empty($name) || empty($value)) {
             $property = empty($name)? 'name': 'value';
-            throw new \Exception("Error : Create new cookie , {$property} is empty");
+            
+            throw new InvalidArgumentException(
+                "Error : Create new cookie , {$property} is empty"
+            );
+            
             return false;
         }
 

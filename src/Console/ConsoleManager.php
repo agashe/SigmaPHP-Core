@@ -59,16 +59,28 @@ class ConsoleManager
                 $this->createSeeder($argument);
                 break;
 
+            case 'drop':
+                $this->drop();
+                break;
+
+            case 'fresh':
+                $this->fresh();
+                break;
+
             case 'migrate':
-                $this->migrate();
+                $this->migrate($argument);
                 break;
 
             case 'rollback':
-                $this->rollback();
+                $this->rollback($argument);
                 break;
 
             case 'seed':
-                $this->seed();
+                $this->seed($argument);
+                break;
+            
+            case 'truncate':
+                $this->truncate();
                 break;
 
             case 'create:controller':
@@ -160,7 +172,8 @@ class ConsoleManager
             create:migration {migration name}
                 Create migration file.
             create:model {model name}
-                Create model.
+                Create model. This command will generate
+                in addition a new migration file automatically.
             create:secret-key
                 Generate app secret key , and save it into .env file.
             create:seeder {seeder name}
@@ -169,18 +182,26 @@ class ConsoleManager
                 Create uploads folder.
             create:view {view name}
                 Create view.
+            drop
+                Drop all tables in the database.
+            fresh
+                Drop all tables in the database. then will run
+                all migrations and seed the database.
             help
                 Print all available commands (this menu).
-            migrate
-                Run migration files.
-            rollback
-                Rollback latest migration.
+            migrate {migration name}
+                Run migration/s files.
+            rollback {date}
+                Rollback latest migration. or choose specific date
+                to rollback to.
             run
                 Run the app with PHP built in server on port 8888.
-            seed
-                Run seeders.
+            seed {seeder name}
+                Run seeder/s.
             test
                 Run unit tests.
+            truncate
+                Delete the data in all tables.
             version
                 Print the current version of SigmaPHP Framework.
 
@@ -253,7 +274,7 @@ class ConsoleManager
     private function dbConsoleCommand($command)
     {
         return 
-            "./vendor/bin/phinx {$command} --configuration config/database.php";
+            "./vendor/bin/sigma-db {$command} --config=config/database.php";
     }
     
     /**
@@ -265,7 +286,7 @@ class ConsoleManager
     private function createMigrationFile($fileName)
     {
         $this->executeCommand(
-            $this->dbConsoleCommand("create {$fileName}")
+            $this->dbConsoleCommand("create:migration {$fileName}")
         );
     }
 
@@ -278,38 +299,73 @@ class ConsoleManager
     private function createSeeder($seederName)
     {
         $this->executeCommand(
-            $this->dbConsoleCommand("seed:create {$seederName}")
+            $this->dbConsoleCommand("create:seeder {$seederName}")
         );
     }
 
     /**
-     * Migrate the database.
+     * Drop all tables in the database.
      * 
      * @return void
      */
-    private function migrate()
+    private function drop()
     {
-        $this->executeCommand($this->dbConsoleCommand("migrate"));
+        $this->executeCommand($this->dbConsoleCommand("drop"));
+    }
+
+    /**
+     * Drop all tables in the database then migrate and seed.
+     * 
+     * @return void
+     */
+    private function fresh()
+    {
+        $this->executeCommand($this->dbConsoleCommand("fresh"));
+    }
+    
+    /**
+     * Migrate the database.
+     * 
+     * @param string $migrationName
+     * @return void
+     */
+    private function migrate($migrationName = '')
+    {
+        $this->executeCommand(
+            $this->dbConsoleCommand("migrate $migrationName")
+        );
     }
 
     /**
      * Rollback the database.
      * 
+     * @param string $date
      * @return void
      */
-    private function rollback()
+    private function rollback($date = '')
     {
-        $this->executeCommand($this->dbConsoleCommand("rollback"));
+        $this->executeCommand($this->dbConsoleCommand("rollback $date"));
     }
 
     /**
      * Seed the database.
      * 
+     * @param string $seederName
      * @return void
      */
-    private function seed()
+    private function seed($seederName = '')
     {
-        $this->executeCommand($this->dbConsoleCommand("seed:run"));
+        $this->executeCommand($this->dbConsoleCommand("seed:run $seederName"));
+    }
+
+    /**
+     * Truncate the database.
+     * 
+     * @return void
+     */
+    private function truncate()
+    {
+        $this->executeCommand($this->dbConsoleCommand("truncate"));
     }
 
     /**
@@ -340,26 +396,11 @@ class ConsoleManager
     {
         $path = $this->config->getFullPath('src/Controllers/');
 
-        $content = <<< MODEL_CONTENT
-        <?php
-        
-        namespace SigmaPHP\Controllers;
-
-        use SigmaPHP\Core\Controllers\BaseController;
-
-        class $controllerName extends BaseController
-        {
-            /**
-             * $controllerName Constructor
-             */
-            public function __construct()
-            {
-                parent::__construct();
-            }
-        }
-        MODEL_CONTENT;
-
-        $this->createFile($path, $controllerName . '.php', $content);
+        $this->createFile($path, $controllerName . '.php', str_replace(
+            '$controllerName',
+            $controllerName,
+            file_get_contents(__DIR__ . '/templates/controller.php.dist')
+        ));
     }
 
     /**
@@ -370,22 +411,9 @@ class ConsoleManager
      */
     private function createModel($modelName)
     {
-        $path = $this->config->getFullPath('src/Models/');
-
-        $content = <<< MODEL_CONTENT
-        <?php
-        
-        namespace SigmaPHP\Models;
-
-        use SigmaPHP\Core\Models\BaseModel;
-
-        class $modelName extends BaseModel
-        {
-            
-        }
-        MODEL_CONTENT;
-
-        $this->createFile($path, $modelName . '.php', $content);
+        $this->executeCommand(
+            $this->dbConsoleCommand("create:model $modelName")
+        );
     }
 
     /**

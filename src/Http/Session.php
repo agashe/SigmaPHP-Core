@@ -2,6 +2,7 @@
 
 namespace SigmaPHP\Core\Http;
 
+use SigmaPHP\Core\Exceptions\InvalidArgumentException;
 use SigmaPHP\Core\Interfaces\Http\SessionInterface;
 
 /**
@@ -20,7 +21,11 @@ class Session implements SessionInterface
     {
         if (empty($name) || empty($value)) {
             $property = empty($name)? 'name': 'value';
-            throw new \Exception("Error : Create new Session , {$property} is empty");
+            
+            throw new InvalidArgumentException(
+                "Error : Create new Session , {$property} is empty"
+            );
+            
             return false;
         }
 
