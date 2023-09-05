@@ -48,7 +48,7 @@ class Config implements ConfigInterface
     public function load()
     {
         $path = $this->getFullPath('config');
-        var_dump($path);
+
         if ($handle = opendir($path)) {
             while (($file = readdir($handle))) {
                 if (in_array($file, ['.', '..'])) continue;

@@ -11,20 +11,6 @@ use SigmaPHP\Core\Config\Config;
 class Helper implements HelperInterface
 {
     /**
-     * @var SigmaPHP\Core\Config\Config $config
-     */
-    private $config;
-
-    /**
-     * Helper Constructor
-     */
-    public function __construct()
-    {
-        $this->config = new Config();
-        $this->config->load();
-    }
-
-    /**
      * Get the value of an environment variable.
      * 
      * @param string $key
@@ -51,7 +37,10 @@ class Helper implements HelperInterface
             return $values;
         }
 
-        $configOptions = $this->config->get($optionNameParts[0]);
+        $config = new Config();
+        $config->load();
+
+        $configOptions = $config->get($optionNameParts[0]);
 
         if (!is_array($configOptions)) {
             return $configOptions;

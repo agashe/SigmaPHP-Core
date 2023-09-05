@@ -2,7 +2,6 @@
 
 use PHPUnit\Framework\TestCase;
 
-use SigmaPHP\Core\Config\Config;
 use SigmaPHP\Core\Helpers\Helper;
 
 /**
@@ -38,11 +37,23 @@ class HelperTest extends TestCase
     }
 
     /**
+     * Test env method will return the default value if the
+     * if the key does'nt exists.
+     *
+     * @return void
+     */
+    public function testEnvMethodWillReturnTheDefaultValue()
+    {
+        $this->assertEquals('default_value', 
+            $this->helper->env('unknown', 'default_value'));
+    }
+
+    /**
      * Test get config value.
      *
      * @return void
      */
-    public function testGetConfigValue()
+    public function testGetConfigValue2()
     {
         // create dummy config file
         if (!is_dir('config')) {
@@ -55,9 +66,6 @@ class HelperTest extends TestCase
                 '<?php return ["api" => ["version" => "all_good"]];'
             );
         }
-
-        $configManager = new Config();
-        $configManager->load();
 
         $this->assertEquals(
             'all_good',
@@ -72,22 +80,6 @@ class HelperTest extends TestCase
         if (is_dir('config')) {
             rmdir('config');
         }
-
-        if (file_exists('app.php')) {
-            unlink('app.php');
-        }
-    }
-
-    /**
-     * Test env method will return the default value if the
-     * if the key does'nt exists.
-     *
-     * @return void
-     */
-    public function testEnvMethodWillReturnTheDefaultValue()
-    {
-        $this->assertEquals('default_value', 
-            $this->helper->env('unknown', 'default_value'));
     }
 
     /**

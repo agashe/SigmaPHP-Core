@@ -1,7 +1,6 @@
 <?php
 
 use PHPUnit\Framework\TestCase;
-use SigmaPHP\Core\Models\BaseModel;
 
 require 'TestModel.php';
 
@@ -12,10 +11,6 @@ require 'TestModel.php';
  * database connection with empty test database to run our tests.
  * I know this's not the best idea , but i personally believe it's
  * more reliable.
- *
- * Remember to copy database.config.php to config/database.php
- * before running this test unit , and of course you will need
- * to open that file to add your database credentials.
  */
 class BaseModelTest extends TestCase
 {
@@ -50,6 +45,34 @@ class BaseModelTest extends TestCase
         // create test table
         $this->createTestTable('test_models');
 
+        // copy testing database config file
+        if (!is_dir('config')) {
+            mkdir('config');
+        } 
+
+        if (!file_exists('config/database.php')) {
+            file_put_contents(
+                'config/database.php', 
+                <<<CONFIG
+                <?php
+
+                return [
+                    'path_to_migrations'  => '/database/migrations',
+                    'path_to_seeders'     => '/database/seeders',
+                    'path_to_models'      => '/src/Models',
+                    'logs_table_name'     => 'db_logs',
+                    'database_connection' => [
+                        'host' => '{$GLOBALS['DB_HOST']}',
+                        'name' => '{$GLOBALS['DB_NAME']}',
+                        'user' => '{$GLOBALS['DB_USER']}',
+                        'pass' => '{$GLOBALS['DB_PASS']}',
+                        'port' => '{$GLOBALS['DB_PORT']}',
+                    ]
+                ];
+                CONFIG
+            );
+        }
+
         // create new test model instance
         $this->model = new TestModel();
     }
@@ -61,6 +84,15 @@ class BaseModelTest extends TestCase
      */
     public function tearDown(): void
     {
+        // remove the testing config file
+        if (file_exists('config/database.php')) {
+            unlink('config/database.php');
+        }
+
+        if (is_dir('config')) {
+            rmdir('config');
+        }
+
         $this->dropTestTable('test_models');
     }
 
