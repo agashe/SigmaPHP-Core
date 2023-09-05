@@ -2,6 +2,7 @@
 
 use PHPUnit\Framework\TestCase;
 
+use SigmaPHP\Core\Config\Config;
 use SigmaPHP\Core\Helpers\Helper;
 
 /**
@@ -55,23 +56,26 @@ class HelperTest extends TestCase
             );
         }
 
+        $configManager = new Config();
+        $configManager->load();
+
         $this->assertEquals(
             'all_good',
             $this->helper->config('app.api.version')
         );
 
-        // // remove the dummy config file
-        // if (file_exists('config/app.php')) {
-        //     unlink('config/app.php');
-        // }
+        // remove the dummy config file
+        if (file_exists('config/app.php')) {
+            unlink('config/app.php');
+        }
 
-        // if (is_dir('config')) {
-        //     rmdir('config');
-        // }
+        if (is_dir('config')) {
+            rmdir('config');
+        }
 
-        // if (file_exists('app.php')) {
-        //     unlink('app.php');
-        // }
+        if (file_exists('app.php')) {
+            unlink('app.php');
+        }
     }
 
     /**
