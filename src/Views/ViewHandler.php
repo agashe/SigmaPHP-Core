@@ -22,6 +22,10 @@ class ViewHandler implements ViewHandlerInterface
 
     /**
      * ViewHandler Constructor
+     * 
+     * @param string $viewsPath
+     * @param string $cachePath
+     * @param array $sharedVariables
      */
     public function __construct($viewsPath, $cachePath, $sharedVariables = [])
     {
