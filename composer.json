@@ -20,9 +20,9 @@
     ],
     "require": {
         "agashe/sigmaphp-db": "0.1.*",
-        "jenssegers/blade": "1.*",
-        "bramus/router": "~1.6",
+        "agashe/sigmaphp-router": "0.1.*",
         "agashe/passgen": "1.*",
+        "jenssegers/blade": "1.*",
         "vlucas/phpdotenv": "^5.4",
         "larapack/dd": "1.*"
     },

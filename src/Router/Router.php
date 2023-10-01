@@ -3,7 +3,7 @@
 namespace SigmaPHP\Core\Router;
 
 use SigmaPHP\Core\Interfaces\Router\RouterInterface;
-use Bramus\Router\Router as RouterEngine;
+use SigmaPHP\Router\Router as RouterEngine;
 
 /**
  * Router Class
@@ -11,14 +11,19 @@ use Bramus\Router\Router as RouterEngine;
 class Router implements RouterInterface
 {
     /**
-     * @var \Bramus\Router\Router $routerEngine
+     * @var \SigmaPHP\Router\Router $routerEngine
      */
     private $routerEngine;
 
     /**
-     * @var string $routesPath
+     * @var string $routeFilesPath
      */
-    private $routesPath;
+    private $routeFilesPath;
+
+    /**
+     * @var string $basePath
+     */
+    private $basePath;
 
     /**
      * @var array $routes
@@ -27,11 +32,14 @@ class Router implements RouterInterface
     
     /**
      * Router Constructor
+     * 
+     * @param string $routeFilesPath
+     * @param string $basePath
      */
-    public function __construct($routesPath)
+    public function __construct($routeFilesPath, $basePath = '')
     {
-        $this->routerEngine = new RouterEngine();
-        $this->routesPath = $routesPath;
+        $this->routeFilesPath = $routeFilesPath;
+        $this->basePath = $basePath;
         $this->routes = [];
     }
 
@@ -42,10 +50,10 @@ class Router implements RouterInterface
      */
     final public function loadRoutes()
     {
-        if ($handle = opendir($this->routesPath)) {
+        if ($handle = opendir($this->routeFilesPath)) {
             while (($file = readdir($handle))) {
                 if (in_array($file, ['.', '..'])) continue;
-                $this->routes += require $this->routesPath . '/' . $file;
+                $this->routes += require $this->routeFilesPath . '/' . $file;
             }
         
             closedir($handle);
@@ -59,13 +67,7 @@ class Router implements RouterInterface
      */
     final public function start()
     {
-        foreach ($this->routes as $route) {
-            $this->routerEngine
-                ->{$route['method']}(
-                    $route['uri'], 
-                    "{$route['controller']}@{$route['action']}"
-                );
-        }
+        $this->routerEngine = new RouterEngine($this->routes, $this->basePath);
         
         $this->routerEngine->run();
     }
