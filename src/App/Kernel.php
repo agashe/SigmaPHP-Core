@@ -5,7 +5,7 @@ namespace SigmaPHP\Core\App;
 use SigmaPHP\Core\Interfaces\App\KernelInterface;
 use SigmaPHP\Core\Config\Config;
 use SigmaPHP\Core\Router\Router;
-use Dotenv\Dotenv;
+use EnvParser\Parser;
 
 /**
  * Kernel Class
@@ -33,12 +33,12 @@ class Kernel implements KernelInterface
     final public function init()
     {
         // Load environment variables
-        $dotenv = Dotenv::createImmutable(
+        $envParser = new Parser();
+
+        $envParser->parse(
             $this->configManager->getFullPath('')
         );
-
-        $dotenv->load();
-
+        
         // load all config files
         $this->configManager->load();
         
