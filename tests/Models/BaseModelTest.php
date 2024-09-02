@@ -1,8 +1,7 @@
 <?php
 
 use PHPUnit\Framework\TestCase;
-
-require 'TestModel.php';
+use SigmaPHP\Core\Tests\Models\TestModel;
 
 /**
  * Base Model Test
