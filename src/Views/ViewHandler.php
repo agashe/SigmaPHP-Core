@@ -3,7 +3,7 @@
 namespace SigmaPHP\Core\Views;
 
 use SigmaPHP\Core\Interfaces\Views\ViewHandlerInterface;
-use Jenssegers\Blade\Blade;
+use SigmaPHP\Template\Engine;
 
 /**
  * View Handler Class
@@ -11,7 +11,7 @@ use Jenssegers\Blade\Blade;
 class ViewHandler implements ViewHandlerInterface
 {
     /**
-     * @var RyanChandler\Blade\Blade $templateEngine
+     * @var SigmaPHP\Template\Engine $templateEngine
      */
     private $templateEngine;
     
@@ -29,8 +29,11 @@ class ViewHandler implements ViewHandlerInterface
      */
     public function __construct($viewsPath, $cachePath, $sharedVariables = [])
     {
-        $this->templateEngine = new Blade($viewsPath, $cachePath);
-        $this->sharedTemplatesVariables = $sharedVariables;
+        $this->templateEngine = new Engine($viewsPath, $cachePath);
+
+        $this->templateEngine->setSharedVariables(
+            $sharedVariables
+        );
     }
 
     /**
@@ -42,11 +45,10 @@ class ViewHandler implements ViewHandlerInterface
      */
     final public function render($templateName = '', $variables = [])
     {
-        echo $this->templateEngine
-            ->make(
-                $templateName,
-                $this->sharedTemplatesVariables + $variables
-            )
-            ->render();
+        ob_start();
+
+        $this->templateEngine->render($templateName, $variables, true);
+
+        ob_end_flush();
     }
 }

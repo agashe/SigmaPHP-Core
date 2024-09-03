@@ -29,10 +29,7 @@ class ViewHandlerTest extends TestCase
             mkdir('cache');
         }
         
-        $this->viewHandler = new ViewHandler(
-            dirname(__DIR__, 2) . '/templates',
-            dirname(__DIR__, 2) . '/cache'
-        );
+        $this->viewHandler = new ViewHandler('templates', 'cache');
     }
 
     /**
@@ -43,7 +40,7 @@ class ViewHandlerTest extends TestCase
     public function testRender()
     {
         file_put_contents(
-            dirname(__DIR__, 2) . '/templates/index.blade.php', 
+            'templates/index.template.html', 
             '<h1>hello {{ $name }}</h1>'
         );
 
@@ -61,8 +58,8 @@ class ViewHandlerTest extends TestCase
      */
     public function tearDown(): void
     {
-        if (file_exists('templates/index.blade.php')) {
-            unlink(dirname(__DIR__, 2) . '/templates/index.blade.php');
+        if (file_exists('templates/index.template.html')) {
+            unlink('templates/index.template.html');
         }
 
         if (is_dir('templates')) {

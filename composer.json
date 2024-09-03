@@ -28,7 +28,7 @@
         "agashe/sigmaphp-db": "^0.1",
         "agashe/sigmaphp-router": "^0.1",
         "agashe/passgen": "^1",
-        "jenssegers/blade": "^1",
+        "agashe/sigmaphp-template": "^0.1",
         "agashe/env-parser": "^1",
         "agashe/var-dumper": "^0.1"
     },
