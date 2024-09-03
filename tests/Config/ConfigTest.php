@@ -55,6 +55,23 @@ class ConfigTest extends TestCase
         $this->config->set('hello', 'world');
         $this->assertEquals('world', $this->config->get('hello'));
     }
+    
+    /**
+     * Test get config using dot notation.
+     *
+     * @return void
+     */
+    public function testGetConfigUsingDotNotation()
+    {
+        $configs = [
+            'api' => [
+                'ver' => '1.0.0'
+            ]
+        ];
+
+        $this->config->set('app', $configs);
+        $this->assertEquals('1.0.0', $this->config->get('app.api.ver'));
+    }
 
     /**
      * Test get config method return null when the key 
@@ -66,6 +83,18 @@ class ConfigTest extends TestCase
     {
         $this->config->set('hello', 'world');
         $this->assertNull($this->config->get('bye'));
+    }
+
+    /**
+     * Test get config method return null when the key 
+     * is not found using dot notation.
+     *
+     * @return void
+     */
+    public function testGetConfigReturnsNullWhenKeyIsNotFoundUsingDotNotation()
+    {
+        $this->config->set('test', ['something' => []]);
+        $this->assertNull($this->config->get('test.something.not_found'));
     }
 
     /**

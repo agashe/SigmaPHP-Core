@@ -34,7 +34,7 @@ interface ConfigInterface
      * Get config value.
      * 
      * @param string $key
-     * @return array|null
+     * @return mixed
      */
     public function get($key);
 

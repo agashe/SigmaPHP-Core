@@ -71,14 +71,20 @@ class Config implements ConfigInterface
     }
 
     /**
-     * Get config value.
+     * Get config value , and support dot notation.
      * 
      * @param string $key
-     * @return array|null
+     * @return mixed
      */
     public function get($key)
     {
-        return $this->configs[$key] ?? null;
+        $value = $this->configs;
+
+        foreach (explode('.', $key) as $option) {
+            $value = $value[$option] ?? null;
+        }
+
+        return $value;
     }
 
     /**

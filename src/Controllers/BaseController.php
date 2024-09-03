@@ -64,12 +64,12 @@ class BaseController implements BaseControllerInterface
         $this->cookies = new Cookie();
         $this->sessions = new Session();
         $this->filesUploader = new FileUpload(
-            $this->config->get('app')['upload_path']
+            $this->config->get('app.upload_path')
         );
 
         $this->views = new ViewHandler(
-            $this->config->get('app')['views_path'],
-            $this->config->get('app')['cache_path']
+            $this->config->get('app.views_path'),
+            $this->config->get('app.cache_path')
         );
     }
 }

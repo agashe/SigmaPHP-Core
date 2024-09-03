@@ -39,7 +39,7 @@ class BaseModel extends Model implements BaseModelInterface
         $this->config = new Config();
         $this->config->load();
 
-        $dbConfigs = $this->config->get('database')['database_connection'];
+        $dbConfigs = $this->config->get('database.database_connection');
 
         // create new DB connection
         $this->connector = new Connector($dbConfigs);
