@@ -44,13 +44,13 @@ class Kernel implements KernelInterface
         
         // set error display
         $this->configManager->setErrorsDisplay(
-            $this->configManager->get('app')['env']
+            $this->configManager->get('app.env')
         );
 
         // load the routes
         $router = new Router(
-            $this->configManager->get('app')['routes_path'],
-            $this->configManager->get('app')['base_path']
+            $this->configManager->get('app.routes_path'),
+            $this->configManager->get('app.base_path')
         );
         
         $router->loadRoutes();
