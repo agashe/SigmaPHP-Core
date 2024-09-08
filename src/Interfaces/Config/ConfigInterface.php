@@ -34,9 +34,10 @@ interface ConfigInterface
      * Get config value.
      * 
      * @param string $key
+     * @param string $default
      * @return mixed
      */
-    public function get($key);
+    public function get($key, $default = '');
 
     /**
      * Set config value.

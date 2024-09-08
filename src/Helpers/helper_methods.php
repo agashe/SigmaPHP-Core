@@ -3,9 +3,9 @@
 require 'vendor/autoload.php';
 
 if (!function_exists('env')) {
-    function env($key) {
+    function env($key, $default = null) {
         $helperClass = new \SigmaPHP\Core\Helpers\Helper();
-        return $helperClass->env($key);
+        return $helperClass->env($key, $default);
     }
 }
 

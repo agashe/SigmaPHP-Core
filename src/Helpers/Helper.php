@@ -26,39 +26,15 @@ class Helper implements HelperInterface
      * Get the value of config option.
      * 
      * @param string $optionName
+     * @param string $default
      * @return mixed
      */
-    public function config($optionName)
+    public function config($optionName, $default = '')
     {
-        $values = null;
-        $optionNameParts = explode('.', $optionName);
-
-        if (!count($optionNameParts)) {
-            return $values;
-        }
-
         $config = new Config();
         $config->load();
-
-        $configOptions = $config->get($optionNameParts[0]);
-
-        if (!is_array($configOptions)) {
-            return $configOptions;
-        }
-
-        unset($optionNameParts[0]);
-
-        // loop through the remaining parts of the config's name
-        // so for example if the required config is 'app.api.version'
-        // then this loop will check for $values['api'] then in the
-        // next loop $values['version']
-        
-        $values = $configOptions;
-        foreach ($optionNameParts as $part) {
-            $values = $values[$part];
-        }
  
-        return $values;
+        return $config->get($optionName, $default);
     }
 
     /**

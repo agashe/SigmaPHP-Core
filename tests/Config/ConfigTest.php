@@ -72,29 +72,39 @@ class ConfigTest extends TestCase
         $this->config->set('app', $configs);
         $this->assertEquals('1.0.0', $this->config->get('app.api.ver'));
     }
+    
+    /**
+     * Test get config will return default value if set.
+     *
+     * @return void
+     */
+    public function testGetConfigWillReturnDefaultValueIfSet()
+    {
+        $this->assertEquals('world', $this->config->get('hello', 'world'));
+    }
 
     /**
-     * Test get config method return null when the key 
+     * Test get config method return empty string when the key 
      * is not found.
      *
      * @return void
      */
-    public function testGetConfigReturnsNullWhenKeyIsNotFound()
+    public function testGetConfigReturnsEmptyStringWhenKeyIsNotFound()
     {
         $this->config->set('hello', 'world');
-        $this->assertNull($this->config->get('bye'));
+        $this->assertEmpty($this->config->get('bye'));
     }
 
     /**
-     * Test get config method return null when the key 
+     * Test get config method return empty string when the key 
      * is not found using dot notation.
      *
      * @return void
      */
-    public function testGetConfigReturnsNullWhenKeyIsNotFoundUsingDotNotation()
+    public function testConfigReturnsEmptyStringIfKeyNotFoundUsingDotNotation()
     {
         $this->config->set('test', ['something' => []]);
-        $this->assertNull($this->config->get('test.something.not_found'));
+        $this->assertEmpty($this->config->get('test.something.not_found'));
     }
 
     /**

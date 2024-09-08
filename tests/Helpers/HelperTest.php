@@ -44,8 +44,10 @@ class HelperTest extends TestCase
      */
     public function testEnvMethodWillReturnTheDefaultValue()
     {
-        $this->assertEquals('default_value', 
-            $this->helper->env('unknown', 'default_value'));
+        $this->assertEquals(
+            'default_value', 
+            $this->helper->env('unknown', 'default_value')
+        );
     }
 
     /**
@@ -53,7 +55,7 @@ class HelperTest extends TestCase
      *
      * @return void
      */
-    public function testGetConfigValue2()
+    public function testGetConfigValue()
     {
         // create dummy config file
         if (!is_dir('config')) {
@@ -63,13 +65,48 @@ class HelperTest extends TestCase
         if (!file_exists('config/app.php')) {
             file_put_contents(
                 'config/app.php', 
-                '<?php return ["api" => ["version" => "all_good"]];'
+                '<?php return ["api" => ["version" => "1.0.0"]];'
             );
         }
 
         $this->assertEquals(
-            'all_good',
+            '1.0.0',
             $this->helper->config('app.api.version')
+        );
+
+        // remove the dummy config file
+        if (file_exists('config/app.php')) {
+            unlink('config/app.php');
+        }
+
+        if (is_dir('config')) {
+            rmdir('config');
+        }
+    }
+
+    /**
+     * Test config method will return the default value if the
+     * if the key does'nt exists.
+     *
+     * @return void
+     */
+    public function testConfigMethodWillReturnTheDefaultValue()
+    {
+        // create dummy config file
+        if (!is_dir('config')) {
+            mkdir('config');
+        }
+
+        if (!file_exists('config/app.php')) {
+            file_put_contents(
+                'config/app.php', 
+                '<?php return ["api" => ["version" => "1.0.0"]];'
+            );
+        }
+
+        $this->assertEquals(
+            'default_value', 
+            $this->helper->config('unknown', 'default_value')
         );
 
         // remove the dummy config file

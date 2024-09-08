@@ -274,7 +274,8 @@ class ConsoleManager
     private function dbConsoleCommand($command)
     {
         return 
-            "./vendor/bin/sigma-db {$command} --config=config/database.php";
+            "./vendor/bin/sigma-db {$command} " .
+            "--config={$this->config->getFullPAth('config/database.php')}";
     }
     
     /**

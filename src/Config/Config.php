@@ -74,9 +74,10 @@ class Config implements ConfigInterface
      * Get config value , and support dot notation.
      * 
      * @param string $key
+     * @param string $default
      * @return mixed
      */
-    public function get($key)
+    public function get($key, $default = '')
     {
         $value = $this->configs;
 
@@ -84,7 +85,7 @@ class Config implements ConfigInterface
             $value = $value[$option] ?? null;
         }
 
-        return $value;
+        return $value ?? $default;
     }
 
     /**
