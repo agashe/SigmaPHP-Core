@@ -14,8 +14,7 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "SigmaPHP\\Core\\Tests\\": "tests/",
-            "SigmaPHP\\Core\\Tests\\Models\\": "tests/Models"
+            "SigmaPHP\\Core\\Tests\\": "tests/"
         }
     },
     "authors": [
