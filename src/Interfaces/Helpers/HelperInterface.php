@@ -12,17 +12,18 @@ interface HelperInterface
      * 
      * @param string $key
      * @param string $default
-     * @return string|null
+     * @return mixed
      */
-    public function env($key, $default = null);
+    public function env($key, $default = '');
 
     /**
      * Get the value of config option.
      * 
      * @param string $optionName
+     * @param string $default
      * @return mixed
      */
-    public function config($optionName);
+    public function config($optionName, $default = '');
 
     /**
      * Generate URL from route or path.
@@ -39,7 +40,7 @@ interface HelperInterface
      * @param string $salt
      * @return string
      */
-    public function encrypt($text, $salt);
+    public function encrypt($text, $salt = '');
 
     /**
      * Decrypt string using.
@@ -48,5 +49,5 @@ interface HelperInterface
      * @param string $salt
      * @return string
      */
-    public function decrypt($text, $salt);
+    public function decrypt($text, $salt = '');
 }

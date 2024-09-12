@@ -36,7 +36,7 @@ class Kernel implements KernelInterface
         $envParser = new Parser();
 
         $envParser->parse(
-            $this->configManager->getFullPath('')
+            $this->configManager->getFullPath('.env')
         );
         
         // load all config files
@@ -47,9 +47,11 @@ class Kernel implements KernelInterface
             $this->configManager->get('app.env')
         );
 
-        // load the routes
+        // load the routes        
         $router = new Router(
-            $this->configManager->get('app.routes_path'),
+            $this->configManager->getFullPath(
+                $this->configManager->get('app.routes_path')
+            ),
             $this->configManager->get('app.base_path')
         );
         

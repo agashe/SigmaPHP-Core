@@ -15,9 +15,9 @@ class Helper implements HelperInterface
      * 
      * @param string $key
      * @param string $default
-     * @return string|null
+     * @return mixed
      */
-    public function env($key, $default = null)
+    public function env($key, $default = '')
     {
         return $_ENV[$key] ?? $default;
     }
@@ -66,14 +66,16 @@ class Helper implements HelperInterface
      * @param string $salt
      * @return string
      */
-    final public function encrypt($text, $salt)
+    final public function encrypt($text, $salt = '')
     {
         return openssl_encrypt(
             $text,
             'aes128',
             $this->env('APP_SECRET_KEY'),
             0,
-            $salt
+            !empty($salt) ? 
+                $salt :
+                substr(hash('sha256', $this->env('APP_SECRET_KEY')), 0, 16)
         );
     }
 
@@ -84,14 +86,16 @@ class Helper implements HelperInterface
      * @param string $salt
      * @return string
      */
-    final public function decrypt($text, $salt)
+    final public function decrypt($text, $salt = '')
     {
         return openssl_decrypt(
             $text,
             'aes128',
             $this->env('APP_SECRET_KEY'),
             0,
-            $salt
+            !empty($salt) ? 
+                $salt :
+                substr(hash('sha256', $this->env('APP_SECRET_KEY')), 0, 16)
         );
     }
 }

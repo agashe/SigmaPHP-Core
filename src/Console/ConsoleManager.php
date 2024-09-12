@@ -3,6 +3,7 @@
 namespace SigmaPHP\Core\Console;
 
 use PassGen\PassGen;
+use EnvParser\Parser;
 use SigmaPHP\Core\Config\Config;
 
 /**
@@ -21,6 +22,13 @@ class ConsoleManager
     public function __construct()
     {
         $this->config = new Config();
+
+        // Load environment variables
+        $envParser = new Parser();
+        
+        $envParser->parse(
+            $this->config->getFullPath('.env')
+        );
     }
 
     /**

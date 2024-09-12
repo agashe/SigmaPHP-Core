@@ -1,18 +1,16 @@
 <?php
 
-require 'vendor/autoload.php';
-
 if (!function_exists('env')) {
-    function env($key, $default = null) {
+    function env($key, $default = '') {
         $helperClass = new \SigmaPHP\Core\Helpers\Helper();
         return $helperClass->env($key, $default);
     }
 }
 
 if (!function_exists('config')) {
-    function config($key) {
+    function config($key, $default = '') {
         $helperClass = new \SigmaPHP\Core\Helpers\Helper();
-        return $helperClass->config($key);
+        return $helperClass->config($key, $default);
     }
 }
 
