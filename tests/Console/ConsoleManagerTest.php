@@ -21,7 +21,23 @@ class ConsoleManagerTest extends TestCase
      */
     public function setUp(): void
     {
+        if (!file_exists('.env')) {
+            file_put_contents('.env', '');
+        }
+
         $this->consoleManager = new ConsoleManager();
+    }
+
+    /**
+     * ConsoleManagerTest TearDown
+     *
+     * @return void
+     */
+    public function tearDown(): void
+    {
+        if (file_exists('.env')) {
+            unlink('.env');
+        }
     }
 
     /**

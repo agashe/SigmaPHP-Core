@@ -253,16 +253,14 @@ class ConsoleManager
         try {
             $envFile = file_get_Contents($this->config->getFullPath('.env'));
             
-            if (strpos($envFile, 'APP_SECRET_KEY') !== FALSE) {
-                $oldKey = substr(
-                    $envFile, 
-                    strpos($envFile, 'APP_SECRET_KEY') + 15, 
-                    32
-                );
-
-                $envFile = str_replace($oldKey, $key, $envFile);
+            if (!empty(env('APP_SECRET_KEY'))) {
+                $envFile = str_replace(env('APP_SECRET_KEY'), $key, $envFile);
             } else {
-                $envFile .= 'APP_SECRET_KEY="' . $key .'"';
+                $envFile = str_replace(
+                    'APP_SECRET_KEY=', 
+                    'APP_SECRET_KEY=' . $key, 
+                    $envFile
+                );
             }
 
             file_put_contents($this->config->getFullPath('.env'), $envFile);
