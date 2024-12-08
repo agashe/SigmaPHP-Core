@@ -24,11 +24,13 @@ class ConsoleManager
         $this->config = new Config();
 
         // Load environment variables
-        $envParser = new Parser();
-        
-        $envParser->parse(
-            $this->config->getFullPath('.env')
-        );
+        if (file_exists($this->config->getFullPath('.env'))) {
+            $envParser = new Parser();
+            
+            $envParser->parse(
+                $this->config->getFullPath('.env')
+            );
+        }
     }
 
     /**
@@ -122,6 +124,44 @@ class ConsoleManager
     }
 
     /**
+     * Print text to terminal and support colors.
+     * 
+     * @param string $message
+     * @param string $type
+     * @return void
+     */
+    private function output($message, $type = '')
+    {
+        // check if terminal supports color
+        if (exec('tput colors') == -1 || 
+            !stream_isatty(STDOUT) || 
+            isset($_SERVER['NO_COLOR'])
+        ) {
+            $type = '';
+        }
+
+        $colors = [
+            'error'   => '31',
+            'success' => '32',
+            'warning' => '33',
+            'info'    => '34',
+        ];
+
+        // check if the message's type is valid
+        if (!empty($type) && !isset($colors[$type])) {
+            throw new \InvalidArgumentException(
+                "The message's type '{$type}' doesn't exists"
+            );
+        }
+
+        if (!empty($type)) {
+            $message = "\033[{$colors[$type]}m" . $message . "\033[0m";
+        }
+
+        print($message . PHP_EOL);
+    }
+    
+    /**
      * Execute the command and print its output.
      *
      * @param string $command
@@ -134,7 +174,7 @@ class ConsoleManager
         exec($command, $output);
 
         foreach ($output as $line) {
-            print($line . PHP_EOL);
+            $this->output($line);
         }
     }
 
@@ -150,7 +190,7 @@ class ConsoleManager
         Type 'php sigma-cli help' command for help.
         NotFound;
 
-        print($message . PHP_EOL);
+        $this->output($message);
     }
 
     /**
@@ -160,7 +200,7 @@ class ConsoleManager
      */
     private function version()
     {
-        print("SigmaPHP framework version 0.1.0" . PHP_EOL);
+        $this->output("SigmaPHP framework version 0.1.0");
     }
     
     /**
@@ -220,7 +260,7 @@ class ConsoleManager
             - php sigma-cli clear:cache
         HELP;
 
-        print($helpContent . PHP_EOL);
+        $this->output($helpContent);
     }
 
     /**
@@ -264,9 +304,9 @@ class ConsoleManager
             }
 
             file_put_contents($this->config->getFullPath('.env'), $envFile);
-            echo "\033[32m App secret key was generated successfully" . PHP_EOL;
+            $this->output('App secret key was generated successfully', 'success');
         } catch (\Exception $e) {
-            echo "\033[31m $e" . PHP_EOL;
+            $this->output($e, 'error');
         }
     }
 
@@ -387,9 +427,9 @@ class ConsoleManager
     {
         try {
             file_put_contents($path . $name, $content);
-            echo "\033[32m {$name} was created successfully" . PHP_EOL;
+            $this->output('{$name} was created successfully', 'success');
         } catch (\Exception $e) {
-            echo "\033[31m $e" . PHP_EOL;
+            $this->output($e, 'error');
         }
     }
 
@@ -458,14 +498,16 @@ class ConsoleManager
                 );
 
                 if ($result) {
-                    echo "\033[32m Uploads folder was created successfully" .
-                        PHP_EOL;
+                    $this->output(
+                        'Uploads folder was created successfully', 
+                        'success'
+                    );
                 }
             } else {
-                echo "Uploads folder already exists" . PHP_EOL;
+                $this->output('Uploads folder already exists', 'info');
             }
         } catch (\Exception $e) {
-            echo "\033[31m $e" . PHP_EOL;
+            $this->output($e, 'error');
         }
     }
 
@@ -488,9 +530,9 @@ class ConsoleManager
                 closedir($handle);
             }
 
-            echo "\033[32m Cache was cleared successfully" . PHP_EOL;
+            $this->output('Cache was cleared successfully', 'success');
         } catch (\Exception $e) {
-            echo "\033[31m $e" . PHP_EOL;
+            $this->output($e, 'error');
         }
     }
 
