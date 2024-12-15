@@ -5,6 +5,8 @@ namespace SigmaPHP\Core\Console;
 use PassGen\PassGen;
 use EnvParser\Parser;
 use SigmaPHP\Core\Config\Config;
+use SigmaPHP\Core\Exceptions\DirectoryNotFoundException;
+use SigmaPHP\Core\Exceptions\FileNotFoundException;
 
 /**
  * Console Manager Class
@@ -150,7 +152,7 @@ class ConsoleManager
         // check if the message's type is valid
         if (!empty($type) && !isset($colors[$type])) {
             throw new \InvalidArgumentException(
-                "The message's type '{$type}' doesn't exists"
+                "The message's type '{$type}' doesn't exist"
             );
         }
 
@@ -165,17 +167,23 @@ class ConsoleManager
      * Execute the command and print its output.
      *
      * @param string $command
-     * @return void
+     * @param bool $printOutput
+     * @return bool
      */
-    private function executeCommand($command)
+    private function executeCommand($command, $printOutput = false)
     {
         $output = [];
+        $result = false;
 
-        exec($command, $output);
+        exec($command . ($printOutput ? '' : ' 2>/dev/null'), $output, $result);
 
-        foreach ($output as $line) {
-            $this->output($line);
+        if ($printOutput) {
+            foreach ($output as $line) {
+                $this->output($line);
+            }
         }
+
+        return ($result == 0);
     }
 
     /**
@@ -271,7 +279,21 @@ class ConsoleManager
      */
     private function runServer($port = 8888)
     {
-        $this->executeCommand("cd public; php -S localhost:$port");
+        // check if server 
+        if (!empty($port) && !preg_match('/[0-9]{4}/', $port)) {
+            throw new \InvalidArgumentException(
+                "Invalid port number {$port}"
+            );
+        }
+
+        // check that pubic/ dir is exist
+        if (!$this->executeCommand("cd public/")) {
+            throw new DirectoryNotFoundException(
+                "The public/ directory doesn't exist"
+            );
+        }
+
+        $this->executeCommand("php -S localhost:$port", true);
     }
 
     /**
@@ -281,8 +303,14 @@ class ConsoleManager
      */
     private function generateAppSecretKey()
     {
-        $passGen = new PassGen(32);
+        // check if the .env file is exist
+        if (!file_exists('.env')) {
+            throw new FileNotFoundException(
+                "No .env file was found"
+            );
+        }
 
+        $passGen = new PassGen(32);
         $key = $passGen->create();
 
         // replace invalid symbols from the generated key
@@ -295,7 +323,11 @@ class ConsoleManager
             
             if (!empty(env('APP_SECRET_KEY'))) {
                 $envFile = str_replace(env('APP_SECRET_KEY'), $key, $envFile);
-            } else {
+            } 
+            else if (!strpos($envFile, 'APP_SECRET_KEY')) {
+                $envFile .= 'APP_SECRET_KEY=' . $key;
+            }
+            else {
                 $envFile = str_replace(
                     'APP_SECRET_KEY=', 
                     'APP_SECRET_KEY=' . $key, 
@@ -304,7 +336,11 @@ class ConsoleManager
             }
 
             file_put_contents($this->config->getFullPath('.env'), $envFile);
-            $this->output('App secret key was generated successfully', 'success');
+
+            $this->output(
+                'App secret key was generated successfully',
+                'success'
+            );
         } catch (\Exception $e) {
             $this->output($e, 'error');
         }
@@ -426,8 +462,14 @@ class ConsoleManager
     private function createFile($path, $name, $content)
     {
         try {
+            // check if the files is not already exist
+            if (file_exists($path . $name)) {
+                $this->output("{$name} already exists", 'warning');
+                return;
+            }
+
             file_put_contents($path . $name, $content);
-            $this->output('{$name} was created successfully', 'success');
+            $this->output("{$name} was created successfully", 'success');
         } catch (\Exception $e) {
             $this->output($e, 'error');
         }
@@ -442,6 +484,20 @@ class ConsoleManager
     private function createController($controllerName)
     {
         $path = $this->config->getFullPath('src/Controllers/');
+        
+        // check that src/Controllers/ is exist
+        if (!file_exists('src/Controllers/')) {
+            throw new DirectoryNotFoundException(
+                "The directory src/Controllers/ doesn't exist"
+            );
+        }
+
+        // check that controller's name is not empty
+        if (empty($controllerName)) {
+            throw new \InvalidArgumentException(
+                "Controller's name can't be empty"
+            );
+        }
 
         $this->createFile($path, $controllerName . '.php', str_replace(
             '$controllerName',
@@ -473,7 +529,21 @@ class ConsoleManager
     {
         $path = $this->config->getFullPath('src/Views/');
 
-        $this->createFile($path, $viewName . '.blade.php', '');
+        // check that src/Views/ is exist
+        if (!file_exists('src/Views/')) {
+            throw new DirectoryNotFoundException(
+                "The directory src/Views/ doesn't exist"
+            );
+        }
+
+        // check that view's name is not empty
+        if (empty($viewName)) {
+            throw new \InvalidArgumentException(
+                "View's name can't be empty"
+            );
+        }
+
+        $this->createFile($path, $viewName . '.template.html', '');
     }
 
     /**
@@ -504,7 +574,7 @@ class ConsoleManager
                     );
                 }
             } else {
-                $this->output('Uploads folder already exists', 'info');
+                $this->output('Uploads folder already exists', 'warning');
             }
         } catch (\Exception $e) {
             $this->output($e, 'error');
@@ -519,7 +589,14 @@ class ConsoleManager
     private function clearCache()
     {
         $path = $this->config->getFullPath('storage/cache');
-        
+
+        // check that storage/cache/ is exist
+        if (!file_exists('storage/cache/')) {
+            throw new DirectoryNotFoundException(
+                "The directory storage/cache/ doesn't exist"
+            );
+        }
+
         try {
             if ($handle = opendir($path)) {
                 while (($file = readdir($handle))) {
@@ -543,6 +620,13 @@ class ConsoleManager
      */
     private function runTests()
     {
+        // check that tests/ is exist
+        if (!file_exists('tests/')) {
+            throw new DirectoryNotFoundException(
+                "The directory tests/ doesn't exist"
+            );
+        }
+
         $this->executeCommand("./vendor/bin/phpunit tests");
     }
 }
