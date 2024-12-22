@@ -24,6 +24,7 @@
         }
     ],
     "require": {
+        "agashe/sigmaphp-container": "^0.1",
         "agashe/sigmaphp-db": "^0.1",
         "agashe/sigmaphp-router": "^0.1",
         "agashe/passgen": "^1",
