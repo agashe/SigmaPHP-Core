@@ -30,10 +30,7 @@ class ViewHandler implements ViewHandlerInterface
     public function __construct($viewsPath, $cachePath, $sharedVariables = [])
     {
         $this->templateEngine = new Engine($viewsPath, $cachePath);
-
-        $this->templateEngine->setSharedVariables(
-            $sharedVariables
-        );
+        $this->templateEngine->setSharedVariables($sharedVariables);
     }
 
     /**
@@ -41,14 +38,10 @@ class ViewHandler implements ViewHandlerInterface
      * 
      * @param string $templateName
      * @param array $variables
-     * @return void
+     * @return string
      */
     final public function render($templateName = '', $variables = [])
     {
-        ob_start();
-
-        $this->templateEngine->render($templateName, $variables, true);
-
-        ob_end_flush();
+        return $this->templateEngine->render($templateName, $variables);
     }
 }

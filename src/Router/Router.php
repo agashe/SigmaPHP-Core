@@ -41,6 +41,10 @@ class Router implements RouterInterface
         $this->routeFilesPath = $routeFilesPath;
         $this->basePath = $basePath;
         $this->routes = [];
+
+        $this->loadRoutes();
+
+        $this->routerEngine = new RouterEngine($this->routes, $this->basePath);
     }
 
     /**
@@ -61,14 +65,25 @@ class Router implements RouterInterface
     }
 
     /**
-     * Render html template.
+     * Generate URL from route's name.
+     * 
+     * @param string $routeName
+     * @param array $parameters
+     * @return string
+     */
+    public function url($routeName, $parameters = [])
+    {
+        return $this->routerEngine->url($routeName, $parameters);
+    }
+    
+    /**
+     * Start the router execution.
      *
      * @return void
      */
     final public function start()
-    {
-        $this->routerEngine = new RouterEngine($this->routes, $this->basePath);
-        
+    {        
+        $this->routerEngine->setActionRunner(CoreActionRunner::class);
         $this->routerEngine->run();
     }
 }

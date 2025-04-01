@@ -2,10 +2,9 @@
 
 namespace SigmaPHP\Core\App;
 
+use App\Interfaces\MailServiceInterface;
 use SigmaPHP\Core\Interfaces\App\KernelInterface;
-use SigmaPHP\Core\Config\Config;
-use SigmaPHP\Core\Router\Router;
-use EnvParser\Parser;
+use SigmaPHP\Container\Container;
 
 /**
  * Kernel Class
@@ -13,16 +12,60 @@ use EnvParser\Parser;
 class Kernel implements KernelInterface
 {
     /**
-     * @var SigmaPHP\Core\Config\Config $configManager
+     * @var Container $container
      */
-    private $configManager;
+    private static $container;
 
     /**
      * Kernel Constructor
      */
     public function __construct()
     {
-        $this->configManager = new Config();
+        // create DI container and load all service providers
+        self::$container = new Container();
+
+        // user defined providers (App\Providers)
+        $providersPath = dirname(
+            (new \ReflectionClass(
+                \Composer\Autoload\ClassLoader::class
+            ))->getFileName()
+        , 3) . '/app/Providers';
+
+        $providers = [];
+
+        if ($handle = opendir($providersPath)) {
+            while (($file = readdir($handle))) {
+                if (in_array($file, ['.', '..'])) continue;
+                $providers[] = ("App\\Providers\\" . 
+                    (str_replace('.php', '', $file)));
+            }
+        
+            closedir($handle);
+        }
+
+        // core providers
+        foreach (array_merge([
+            \SigmaPHP\Core\Providers\ConfigServiceProvider::class,
+            \SigmaPHP\Core\Providers\RouterServiceProvider::class,
+            \SigmaPHP\Core\Providers\ViewServiceProvider::class,
+            \SigmaPHP\Core\Providers\DBServiceProvider::class,
+            \SigmaPHP\Core\Providers\HTTPServiceProvider::class,
+        ], $providers) as $provider) {
+            self::$container->registerProvider($provider);
+        }
+
+        // enable the autowiring for all classes
+        self::$container->autowire();
+    }
+
+    /**
+     * Get the DI container instance from the Kernel.
+     * 
+     * @return Container
+     */
+    final public static function getContainer()
+    {
+        return self::$container;
     }
 
     /**
@@ -32,32 +75,7 @@ class Kernel implements KernelInterface
      */
     final public function init()
     {
-        // Load environment variables
-        $envParser = new Parser();
-
-        $envParser->parse(
-            $this->configManager->getFullPath('.env')
-        );
-        
-        // load all config files
-        $this->configManager->load();
-        
-        // set error display
-        $this->configManager->setErrorsDisplay(
-            $this->configManager->get('app.env')
-        );
-
-        // load the routes        
-        $router = new Router(
-            $this->configManager->getFullPath(
-                $this->configManager->get('app.routes_path')
-            ),
-            $this->configManager->get('app.base_path')
-        );
-        
-        $router->loadRoutes();
-        
         // run the app
-        $router->start();
+        self::$container->get('router')->start();
     }
 }

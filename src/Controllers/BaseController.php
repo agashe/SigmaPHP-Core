@@ -3,13 +3,6 @@
 namespace SigmaPHP\Core\Controllers;
 
 use SigmaPHP\Core\Interfaces\Controllers\BaseControllerInterface;
-use SigmaPHP\Core\Config\Config;
-use SigmaPHP\Core\Http\Request;
-use SigmaPHP\Core\Http\Response;
-use SigmaPHP\Core\Http\Cookie;
-use SigmaPHP\Core\Http\Session;
-use SigmaPHP\Core\Http\FileUpload;
-use SigmaPHP\Core\Views\ViewHandler;
 
 /**
  * Base Controller Class
@@ -17,59 +10,88 @@ use SigmaPHP\Core\Views\ViewHandler;
 class BaseController implements BaseControllerInterface
 {
     /**
-     * @var SigmaPHP\Core\Config\Config $config
+     * Return new response.
+     * 
+     * @param mixed $data
+     * @param string $type
+     * @param int $code
+     * @param array $headers
+     * @return SigmaPHP\Core\Http\Response
      */
-    private $config;
+    final public function response(
+        $data = [], 
+        $type = 'text/html', 
+        $code = 200, 
+        $headers = []
+    ) {
+        return container('response')->response($data, $type, $code, $headers);
+    }
 
     /**
-     * @var SigmaPHP\Core\Http\Request $request
+     * Return new JSON response.
+     * 
+     * @param mixed $data
+     * @param int $code
+     * @param array $headers
+     * @return SigmaPHP\Core\Http\Response
      */
-    protected $request;
+    final public function json($data = [], $code = 200, $headers = []) {
+        return container('response')->responseJSON($data, $code, $headers);
+    }
 
     /**
-     * @var SigmaPHP\Core\Http\Response $response
+     * Render html template and return new Response.
+     * 
+     * @param string $templateName
+     * @param array $variables
+     * @return SigmaPHP\Core\Http\Response
      */
-    protected $response;
+    final public function render($templateName = '', $variables = [])
+    {
+        return $this->response(
+            container('view')->render($templateName, $variables)
+        );
+    }
 
     /**
-     * @var SigmaPHP\Core\Http\Cookie $cookies
+     * Render html template and return the content as string.
+     * 
+     * @param string $templateName
+     * @param array $variables
+     * @return string html content
      */
-    protected $cookies;
+    public function renderView($templateName = '', $variables = [])
+    {
+        return container('view')->render($templateName, $variables);
+    }
     
     /**
-     * @var SigmaPHP\Core\Http\Session $sessions
+     * Handle cookies.
+     * 
+     * @return SigmaPHP\Core\Http\Cookie
      */
-    protected $sessions;
-
-    /**
-     * @var SigmaPHP\Core\Http\FileUpload $filesUploader
-     */
-    protected $filesUploader;
-
-    /**
-     * @var SigmaPHP\Core\Views\ViewHandler $views
-     */
-    protected $views;
-
-    /**
-     * BaseController Constructor
-     */
-    public function __construct()
+    final public function cookie()
     {
-        $this->config = new Config();
-        $this->config->load();
-
-        $this->request = new Request();
-        $this->response = new Response();
-        $this->cookies = new Cookie();
-        $this->sessions = new Session();
-        $this->filesUploader = new FileUpload(
-            $this->config->get('app.upload_path')
-        );
-
-        $this->views = new ViewHandler(
-            $this->config->get('app.views_path'),
-            $this->config->get('app.cache_path')
-        );
+        return container('cookie');
+    }
+    
+    /**
+     * Handle sessions.
+     * 
+     * @return SigmaPHP\Core\Http\Session
+     */
+    final public function session()
+    {
+        return container('session');
+    }
+    
+    /**
+     * Handle files.
+     * 
+     * @return SigmaPHP\Core\Http\FileUpload
+     */
+    final public function file()
+    {
+        return container('file');
     }
 }
