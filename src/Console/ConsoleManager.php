@@ -287,13 +287,13 @@ class ConsoleManager
         }
 
         // check that pubic/ dir is exist
-        if (!$this->executeCommand("cd public/")) {
+        if (!file_exists('public/')) {
             throw new DirectoryNotFoundException(
                 "The public/ directory doesn't exist"
             );
         }
 
-        $this->executeCommand("php -S localhost:$port", true);
+        $this->executeCommand("cd public/; php -S localhost:$port", true);
     }
 
     /**
@@ -483,12 +483,12 @@ class ConsoleManager
      */
     private function createController($controllerName)
     {
-        $path = $this->config->getFullPath('src/Controllers/');
+        $path = $this->config->getFullPath('app/Controllers/');
         
-        // check that src/Controllers/ is exist
-        if (!file_exists('src/Controllers/')) {
+        // check that app/Controllers/ is exist
+        if (!file_exists('app/Controllers/')) {
             throw new DirectoryNotFoundException(
-                "The directory src/Controllers/ doesn't exist"
+                "The directory app/Controllers/ doesn't exist"
             );
         }
 
@@ -527,12 +527,12 @@ class ConsoleManager
      */
     private function createView($viewName)
     {
-        $path = $this->config->getFullPath('src/Views/');
+        $path = $this->config->getFullPath('app/Views/');
 
-        // check that src/Views/ is exist
-        if (!file_exists('src/Views/')) {
+        // check that app/Views/ is exist
+        if (!file_exists('app/Views/')) {
             throw new DirectoryNotFoundException(
-                "The directory src/Views/ doesn't exist"
+                "The directory app/Views/ doesn't exist"
             );
         }
 

@@ -16,37 +16,48 @@ class Response implements ResponseInterface
      * @param string $type
      * @param int $code
      * @param array $headers
-     * @return mixed
+     * @return self
      */
     final public function response(
         $data = [], 
         $type = 'text/html', 
-        $statusCode = 200, 
+        $code = 200, 
         $headers = []
     ) {
         header("Content-Type: $type");
-        http_response_code($statusCode);
+        http_response_code($code);
 
         foreach ($headers as $key => $val) {
             header("$key: $val");
         }
 
+        ob_start();
+
         echo $data;
+
+        ob_end_flush();
+
+        return $this;
     }
 
     /**
-     * Return Response.
+     * Return JSON Response.
      * 
      * @param mixed $data
-     * @param int $statusCode
+     * @param int $code
      * @param array $headers
-     * @return mixed
+     * @return self
      */
     final public function responseJSON(
         $data = [],
-        $statusCode = 200,
+        $code = 200,
         $headers = []
     ) {
-        $this->response($data, 'application/json', $statusCode, $headers);
+        return $this->response(
+            json_encode($data), 
+            'application/json', 
+            $code, 
+            $headers
+        );
     }
 }
