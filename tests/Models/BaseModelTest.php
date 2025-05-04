@@ -3,6 +3,8 @@
 use PHPUnit\Framework\TestCase;
 use SigmaPHP\Core\Tests\Models\TestModel;
 
+use SigmaPHP\Core\App\Kernel;
+
 /**
  * Base Model Test
  *
@@ -30,6 +32,9 @@ class BaseModelTest extends TestCase
      */
     public function setUp(): void
     {
+        // initialize new app
+        new Kernel();
+
         // add your database configs to phpunit.xml
         // and to database.config.php for the SigmaPHP-DB
         // package to work properly
@@ -72,6 +77,11 @@ class BaseModelTest extends TestCase
             );
         }
 
+        // create dummy .env file
+        if (!file_exists('.env')) {
+            file_put_contents('.env', 'APP_ENV="development"');
+        }
+
         // create new test model instance
         $this->model = new TestModel();
     }
@@ -90,6 +100,11 @@ class BaseModelTest extends TestCase
 
         if (is_dir('config')) {
             rmdir('config');
+        }
+
+        // remove the dummy .env file
+        if (file_exists('.env')) {
+            unlink('.env');
         }
 
         $this->dropTestTable('test_models');

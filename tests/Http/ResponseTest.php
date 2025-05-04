@@ -145,6 +145,6 @@ class ResponseTest extends TestCase
 
         $this->response->responseJSON(json_encode($message));
         
-        $this->expectOutputString('{"data":"hello world"}');        
+        $this->expectOutputString('"{\"data\":\"hello world\"}"');        
     }
 }

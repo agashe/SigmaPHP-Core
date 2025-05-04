@@ -10,11 +10,6 @@ use SigmaPHP\Core\App\Kernel;
 class HelperTest extends TestCase
 {
     /**
-     * @var Kernel $kernel
-     */
-    private $kernel;
-
-    /**
      * HelperTest SetUp
      *
      * @return void
@@ -22,7 +17,7 @@ class HelperTest extends TestCase
     public function setUp(): void
     {
         // initialize new app
-        $this->kernel = new Kernel();
+        new Kernel();
 
         // create dummy config file
         if (!is_dir('config')) {
@@ -41,7 +36,6 @@ class HelperTest extends TestCase
         if (!file_exists('.env')) {
             file_put_contents('.env', 'APP_ENV="development"');
         }
-        
 
         // create dummy routes file
         if (!is_dir('routes')) {

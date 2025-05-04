@@ -44,7 +44,7 @@ class ViewHandlerTest extends TestCase
             '<h1>hello {{ $name }}</h1>'
         );
 
-        $this->viewHandler->render('index', [
+        print $this->viewHandler->render('index', [
             'name' => 'world'
         ]);
 
