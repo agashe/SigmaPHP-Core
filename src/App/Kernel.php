@@ -2,7 +2,6 @@
 
 namespace SigmaPHP\Core\App;
 
-use App\Interfaces\MailServiceInterface;
 use SigmaPHP\Core\Interfaces\App\KernelInterface;
 use SigmaPHP\Container\Container;
 
@@ -33,14 +32,16 @@ class Kernel implements KernelInterface
 
         $providers = [];
 
-        if ($handle = opendir($providersPath)) {
-            while (($file = readdir($handle))) {
-                if (in_array($file, ['.', '..'])) continue;
-                $providers[] = ("App\\Providers\\" . 
+        if (file_exists($providersPath)) {
+            if ($handle = opendir($providersPath)) {
+                while (($file = readdir($handle))) {
+                    if (in_array($file, ['.', '..'])) continue;
+                    $providers[] = ("App\\Providers\\" . 
                     (str_replace('.php', '', $file)));
+                }
+                
+                closedir($handle);
             }
-        
-            closedir($handle);
         }
 
         // core providers

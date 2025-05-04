@@ -2,7 +2,7 @@
 
 use PHPUnit\Framework\TestCase;
 
-use SigmaPHP\Core\Helpers\Helper;
+use SigmaPHP\Core\App\Kernel;
 
 /**
  * Helper Test
@@ -10,9 +10,9 @@ use SigmaPHP\Core\Helpers\Helper;
 class HelperTest extends TestCase
 {
     /**
-     * @var Helper $helper
+     * @var Kernel $kernel
      */
-    private $helper;
+    private $kernel;
 
     /**
      * HelperTest SetUp
@@ -21,7 +21,96 @@ class HelperTest extends TestCase
      */
     public function setUp(): void
     {
-        $this->helper = new Helper();
+        // initialize new app
+        $this->kernel = new Kernel();
+
+        // create dummy config file
+        if (!is_dir('config')) {
+            mkdir('config');
+        }
+
+        if (!file_exists('config/app.php')) {
+            file_put_contents(
+                'config/app.php', 
+                '<?php return ["api" => ["version" => "1.0.0"],'.
+                '"routes_path" => "routes/"];'
+            );
+        }
+
+        // create dummy .env file
+        if (!file_exists('.env')) {
+            file_put_contents('.env', 'APP_ENV="development"');
+        }
+        
+
+        // create dummy routes file
+        if (!is_dir('routes')) {
+            mkdir('routes');
+        }
+        
+        if (!file_exists('web.php')) {
+            file_put_contents(
+                'routes/web.php', 
+                '<?php return [["path" => "/test", "name" => "test"]];'
+            );
+        }
+    }
+
+    /**
+     * HelperTest TearDown
+     *
+     * @return void
+     */
+    public function tearDown(): void
+    {
+        // remove the dummy config file
+        if (file_exists('config/app.php')) {
+            unlink('config/app.php');
+        }
+
+        if (is_dir('config')) {
+            rmdir('config');
+        }
+
+        // remove the dummy .env file
+        if (file_exists('.env')) {
+            unlink('.env');
+        }
+        
+        // remove the dummy routes file
+        if (file_exists('routes/web.php')) {
+            unlink('routes/web.php');
+        }
+
+        if (is_dir('routes')) {
+            rmdir('routes');
+        }
+    }
+    
+    /**
+     * Test get container instance.
+     *
+     * @return void
+     */
+    public function testGetContainerInstance()
+    {
+        $this->assertInstanceOf(
+            SigmaPHP\Container\Container::class,
+            container()
+        );
+    }
+    
+    /**
+     * Test get class instance from the container.
+     *
+     * @return void
+     */
+    public function testGetClassInstanceFromTheContainer()
+    {
+        $this->assertInstanceOf(
+            SigmaPHP\Core\Config\Config::class,
+            container('config')
+        );
     }
 
     /**
@@ -33,7 +122,7 @@ class HelperTest extends TestCase
     {
         $_ENV['test'] = 'hello world';
 
-        $this->assertEquals('hello world', $this->helper->env('test'));
+        $this->assertEquals('hello world', env('test'));
     }
 
     /**
@@ -46,7 +135,7 @@ class HelperTest extends TestCase
     {
         $this->assertEquals(
             'default_value', 
-            $this->helper->env('unknown', 'default_value')
+            env('unknown', 'default_value')
         );
     }
 
@@ -57,31 +146,10 @@ class HelperTest extends TestCase
      */
     public function testGetConfigValue()
     {
-        // create dummy config file
-        if (!is_dir('config')) {
-            mkdir('config');
-        }
-
-        if (!file_exists('config/app.php')) {
-            file_put_contents(
-                'config/app.php', 
-                '<?php return ["api" => ["version" => "1.0.0"]];'
-            );
-        }
-
         $this->assertEquals(
             '1.0.0',
-            $this->helper->config('app.api.version')
+            config('app.api.version')
         );
-
-        // remove the dummy config file
-        if (file_exists('config/app.php')) {
-            unlink('config/app.php');
-        }
-
-        if (is_dir('config')) {
-            rmdir('config');
-        }
     }
 
     /**
@@ -92,61 +160,24 @@ class HelperTest extends TestCase
      */
     public function testConfigMethodWillReturnTheDefaultValue()
     {
-        // create dummy config file
-        if (!is_dir('config')) {
-            mkdir('config');
-        }
-
-        if (!file_exists('config/app.php')) {
-            file_put_contents(
-                'config/app.php', 
-                '<?php return ["api" => ["version" => "1.0.0"]];'
-            );
-        }
-
         $this->assertEquals(
             'default_value', 
-            $this->helper->config('unknown', 'default_value')
+            config('unknown', 'default_value')
         );
-
-        // remove the dummy config file
-        if (file_exists('config/app.php')) {
-            unlink('config/app.php');
-        }
-
-        if (is_dir('config')) {
-            rmdir('config');
-        }
     }
 
     /**
-     * Test generate URL from path using the provided app url.
+     * Test generate URL from path using the route name.
      *
      * @return void
      */
-    public function testGenerateUrlFromPathUsingTheProvidedAppUrl()
+    public function testGenerateUrlFromPathUsingTheRouteName()
     {
-        $_ENV['APP_URL'] = 'http://localhost';
-        $_SERVER['SERVER_NAME'] = 'localhost';
+        $_SERVER['HTTP_HOST'] = 'localhost';
 
         $expected = 'http://localhost/test';
 
-        $this->assertEquals($expected, $this->helper->url('test'));
-    }
-    
-    /**
-     * Test generate URL from path using the server name.
-     *
-     * @return void
-     */
-    public function testGenerateUrlFromPathUsingTheServerName()
-    {
-        $_ENV['APP_URL'] = '';
-        $_SERVER['SERVER_NAME'] = 'localhost';
-
-        $expected = 'http://localhost/test';
-
-        $this->assertEquals($expected, $this->helper->url('test'));
+        $this->assertEquals($expected, url('test'));
     }
     
     /**
@@ -162,7 +193,7 @@ class HelperTest extends TestCase
 
         $this->assertEquals(
             $expected,
-            $this->helper->encrypt('test', base64_encode('1234567890'))
+            encrypt('test', base64_encode('1234567890'))
         );
     }
     
@@ -179,7 +210,7 @@ class HelperTest extends TestCase
 
         $this->assertEquals(
             $expected,
-            $this->helper->decrypt(
+            decrypt(
                 'Aua30ZjVa7sRdmIGi8i+lw==',
                 base64_encode('1234567890')
             )
