@@ -45,15 +45,14 @@ class Kernel implements KernelInterface
         }
 
         // core providers
-        foreach (array_merge([
+        // core providers
+        self::$container->registerProviders(array_merge([
             \SigmaPHP\Core\Providers\ConfigServiceProvider::class,
             \SigmaPHP\Core\Providers\RouterServiceProvider::class,
             \SigmaPHP\Core\Providers\ViewServiceProvider::class,
             \SigmaPHP\Core\Providers\DBServiceProvider::class,
             \SigmaPHP\Core\Providers\HTTPServiceProvider::class,
-        ], $providers) as $provider) {
-            self::$container->registerProvider($provider);
-        }
+        ], $providers));
 
         // enable the autowiring for all classes
         self::$container->autowire();

@@ -44,25 +44,28 @@ class CoreActionRunner implements RunnerInterface
                     );
                 }
 
-                if ($parameterIsClass) {
-                    $arguments[] = container()->get(
-                        $parameter->getType()->getName()
-                    );
-                } else {
+                if (!$parameterIsClass) {
                     // for primitive parameters , first we check if they 
                     // they have value from route's parameters if yes
                     // we put that value , otherwise we check for the default
                     // value from the Reflection class , if not we 
                     // put null !
-                    $arguments[] = isset($route['parameters'][$index]) ?
-                        ($route['parameters'][$index]) :
-                        ($parameter->isDefaultValueAvailable() ?
-                            $parameter->getDefaultValue() : null);
+                    $arguments[$parameter->getName()] = 
+                        isset($route['parameters'][$index]) ?
+                            ($route['parameters'][$index]) :
+                            ($parameter->isDefaultValueAvailable() ?
+                                $parameter->getDefaultValue() : null);
                 }
             }
 
-            $controller = container()->get($route['controller']);
-            $controller->{$route['action']}(...$arguments);
+            // if the parameter is a class , the container will take care 
+            // otherwise we prepare all the primitive parameters in the
+            // $arguments and then pass it
+            container()->call(
+                $route['controller'],
+                $route['action'],
+                $arguments
+            );
         }
     }
 }
