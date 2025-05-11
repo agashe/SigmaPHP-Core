@@ -272,7 +272,7 @@ class ConsoleManager
     }
 
     /**
-     * Run PHP built in server.
+     * Run PHP built-in server.
      * 
      * @param int $port
      * @return void
@@ -293,7 +293,7 @@ class ConsoleManager
             );
         }
 
-        $this->executeCommand("cd public/; php -S localhost:$port", true);
+        $this->executeCommand("php -S localhost:$port -t public/", true);
     }
 
     /**
