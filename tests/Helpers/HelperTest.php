@@ -82,6 +82,16 @@ class HelperTest extends TestCase
     }
     
     /**
+     * Test get framework version.
+     *
+     * @return void
+     */
+    public function testGetFrameworkVersion()
+    {
+        $this->assertEquals(Kernel::SIGMAPHP_FRAMEWORK_VERSION, version());
+    }
+
+    /**
      * Test get container instance.
      *
      * @return void

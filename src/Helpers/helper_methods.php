@@ -1,5 +1,11 @@
 <?php
 
+if (!function_exists('version')) {
+    function version() {
+        return \SigmaPHP\Core\App\Kernel::SIGMAPHP_FRAMEWORK_VERSION;
+    }
+}
+
 if (!function_exists('container')) {
     function container($item = '') {
         $container = \SigmaPHP\Core\App\Kernel::getContainer();

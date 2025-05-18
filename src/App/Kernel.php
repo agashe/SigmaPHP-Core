@@ -11,6 +11,11 @@ use SigmaPHP\Container\Container;
 class Kernel implements KernelInterface
 {
     /**
+     * @var string framework version
+     */
+    const SIGMAPHP_FRAMEWORK_VERSION = '0.1.0';
+
+    /**
      * @var Container $container
      */
     private static $container;
