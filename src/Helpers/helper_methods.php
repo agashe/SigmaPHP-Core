@@ -19,6 +19,12 @@ if (!function_exists('config')) {
     }
 }
 
+if (!function_exists('root_path')) {
+    function root_path($dir) {
+        return container('config')->getFullPath($dir);
+    }
+}
+
 if (!function_exists('url')) {
     function url($route, $parameters = []) {
         return container('router')->url($route, $parameters);

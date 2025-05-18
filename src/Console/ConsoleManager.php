@@ -14,28 +14,6 @@ use SigmaPHP\Core\Exceptions\FileNotFoundException;
 class ConsoleManager
 {
     /**
-     * @var SigmaPHP\Core\Config\Config $config
-     */
-    private $config;
-
-    /**
-     * ConsoleManager Constructor
-     */
-    public function __construct()
-    {
-        $this->config = new Config();
-
-        // Load environment variables
-        if (file_exists($this->config->getFullPath('.env'))) {
-            $envParser = new Parser();
-            
-            $envParser->parse(
-                $this->config->getFullPath('.env')
-            );
-        }
-    }
-
-    /**
      * Execute console commands.
      * 
      * @param string $input
@@ -319,7 +297,7 @@ class ConsoleManager
         $key  = str_replace('"', 'C', $key);
 
         try {
-            $envFile = file_get_Contents($this->config->getFullPath('.env'));
+            $envFile = file_get_Contents(root_path('.env'));
             
             if (!empty(env('APP_SECRET_KEY'))) {
                 $envFile = str_replace(env('APP_SECRET_KEY'), $key, $envFile);
@@ -335,8 +313,8 @@ class ConsoleManager
                 );
             }
 
-            file_put_contents($this->config->getFullPath('.env'), $envFile);
-
+            file_put_contents(root_path('.env'), $envFile);
+            
             $this->output(
                 'App secret key was generated successfully',
                 'success'
@@ -345,7 +323,6 @@ class ConsoleManager
             $this->output($e, 'error');
         }
     }
-
 
     /**
      * Return the CLI command for the database handler.
@@ -357,7 +334,7 @@ class ConsoleManager
     {
         return 
             "./vendor/bin/sigma-db {$command} " .
-            "--config={$this->config->getFullPAth('config/database.php')}";
+            "--config=" . root_path('config/database.php');
     }
     
     /**
@@ -483,12 +460,12 @@ class ConsoleManager
      */
     private function createController($controllerName)
     {
-        $path = $this->config->getFullPath('app/Controllers/');
+        $path = root_path(config('app.controllers_path'));
         
-        // check that app/Controllers/ is exist
-        if (!file_exists('app/Controllers/')) {
+        // check that controllers path does exist
+        if (!file_exists($path)) {
             throw new DirectoryNotFoundException(
-                "The directory app/Controllers/ doesn't exist"
+                "The path to controllers {$path} doesn't exist"
             );
         }
 
@@ -527,12 +504,12 @@ class ConsoleManager
      */
     private function createView($viewName)
     {
-        $path = $this->config->getFullPath('app/Views/');
+        $path = root_path(config('app.views_path'));
 
-        // check that app/Views/ is exist
-        if (!file_exists('app/Views/')) {
+        // check that views path does exist
+        if (!file_exists($path)) {
             throw new DirectoryNotFoundException(
-                "The directory app/Views/ doesn't exist"
+                "The path to views {$path} doesn't exist"
             );
         }
 
@@ -553,8 +530,8 @@ class ConsoleManager
      */
     private function createUploadsFolder()
     {
-        $storagePath = $this->config->getFullPath('storage/');
-        $publicPath = $this->config->getFullPath('public/');
+        $storagePath = root_path('storage/');
+        $publicPath = root_path('public/');
 
         try {
             if (!is_dir($storagePath . 'uploads')) {
@@ -588,7 +565,7 @@ class ConsoleManager
      */
     private function clearCache()
     {
-        $path = $this->config->getFullPath('storage/cache');
+        $path = root_path('storage/cache');
 
         // check that storage/cache/ is exist
         if (!file_exists('storage/cache/')) {

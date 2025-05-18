@@ -120,12 +120,12 @@ class HelperTest extends TestCase
     }
 
     /**
-     * Test env method will return the default value if the
+     * Test env function will return the default value if the
      * if the key does'nt exists.
      *
      * @return void
      */
-    public function testEnvMethodWillReturnTheDefaultValue()
+    public function testEnvFunctionWillReturnTheDefaultValue()
     {
         $this->assertEquals(
             'default_value', 
@@ -147,17 +147,27 @@ class HelperTest extends TestCase
     }
 
     /**
-     * Test config method will return the default value if the
+     * Test config function will return the default value if the
      * if the key does'nt exists.
      *
      * @return void
      */
-    public function testConfigMethodWillReturnTheDefaultValue()
+    public function testConfigFunctionWillReturnTheDefaultValue()
     {
         $this->assertEquals(
             'default_value', 
             config('unknown', 'default_value')
         );
+    }
+
+    /**
+     * Test root_path function will return the current file path.
+     *
+     * @return void
+     */
+    public function testRootPathFunctionWillReturnTheCurrentFilePath()
+    {
+        $this->assertEquals(__DIR__, root_path('tests/Helpers'));
     }
 
     /**

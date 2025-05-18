@@ -23,20 +23,26 @@ class Kernel implements KernelInterface
         // create DI container and load all service providers
         self::$container = new Container();
 
+        // Please note , since the config manager still not registered in the
+        // container , it's nearly impossible to read the service providers
+        // path from the config file , maybe in the future we can find a 
+        // solution for this issue , but as for now we will hardcoded it !
+        $userDefinedProvidersPath = '/app/Providers';
+        
         // user defined providers (App\Providers)
-        $providersPath = dirname(
+        $userDefinedProvidersPath = dirname(
             (new \ReflectionClass(
                 \Composer\Autoload\ClassLoader::class
             ))->getFileName()
-        , 3) . '/app/Providers';
+        , 3) . $userDefinedProvidersPath;
 
-        $providers = [];
+        $userDefinedProviders = [];
 
-        if (file_exists($providersPath)) {
-            if ($handle = opendir($providersPath)) {
+        if (file_exists($userDefinedProvidersPath)) {
+            if ($handle = opendir($userDefinedProvidersPath)) {
                 while (($file = readdir($handle))) {
                     if (in_array($file, ['.', '..'])) continue;
-                    $providers[] = ("App\\Providers\\" . 
+                    $userDefinedProviders[] = ("App\\Providers\\" . 
                     (str_replace('.php', '', $file)));
                 }
                 
@@ -45,14 +51,13 @@ class Kernel implements KernelInterface
         }
 
         // core providers
-        // core providers
         self::$container->registerProviders(array_merge([
             \SigmaPHP\Core\Providers\ConfigServiceProvider::class,
             \SigmaPHP\Core\Providers\RouterServiceProvider::class,
             \SigmaPHP\Core\Providers\ViewServiceProvider::class,
             \SigmaPHP\Core\Providers\DBServiceProvider::class,
             \SigmaPHP\Core\Providers\HTTPServiceProvider::class,
-        ], $providers));
+        ], $userDefinedProviders));
 
         // enable the autowiring for all classes
         self::$container->autowire();
