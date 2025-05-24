@@ -14,23 +14,16 @@ class ViewHandler implements ViewHandlerInterface
      * @var SigmaPHP\Template\Engine $templateEngine
      */
     private $templateEngine;
-    
-    /**
-     * @var array $sharedTemplatesVariables
-     */
-    private $sharedTemplatesVariables;
 
     /**
      * ViewHandler Constructor
      * 
      * @param string $viewsPath
      * @param string $cachePath
-     * @param array $sharedVariables
      */
-    public function __construct($viewsPath, $cachePath, $sharedVariables = [])
+    public function __construct($viewsPath, $cachePath)
     {
         $this->templateEngine = new Engine($viewsPath, $cachePath);
-        $this->templateEngine->setSharedVariables($sharedVariables);
     }
 
     /**
@@ -42,6 +35,15 @@ class ViewHandler implements ViewHandlerInterface
      */
     final public function render($templateName = '', $variables = [])
     {
+        $this->templateEngine->setSharedVariables(
+            container('shared_template_variables')
+        );
+
+        foreach (container('custom_template_directives') as $name => $callback)
+        {
+            $this->templateEngine->registerCustomDirective($name, $callback);
+        }
+
         return $this->templateEngine->render($templateName, $variables);
     }
 }

@@ -64,3 +64,25 @@ if (!function_exists('decrypt')) {
         );
     }
 }
+
+if (!function_exists('shareTemplateVariable')) {
+    function shareTemplateVariable($variables) {
+        $currentSharedTemplateVars = container('shared_template_variables');
+
+        container()->set('shared_template_variables', array_merge(
+            $currentSharedTemplateVars,
+            $variables
+        ));
+    }
+}
+
+if (!function_exists('defineCustomTemplateDirective')) {
+    function defineCustomTemplateDirective($name, $callback) {
+        $currentCustomDirectives = container('custom_template_directives');
+
+        container()->set('custom_template_directives', array_merge(
+            $currentCustomDirectives,
+            [$name => $callback]
+        ));
+    }
+}

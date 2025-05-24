@@ -64,6 +64,12 @@ class Kernel implements KernelInterface
             \SigmaPHP\Core\Providers\HTTPServiceProvider::class,
         ], $userDefinedProviders));
 
+        // define shared template variables in the container
+        self::$container->set('shared_template_variables', []);
+
+        // define custom template directives in the container
+        self::$container->set('custom_template_directives', []);
+
         // enable the autowiring for all classes
         self::$container->autowire();
     }

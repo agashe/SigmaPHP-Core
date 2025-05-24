@@ -27,8 +27,11 @@ class HelperTest extends TestCase
         if (!file_exists('config/app.php')) {
             file_put_contents(
                 'config/app.php', 
-                '<?php return ["api" => ["version" => "1.0.0"],'.
-                '"routes_path" => "routes/"];'
+                '<?php return [' .
+                    '"api" => ["version" => "1.0.0"],' .
+                    '"views_path" => "templates/",' .
+                    '"routes_path" => "routes/"' . 
+                '];'
             );
         }
 
@@ -46,6 +49,18 @@ class HelperTest extends TestCase
             file_put_contents(
                 'routes/web.php', 
                 '<?php return [["path" => "/test", "name" => "test"]];'
+            );
+        }
+
+        // create dummy template file
+        if (!is_dir('templates')) {
+            mkdir('templates');
+        }
+        
+        if (!file_exists('index.template.html')) {
+            file_put_contents(
+                'templates/index.template.html', 
+                '<h1>hello {{ $name }}</h1>'
             );
         }
     }
@@ -78,6 +93,15 @@ class HelperTest extends TestCase
 
         if (is_dir('routes')) {
             rmdir('routes');
+        }
+        
+        // remove the dummy template file
+        if (file_exists('templates/index.template.html')) {
+            unlink('templates/index.template.html');
+        }
+
+        if (is_dir('templates')) {
+            rmdir('templates');
         }
     }
     
@@ -228,6 +252,45 @@ class HelperTest extends TestCase
                 'Aua30ZjVa7sRdmIGi8i+lw==',
                 base64_encode('1234567890')
             )
+        );
+    }
+
+    /**
+     * Test share template variables.
+     *
+     * @return void
+     */
+    public function testSharedTemplateVariable()
+    {
+        shareTemplateVariable(['name' => 'world']);
+
+        $this->assertEquals(
+            '<h1>hello world</h1>', 
+            container('view')->render('index')
+        );
+    }
+    
+    /**
+     * Test custom template directives.
+     *
+     * @return void
+     */
+    public function testCustomTemplateDirectives()
+    {
+        if (!file_exists('index.template.html')) {
+            file_put_contents(
+                'templates/index.template.html', 
+                '<h1>{% greeting("Omar") %}</h1>'
+            );
+        }
+
+        defineCustomTemplateDirective('greeting', function ($name) {
+            return "Hi, $name";
+        });
+
+        $this->assertEquals(
+            '<h1> Hi, Omar </h1>', 
+            container('view')->render('index')
         );
     }
 }
