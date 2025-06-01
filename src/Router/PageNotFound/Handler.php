@@ -2,6 +2,9 @@
 
 namespace SigmaPHP\Core\Router\PageNotFound;
 
+/**
+ * Page Not Found Handler Class
+ */
 class Handler
 {
     /**
