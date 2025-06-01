@@ -14,10 +14,10 @@ class Handler
      */
     public function handle()
     {
-        http_response_code(404);
-
-        container('view')->render(root_path('404.template.html'));
-
-        exit();
+        return container('response')->response(
+            container('view')->render('errors/404'),
+            'text/html',
+            404
+        );
     }
 }
