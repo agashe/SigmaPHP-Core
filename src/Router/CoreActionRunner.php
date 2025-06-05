@@ -26,7 +26,20 @@ class CoreActionRunner implements RunnerInterface
                 $route['action']
             );
 
+            // we will introduce the argumentsIndex as an index
+            // so we can decrement if the parameter will be injected
+            // otherwise we will fetch directly from the $route['parameters']
+            // in order , for example :
+            //
+            // action(Request $request, $name)
+            //
+            // in the is case we have 2 arguments , but actually only one of
+            // them is exists , which is $name , so the array should only handle
+            // the primitive
+
             $arguments = [];
+            $argumentsIndex = 0;
+
             foreach ($reflection->getParameters() as $index => $parameter) {
                 // check if the parameter is class
                 $parameterIsClass = ($parameter->getType() !== null) &&
@@ -34,7 +47,7 @@ class CoreActionRunner implements RunnerInterface
 
                 // if the parameter doesn't exist in the route's parameters
                 // and it's not optional in the action (no default value !)
-                // we thraw exception !
+                // we throw exception !
                 if (!isset($route['parameters'][$index]) &&
                     !$parameter->isOptional() && !$parameterIsClass
                 ) {
@@ -55,6 +68,8 @@ class CoreActionRunner implements RunnerInterface
                             ($route['parameters'][$index]) :
                             ($parameter->isDefaultValueAvailable() ?
                                 $parameter->getDefaultValue() : null);
+                    
+                    $argumentsIndex += 1;
                 }
             }
 
