@@ -12,30 +12,31 @@ class BaseController implements BaseControllerInterface
     /**
      * Return new response.
      * 
-     * @param mixed $data
+     * @param string $data
      * @param string $type
      * @param int $code
      * @param array $headers
      * @return SigmaPHP\Core\Http\Response
      */
     final public function response(
-        $data = [], 
+        $data, 
         $type = 'text/html', 
         $code = 200, 
         $headers = []
     ) {
-        return container('response')->response($data, $type, $code, $headers);
+        return container('response')->responseData(
+            $data, $type, $code, $headers);
     }
 
     /**
      * Return new JSON response.
      * 
-     * @param mixed $data
+     * @param array $data
      * @param int $code
      * @param array $headers
      * @return SigmaPHP\Core\Http\Response
      */
-    final public function json($data = [], $code = 200, $headers = []) {
+    final public function json($data, $code = 200, $headers = []) {
         return container('response')->responseJSON($data, $code, $headers);
     }
 

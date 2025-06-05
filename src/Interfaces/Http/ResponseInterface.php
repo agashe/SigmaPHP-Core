@@ -10,21 +10,21 @@ interface ResponseInterface
     /**
      * Return Response.
      * 
-     * @param mixed $data
+     * @param string $data
      * @param string $type
      * @param int $code
      * @param array $headers
-     * @return mixed
+     * @return self
      */
-    public function response($data, $type, $code, $headers);
+    public function responseData($data, $type, $code, $headers);
 
     /**
      * Return JSON Response.
      * 
-     * @param mixed $data
+     * @param array $data
      * @param int $code
      * @param array $headers
-     * @return mixed
+     * @return self
      */
     public function responseJSON($data, $code, $headers);
 }

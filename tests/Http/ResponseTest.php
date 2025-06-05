@@ -69,7 +69,7 @@ class ResponseTest extends TestCase
         $statusCode = 200, 
         $headers = []
     ) {
-        $this->response->response(
+        $this->response->responseData(
             $data,
             $type,
             $statusCode,
@@ -93,7 +93,7 @@ class ResponseTest extends TestCase
      */
     public function testHttpResponse()
     {
-        $this->response->response('hello world');
+        $this->response->responseData('hello world');
         $this->expectOutputString('hello world');
     }
 
@@ -124,7 +124,7 @@ class ResponseTest extends TestCase
      */
     public function testHttpResponseReturnsTheStatusCode()
     {
-        $this->response->response('hello world', 'text/plain', 201);
+        $this->response->responseData('hello world', 'text/plain', 201);
         
         $this->assertEquals(201, http_response_code());
         

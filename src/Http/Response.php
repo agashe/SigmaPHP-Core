@@ -12,19 +12,22 @@ class Response implements ResponseInterface
     /**
      * Return Response.
      * 
-     * @param mixed $data
+     * @param string $data
      * @param string $type
      * @param int $code
      * @param array $headers
      * @return self
      */
-    final public function response(
-        $data = [], 
+    final public function responseData(
+        $data, 
         $type = 'text/html', 
         $code = 200, 
         $headers = []
     ) {
-        header("Content-Type: $type");
+        if (!headers_sent()) {
+            header("Content-Type: $type");
+        }
+
         http_response_code($code);
 
         foreach ($headers as $key => $val) {
@@ -43,17 +46,13 @@ class Response implements ResponseInterface
     /**
      * Return JSON Response.
      * 
-     * @param mixed $data
+     * @param array $data
      * @param int $code
      * @param array $headers
      * @return self
      */
-    final public function responseJSON(
-        $data = [],
-        $code = 200,
-        $headers = []
-    ) {
-        return $this->response(
+    final public function responseJSON($data, $code = 200, $headers = []) {
+        return $this->responseData(
             json_encode($data), 
             'application/json', 
             $code, 

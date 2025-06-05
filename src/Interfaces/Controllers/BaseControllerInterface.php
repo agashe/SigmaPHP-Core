@@ -10,14 +10,14 @@ interface BaseControllerInterface
     /**
      * Return new response.
      * 
-     * @param mixed $data
+     * @param string $data
      * @param string $type
      * @param int $code
      * @param array $headers
      * @return SigmaPHP\Core\Http\Response
      */
     public function response(
-        $data = [], 
+        $data, 
         $type = 'text/html', 
         $code = 200, 
         $headers = []
@@ -26,12 +26,12 @@ interface BaseControllerInterface
     /**
      * Return new JSON response.
      * 
-     * @param mixed $data
+     * @param array $data
      * @param int $code
      * @param array $headers
      * @return SigmaPHP\Core\Http\Response
      */
-    public function json($data = [], $code = 200, $headers = []);
+    public function json($data, $code = 200, $headers = []);
 
     /**
      * Render html template and return new Response.
