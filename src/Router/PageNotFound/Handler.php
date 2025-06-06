@@ -14,7 +14,7 @@ class Handler
      */
     public function handle()
     {
-        return container('response')->response(
+        return container('response')->responseData(
             container('view')->render('errors/404'),
             'text/html',
             404
