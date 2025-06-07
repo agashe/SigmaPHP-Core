@@ -602,6 +602,6 @@ class ConsoleManager
             );
         }
 
-        $this->executeCommand("./vendor/bin/phpunit tests");
+        $this->executeCommand("./vendor/bin/phpunit tests", true);
     }
 }
