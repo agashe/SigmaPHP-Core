@@ -3,8 +3,6 @@
 namespace SigmaPHP\Core\Console;
 
 use PassGen\PassGen;
-use EnvParser\Parser;
-use SigmaPHP\Core\Config\Config;
 use SigmaPHP\Core\Exceptions\DirectoryNotFoundException;
 use SigmaPHP\Core\Exceptions\FileNotFoundException;
 
@@ -565,12 +563,12 @@ class ConsoleManager
      */
     private function clearCache()
     {
-        $path = root_path('storage/cache');
+        $path = config('app.cache_path');
 
-        // check that storage/cache/ is exist
-        if (!file_exists('storage/cache/')) {
+        // check that path is exist
+        if (!file_exists($path)) {
             throw new DirectoryNotFoundException(
-                "The directory storage/cache/ doesn't exist"
+                "The directory {$path} doesn't exist"
             );
         }
 

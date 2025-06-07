@@ -81,7 +81,9 @@ class Kernel implements KernelInterface
      */
     final public static function getContainer()
     {
-        return self::$container;
+        return !is_null(self::$container) ? 
+            self::$container :
+            (new self)::$container;
     }
 
     /**
