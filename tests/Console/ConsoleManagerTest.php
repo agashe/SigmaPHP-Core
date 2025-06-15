@@ -1,7 +1,6 @@
 <?php 
 
 use PHPUnit\Framework\TestCase;
-
 use SigmaPHP\Core\Console\ConsoleManager;
 
 /**
@@ -53,7 +52,9 @@ class ConsoleManagerTest extends TestCase
         ];
 
         $this->consoleManager->execute($input);
-        $this->expectOutputString("SigmaPHP framework version 0.1.0\n");
+        $this->expectOutputString("SigmaPHP framework version " . 
+            SigmaPHP\Core\App\Kernel::SIGMAPHP_FRAMEWORK_VERSION
+        . "\n");
     }
     
     /**

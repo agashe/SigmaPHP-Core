@@ -184,7 +184,7 @@ class ConsoleManager
      */
     private function version()
     {
-        $this->output("SigmaPHP framework version 0.1.0");
+        $this->output("SigmaPHP framework version " . version());
     }
     
     /**
