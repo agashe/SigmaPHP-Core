@@ -37,7 +37,7 @@ class RouterServiceProvider implements ServiceProviderInterface
             $configManager = $container->get('config');
 
             $router = new Router(
-                $configManager->getFullPath(
+                $configManager::getFullPath(
                     $configManager->get('app.routes_path')
                 ),
                 $configManager->get('app.base_path')

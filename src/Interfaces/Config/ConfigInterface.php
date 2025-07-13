@@ -14,7 +14,7 @@ interface ConfigInterface
      * @param string $dis
      * @return string
      */
-    public function getFullPath($dis);
+    public static function getFullPath($dis);
 
     /**
      * Load all config files.

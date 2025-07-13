@@ -29,7 +29,7 @@ class Config implements ConfigInterface
      * @param string $dis
      * @return string
      */
-    public function getFullPath($dis)
+    public static function getFullPath($dis)
     {
         $basePath = dirname(
             (new \ReflectionClass(
@@ -47,7 +47,7 @@ class Config implements ConfigInterface
      */
     public function load()
     {
-        $path = $this->getFullPath('config');
+        $path = self::getFullPath('config');
 
         if ($handle = opendir($path)) {
             while (($file = readdir($handle))) {

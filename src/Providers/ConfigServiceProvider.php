@@ -5,7 +5,6 @@ namespace SigmaPHP\Core\Providers;
 use SigmaPHP\Container\Interfaces\ServiceProviderInterface;
 use SigmaPHP\Container\Container;
 use SigmaPHP\Core\Config\Config;
-use EnvParser\Parser;
 
 /**
  * Config Service Provider Class
@@ -35,13 +34,6 @@ class ConfigServiceProvider implements ServiceProviderInterface
         $container->set('config', function () {
             // create new config manager
             $configManager = new Config();
-
-            // load environment variables
-            $envParser = new Parser();
-
-            $envParser->parse(
-                $configManager->getFullPath('.env')
-            );
             
             // load all config files
             $configManager->load();

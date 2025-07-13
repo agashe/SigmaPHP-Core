@@ -4,6 +4,8 @@ namespace SigmaPHP\Core\App;
 
 use SigmaPHP\Core\Interfaces\App\KernelInterface;
 use SigmaPHP\Container\Container;
+use SigmaPHP\Core\Config\Config;
+use EnvParser\Parser;
 
 /**
  * Kernel Class
@@ -28,6 +30,11 @@ class Kernel implements KernelInterface
         // create DI container and load all service providers
         self::$container = new Container();
 
+        // load environment variables
+        if (file_exists(Config::getFullPath('.env'))) {
+            (new Parser())->parse(Config::getFullPath('.env'));
+        }
+
         // Please note , since the config manager still not registered in the
         // container , it's nearly impossible to read the service providers
         // path from the config file , maybe in the future we can find a 
@@ -35,11 +42,9 @@ class Kernel implements KernelInterface
         $userDefinedProvidersPath = '/app/Providers';
         
         // user defined providers (App\Providers)
-        $userDefinedProvidersPath = dirname(
-            (new \ReflectionClass(
-                \Composer\Autoload\ClassLoader::class
-            ))->getFileName()
-        , 3) . $userDefinedProvidersPath;
+        $userDefinedProvidersPath = Config::getFullPath(
+            $userDefinedProvidersPath
+        );
 
         $userDefinedProviders = [];
 

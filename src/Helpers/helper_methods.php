@@ -15,6 +15,7 @@ if (!function_exists('container')) {
 
 if (!function_exists('env')) {
     function env($key, $default = '') {
+        new \SigmaPHP\Core\App\Kernel();
         return $_ENV[$key] ?? $default;
     }
 }
@@ -27,7 +28,7 @@ if (!function_exists('config')) {
 
 if (!function_exists('root_path')) {
     function root_path($dir) {
-        return container('config')->getFullPath($dir);
+        return container('config')::getFullPath($dir);
     }
 }
 
