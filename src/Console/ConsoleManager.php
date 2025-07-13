@@ -297,9 +297,15 @@ class ConsoleManager
         try {
             $envFile = file_get_Contents(root_path('.env'));
             
-            if (!empty(env('APP_SECRET_KEY'))) {
+            if (strpos($envFile, 'APP_SECRET_KEY=""')) {
+                $emptySecretKey = 'APP_SECRET_KEY=""';
+                $secretKey = 'APP_SECRET_KEY="' . $key . '"';
+                
+                $envFile = str_replace($emptySecretKey, $secretKey, $envFile);
+            }
+            else if (!empty(env('APP_SECRET_KEY'))) {
                 $envFile = str_replace(env('APP_SECRET_KEY'), $key, $envFile);
-            } 
+            }
             else if (!strpos($envFile, 'APP_SECRET_KEY')) {
                 $envFile .= 'APP_SECRET_KEY=' . $key;
             }
