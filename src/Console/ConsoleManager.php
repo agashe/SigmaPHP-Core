@@ -144,14 +144,25 @@ class ConsoleManager
      *
      * @param string $command
      * @param bool $printOutput
+     * @param bool $skipFirstLine
      * @return bool
      */
-    private function executeCommand($command, $printOutput = false)
-    {
+    private function executeCommand(
+        $command, 
+        $printOutput = false, 
+        $skipFirstLine = false
+    ) {
         $output = [];
         $result = false;
 
         exec($command . ($printOutput ? '' : ' 2>/dev/null'), $output, $result);
+
+        // since sigma-db are using pipes to return their feedback
+        // we are escaping the first line , otherwise we will print
+        // repeated validation messages (we need to revisit this in future !!)
+        if ($skipFirstLine && isset($output[0])) {
+            unset($output[0]);
+        }
 
         if ($printOutput) {
             foreach ($output as $line) {
@@ -350,7 +361,8 @@ class ConsoleManager
     private function createMigrationFile($fileName)
     {
         $this->executeCommand(
-            $this->dbConsoleCommand("create:migration {$fileName}")
+            $this->dbConsoleCommand("create:migration {$fileName}"),
+            true
         );
     }
 
@@ -363,7 +375,8 @@ class ConsoleManager
     private function createSeeder($seederName)
     {
         $this->executeCommand(
-            $this->dbConsoleCommand("create:seeder {$seederName}")
+            $this->dbConsoleCommand("create:seeder {$seederName}"),
+            true
         );
     }
 
@@ -374,7 +387,14 @@ class ConsoleManager
      */
     private function drop()
     {
-        $this->executeCommand($this->dbConsoleCommand("drop"));
+        $message = "This command will drop all tables, ";
+        $message .= "Are You Sure? (Enter 'YES' to proceed)";
+        $this->output($message, 'warning');
+
+        $answer = stream_get_line(STDIN, 16, PHP_EOL);
+
+        $this->executeCommand(
+            "echo {$answer} | " . $this->dbConsoleCommand("drop"), true, true);
     }
 
     /**
@@ -384,7 +404,14 @@ class ConsoleManager
      */
     private function fresh()
     {
-        $this->executeCommand($this->dbConsoleCommand("fresh"));
+        $message = "This command will drop all tables, ";
+        $message .= "Are You Sure? (Enter 'YES' to proceed)";
+        $this->output($message, 'warning');
+
+        $answer = stream_get_line(STDIN, 16, PHP_EOL);
+
+        $this->executeCommand(
+            "echo {$answer} | " . $this->dbConsoleCommand("fresh"), true, true);
     }
     
     /**
@@ -396,7 +423,8 @@ class ConsoleManager
     private function migrate($migrationName = '')
     {
         $this->executeCommand(
-            $this->dbConsoleCommand("migrate $migrationName")
+            $this->dbConsoleCommand("migrate $migrationName"),
+            true
         );
     }
 
@@ -408,7 +436,7 @@ class ConsoleManager
      */
     private function rollback($date = '')
     {
-        $this->executeCommand($this->dbConsoleCommand("rollback $date"));
+        $this->executeCommand($this->dbConsoleCommand("rollback $date"), true);
     }
 
     /**
@@ -419,7 +447,10 @@ class ConsoleManager
      */
     private function seed($seederName = '')
     {
-        $this->executeCommand($this->dbConsoleCommand("seed:run $seederName"));
+        $this->executeCommand(
+            $this->dbConsoleCommand("seed $seederName"),
+            true
+        );
     }
 
     /**
@@ -429,7 +460,15 @@ class ConsoleManager
      */
     private function truncate()
     {
-        $this->executeCommand($this->dbConsoleCommand("truncate"));
+        $message = "This command will truncate all tables, ";
+        $message .= "Are You Sure? (Enter 'YES' to proceed)";
+        $this->output($message, 'warning');
+
+        $answer = stream_get_line(STDIN, 16, PHP_EOL);
+        
+        $this->executeCommand(
+            "echo {$answer} | " . 
+            $this->dbConsoleCommand("truncate"), true, true);
     }
 
     /**
