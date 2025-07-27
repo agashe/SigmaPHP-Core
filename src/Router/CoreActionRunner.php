@@ -48,7 +48,7 @@ class CoreActionRunner implements RunnerInterface
                 // if the parameter doesn't exist in the route's parameters
                 // and it's not optional in the action (no default value !)
                 // we throw exception !
-                if (!isset($route['parameters'][$index]) &&
+                if (!isset($route['parameters'][$argumentsIndex]) &&
                     !$parameter->isOptional() && !$parameterIsClass
                 ) {
                     throw new \InvalidArgumentException(
@@ -64,8 +64,8 @@ class CoreActionRunner implements RunnerInterface
                     // value from the Reflection class , if not we 
                     // put null !
                     $arguments[$parameter->getName()] = 
-                        isset($route['parameters'][$index]) ?
-                            ($route['parameters'][$index]) :
+                        isset($route['parameters'][$argumentsIndex]) ?
+                            ($route['parameters'][$argumentsIndex]) :
                             ($parameter->isDefaultValueAvailable() ?
                                 $parameter->getDefaultValue() : null);
                     
