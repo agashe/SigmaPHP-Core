@@ -62,7 +62,7 @@ class Session implements SessionInterface
     final public function delete($name = null)
     {
         @session_start();
-        
+
         if (empty($name) || !isset($_SESSION[$name])) {
             return false;
         }

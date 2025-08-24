@@ -103,6 +103,7 @@ class SessionTest extends TestCase
      */
     public function testDeleteSession()
     {
+        @session_start();
         $_SESSION['hello'] = 'world';
 
         $this->assertTrue($this->session->delete('hello'));
