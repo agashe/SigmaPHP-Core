@@ -45,12 +45,20 @@ class BaseController implements BaseControllerInterface
      * 
      * @param string $templateName
      * @param array $variables
+     * @param int $code
+     * @param array $headers
      * @return SigmaPHP\Core\Http\Response
      */
-    final public function render($templateName = '', $variables = [])
-    {
+    final public function render(
+        $templateName, 
+        $variables = [], 
+        $code = 200, 
+        $headers = []
+    ) {
         return $this->response(
-            container('view')->render($templateName, $variables)
+            container('view')->render($templateName, $variables),
+            $code,
+            $headers
         );
     }
 
@@ -61,7 +69,7 @@ class BaseController implements BaseControllerInterface
      * @param array $variables
      * @return string html content
      */
-    public function renderView($templateName = '', $variables = [])
+    public function renderView($templateName, $variables = [])
     {
         return container('view')->render($templateName, $variables);
     }
