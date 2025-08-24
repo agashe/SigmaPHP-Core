@@ -30,6 +30,7 @@ class Session implements SessionInterface
         }
 
         @session_start();
+
         $_SESSION[$name] = $value;
 
         return true;
@@ -43,11 +44,12 @@ class Session implements SessionInterface
      */
     final public function get($name = null)
     {
+        @session_start();
+
         if (empty($name) || !isset($_SESSION[$name])) {
             return false;
         }
         
-        @session_start();
         return  $_SESSION[$name];        
     }
 
@@ -59,11 +61,12 @@ class Session implements SessionInterface
      */
     final public function delete($name = null)
     {
+        @session_start();
+        
         if (empty($name) || !isset($_SESSION[$name])) {
             return false;
         }
 
-        @session_start();        
         unset($_SESSION[$name]);
 
         return true;
