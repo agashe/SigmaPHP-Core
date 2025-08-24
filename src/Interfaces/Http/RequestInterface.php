@@ -11,7 +11,7 @@ interface RequestInterface
      * Get HTTP GET Request Data.
      * 
      * @param string $key
-     * @return array|null
+     * @return mixed
      */
     public function get($key);
 
@@ -19,7 +19,7 @@ interface RequestInterface
      * Get HTTP POST Request Data.
      * 
      * @param string $key
-     * @return array|null
+     * @return mixed
      */
     public function post($key);
 
@@ -27,7 +27,7 @@ interface RequestInterface
      * Get HTTP Request Uploaded Files.
      * 
      * @param string $key
-     * @return array|null
+     * @return mixed
      */
     public function files($key);
 }

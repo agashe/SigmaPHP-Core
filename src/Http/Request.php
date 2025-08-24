@@ -14,7 +14,7 @@ class Request implements RequestInterface
      * 
      * @param array $source
      * @param string $key
-     * @return array|null
+     * @return mixed
      */
     private function data($source = [], $key = null)
     {
@@ -31,7 +31,7 @@ class Request implements RequestInterface
      * Get HTTP Request Data.
      * 
      * @param string $key
-     * @return array|null
+     * @return mixed
      */
     final public function get($key = null)
     {
@@ -42,7 +42,7 @@ class Request implements RequestInterface
      * Get HTTP Request Data.
      * 
      * @param string $key
-     * @return array|null
+     * @return mixed
      */
     final public function post($key = null)
     {
@@ -53,7 +53,7 @@ class Request implements RequestInterface
      * Get HTTP Request Uploaded Files.
      * 
      * @param string $key
-     * @return array|null
+     * @return mixed
      */
     final public function files($key = null)
     {
