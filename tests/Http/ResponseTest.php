@@ -107,7 +107,6 @@ class ResponseTest extends TestCase
     {
         $this->fakeResponse('hello world', 'text/xml');
 
-        
         $this->assertEquals(
             'text/xml',
             $this->getAllHeadersHelper('Content-Type')
@@ -146,5 +145,20 @@ class ResponseTest extends TestCase
         $this->response->responseJSON(json_encode($message));
         
         $this->expectOutputString('"{\"data\":\"hello world\"}"');        
+    }
+    
+    /**
+     * Test redirect.
+     *
+     * @runInSeparateProcess
+     * @return void
+     */
+    public function testRedirect()
+    {
+        $this->response->redirect('http://test.com');
+        
+        ob_clean(); // clear output
+
+        $this->assertEquals(302, http_response_code());
     }
 }

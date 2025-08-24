@@ -26,13 +26,13 @@ class Response implements ResponseInterface
     ) {
         if (!headers_sent()) {
             header("Content-Type: $type");
+    
+            foreach ($headers as $key => $val) {
+                header("$key: $val");
+            }
         }
 
         http_response_code($code);
-
-        foreach ($headers as $key => $val) {
-            header("$key: $val");
-        }
 
         ob_start();
 
@@ -58,5 +58,50 @@ class Response implements ResponseInterface
             $code, 
             $headers
         );
+    }
+    
+    /**
+     * Redirect to an URL.
+     * 
+     * This method will create dummy html to handle the the redirect with
+     * HTTP status code 302
+     * 
+     * @param string $url
+     * @return self
+     */
+    final public function redirect($url) {
+        $redirectContent = <<<HTML
+            <!DOCTYPE html>
+            <html>
+            <head>
+                <title>Redirecting...</title>
+                <meta http-equiv="refresh" content="0; url={$url}">
+            </head>
+            <body>
+                <p>You will be redirected to {$url}</p>
+            </body>
+            </html>
+        HTML;
+
+        return $this->responseData(
+            $redirectContent, 
+            'text/html', 
+            302,
+            [
+                'Location' => $url
+            ]
+        );
+    }
+
+    /**
+     * Redirect to a route.
+     * 
+     * @param string $routeName
+     * @param array $parameters
+     * @return self
+     */
+    public function route($routeName, $parameters = [])
+    {
+        return $this->redirect(url($routeName, $parameters));
     }
 }
