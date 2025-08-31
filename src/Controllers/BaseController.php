@@ -57,6 +57,7 @@ class BaseController implements BaseControllerInterface
     ) {
         return $this->response(
             container('view')->render($templateName, $variables),
+            'text/html',
             $code,
             $headers
         );
