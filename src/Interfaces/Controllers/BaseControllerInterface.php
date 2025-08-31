@@ -59,6 +59,23 @@ interface BaseControllerInterface
     public function renderView($templateName, $variables = []);
     
     /**
+     * Redirect to an URL.
+     * 
+     * @param string $url
+     * @return SigmaPHP\Core\Http\Response
+     */
+    public function redirect($url);
+    
+    /**
+     * Redirect to a route.
+     * 
+     * @param string $routeName
+     * @param array $parameters
+     * @return SigmaPHP\Core\Http\Response
+    */
+    public function route($routeName, $parameters = []);
+
+    /**
      * Handle cookies.
      * 
      * @return SigmaPHP\Core\Http\Cookie

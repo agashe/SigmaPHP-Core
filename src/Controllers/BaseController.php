@@ -75,6 +75,29 @@ class BaseController implements BaseControllerInterface
     }
     
     /**
+     * Redirect to an URL.
+     * 
+     * @param string $url
+     * @return SigmaPHP\Core\Http\Response
+     */
+    final public function redirect($url)
+    {
+        return container('response')->redirect($url);
+    }
+    
+    /**
+     * Redirect to a route.
+     * 
+     * @param string $routeName
+     * @param array $parameters
+     * @return SigmaPHP\Core\Http\Response
+    */
+    final public function route($routeName, $parameters = [])
+    {
+        return container('response')->route($routeName, $parameters);
+    }
+
+    /**
      * Handle cookies.
      * 
      * @return SigmaPHP\Core\Http\Cookie
