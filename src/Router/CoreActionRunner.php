@@ -3,6 +3,8 @@
 namespace SigmaPHP\Core\Router;
 
 use SigmaPHP\Router\Interfaces\RunnerInterface;
+use SigmaPHP\Router\Exceptions\ActionNotFoundException;
+use SigmaPHP\Router\Exceptions\ControllerNotFoundException;
 
 /**
  * SigmaPHP-Core Action Runner
@@ -18,8 +20,27 @@ class CoreActionRunner implements RunnerInterface
     public function execute($route)
     {
         if (!isset($route['controller']) || empty($route['controller'])) {
+            if (!function_exists($route['action'])) {
+                throw new ActionNotFoundException("
+                    The action {$route['action']} is not found
+                ");
+            }
+
             call_user_func($route['action'],...$route['parameters']);
         } else {
+            if (!class_exists($route['controller'])) {
+                throw new ControllerNotFoundException("
+                    The controller {$route['controller']} is not found
+                ");
+            }
+
+            if (!method_exists($route['controller'], $route['action'])) {
+                throw new ActionNotFoundException("
+                    The action {$route['action']} is not found in 
+                    {$route['controller']} controller
+                ");
+            }
+
             // get match arguments with parameters value
             $reflection = new \ReflectionMethod(
                 $route['controller'],
