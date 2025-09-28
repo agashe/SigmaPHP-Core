@@ -293,4 +293,18 @@ class HelperTest extends TestCase
             container('view')->render('index')
         );
     }
+
+    /**
+     * Test get base URL.
+     *
+     * @return void
+     */
+    public function testGetBaseUrl()
+    {
+        $_SERVER['HTTP_HOST'] = 'localhost';
+
+        $expected = 'http://localhost/';
+
+        $this->assertEquals($expected, baseUrl());
+    }
 }

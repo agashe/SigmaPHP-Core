@@ -86,6 +86,16 @@ class Router implements RouterInterface
     {
         $this->routerEngine->setPageNotFoundHandler($handler);
     }
+
+    /**
+     * Get base URL.
+     * 
+     * @return string
+     */
+    public function getBaseUrl()
+    {
+        return $this->routerEngine->getBaseUrl();
+    }
     
     /**
      * Start the router execution.

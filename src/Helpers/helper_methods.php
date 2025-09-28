@@ -38,6 +38,12 @@ if (!function_exists('url')) {
     }
 }
 
+if (!function_exists('baseUrl')) {
+    function baseUrl() {
+        return container('router')->getBaseUrl();
+    }
+}
+
 if (!function_exists('encrypt')) {
     function encrypt($text, $salt = '') {
         return openssl_encrypt(
