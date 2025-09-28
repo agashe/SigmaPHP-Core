@@ -11,7 +11,7 @@ interface CookieInterface
      * Create Cookie.
      * 
      * @param string $name
-     * @param mixed $value
+     * @param string $value
      * @param int $expireAt
      * @param array $options
      * @return bool
@@ -22,7 +22,7 @@ interface CookieInterface
      * Get Cookie Value.
      * 
      * @param string $name
-     * @return mixed
+     * @return string
      */
     public function get($name);
 

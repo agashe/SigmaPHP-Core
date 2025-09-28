@@ -14,7 +14,7 @@ class Cookie implements CookieInterface
      * Create Cookie.
      * 
      * @param string $name
-     * @param mixed $value
+     * @param string $value
      * @param int $expireAt
      * @param array $options
      * @return bool
@@ -36,7 +36,8 @@ class Cookie implements CookieInterface
         }
 
         return setcookie($name, $value, ([
-            'expires' => $expireAt
+            'expires' => $expireAt,
+            'path' => '/'
         ] + $options));
     }
 
@@ -44,7 +45,7 @@ class Cookie implements CookieInterface
      * Get Cookie Value.
      * 
      * @param string $name
-     * @return mixed
+     * @return string
      */
     final public function get($name = null)
     {
@@ -65,7 +66,8 @@ class Cookie implements CookieInterface
         }
 
         return setcookie($name, '', [
-            'expires' => (time() - 3600)
+            'expires' => (time() - 3600),
+            'path' => '/'
         ]);
     }
 }
