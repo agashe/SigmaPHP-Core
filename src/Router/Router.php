@@ -3,7 +3,6 @@
 namespace SigmaPHP\Core\Router;
 
 use SigmaPHP\Core\Interfaces\Router\RouterInterface;
-use SigmaPHP\Router\Router as RouterEngine;
 
 /**
  * Router Class
@@ -11,7 +10,7 @@ use SigmaPHP\Router\Router as RouterEngine;
 class Router implements RouterInterface
 {
     /**
-     * @var \SigmaPHP\Router\Router $routerEngine
+     * @var object $routerEngine
      */
     private $routerEngine;
 
@@ -19,11 +18,6 @@ class Router implements RouterInterface
      * @var string $routeFilesPath
      */
     private $routeFilesPath;
-
-    /**
-     * @var string $basePath
-     */
-    private $basePath;
 
     /**
      * @var array $routes
@@ -34,17 +28,22 @@ class Router implements RouterInterface
      * Router Constructor
      * 
      * @param string $routeFilesPath
-     * @param string $basePath
      */
-    public function __construct($routeFilesPath, $basePath = '')
+    public function __construct($routeFilesPath)
     {
         $this->routeFilesPath = $routeFilesPath;
-        $this->basePath = $basePath;
         $this->routes = [];
+    }
 
-        $this->loadRoutes();
-
-        $this->routerEngine = new RouterEngine($this->routes, $this->basePath);
+    /**
+     * Set the router engine (the actual Router).
+     * 
+     * @param object $routerEngine
+     * @return void
+     */
+    public function setRouterEngine($routerEngine)
+    {
+        $this->routerEngine = $routerEngine;
     }
 
     /**
@@ -52,7 +51,7 @@ class Router implements RouterInterface
      * 
      * @return void
      */
-    final public function loadRoutes()
+    public function loadRoutes()
     {
         if ($handle = opendir($this->routeFilesPath)) {
             while (($file = readdir($handle))) {
@@ -62,6 +61,16 @@ class Router implements RouterInterface
         
             closedir($handle);
         }
+    }
+
+    /**
+     * List all registered routes.
+     * 
+     * @return array
+     */
+    public function listRoutes()
+    {
+        return $this->routes;
     }
 
     /**
@@ -102,7 +111,7 @@ class Router implements RouterInterface
      *
      * @return void
      */
-    final public function start()
+    public function start()
     {        
         $this->routerEngine->setActionRunner(CoreActionRunner::class);
         $this->routerEngine->run();
