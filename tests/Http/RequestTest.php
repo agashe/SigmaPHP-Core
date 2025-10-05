@@ -153,4 +153,52 @@ class RequestTest extends TestCase
     {
         $this->assertNull($this->request->files('hello'));
     }
+    
+    /**
+     * Test returns the current full URL.
+     *
+     * @return void
+     */
+    public function testReturnsTheCurrentFullUrl()
+    {
+        // fake url
+        $_SERVER['HTTPS'] = 'on';
+        $_SERVER['HTTP_HOST'] = 'example.com';
+        $_SERVER['REQUEST_URI'] = 'api/v1/user?name=ahmed';
+        
+        $this->assertEquals(
+            'https://example.com/api/v1/user?name=ahmed', 
+            $this->request->current()
+        );
+    }
+
+    /**
+     * Test returns the current HTTP method.
+     *
+     * @return void
+     */
+    public function testReturnsTheCurrentHttpMethod()
+    {
+        $_SERVER['REQUEST_METHOD'] = 'DELETE';
+        
+        $this->assertEquals('DELETE', $this->request->method());
+    }
+    
+    /**
+     * Test returns the request headers.
+     *
+     * @return void
+     */
+    public function testReturnsTheRequestHeaders()
+    {
+        if (isset($_SERVER['HTTP_HOST'])) {
+            unset($_SERVER['HTTP_HOST']);
+        }
+        
+        $_SERVER['HTTP_MY_CUSTOM_HEADER'] = '123';
+
+        $this->assertEquals([
+            'My-Custom-Header' => '123'
+        ], $this->request->headers());
+    }
 }

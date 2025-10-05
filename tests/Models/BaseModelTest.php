@@ -3,8 +3,6 @@
 use PHPUnit\Framework\TestCase;
 use SigmaPHP\Core\Tests\Models\TestModel;
 
-use SigmaPHP\Core\App\Kernel;
-
 /**
  * Base Model Test
  *
@@ -32,9 +30,6 @@ class BaseModelTest extends TestCase
      */
     public function setUp(): void
     {
-        // initialize new app
-        new Kernel();
-
         // add your database configs to phpunit.xml
         // and to database.config.php for the SigmaPHP-DB
         // package to work properly
@@ -45,42 +40,9 @@ class BaseModelTest extends TestCase
             'pass' => $GLOBALS['DB_PASS'],
             'port' => $GLOBALS['DB_PORT'],
         ];
-
+        
         // create test table
         $this->createTestTable('test_models');
-
-        // copy testing database config file
-        if (!is_dir('config')) {
-            mkdir('config');
-        } 
-
-        if (!file_exists('config/database.php')) {
-            file_put_contents(
-                'config/database.php', 
-                <<<CONFIG
-                <?php
-
-                return [
-                    'path_to_migrations'  => '/database/migrations',
-                    'path_to_seeders'     => '/database/seeders',
-                    'path_to_models'      => '/src/Models',
-                    'logs_table_name'     => 'db_logs',
-                    'database_connection' => [
-                        'host' => '{$GLOBALS['DB_HOST']}',
-                        'name' => '{$GLOBALS['DB_NAME']}',
-                        'user' => '{$GLOBALS['DB_USER']}',
-                        'pass' => '{$GLOBALS['DB_PASS']}',
-                        'port' => '{$GLOBALS['DB_PORT']}',
-                    ]
-                ];
-                CONFIG
-            );
-        }
-
-        // create dummy .env file
-        if (!file_exists('.env')) {
-            file_put_contents('.env', 'APP_ENV="development"');
-        }
 
         // create new test model instance
         $this->model = new TestModel();
@@ -93,20 +55,6 @@ class BaseModelTest extends TestCase
      */
     public function tearDown(): void
     {
-        // remove the testing config file
-        if (file_exists('config/database.php')) {
-            unlink('config/database.php');
-        }
-
-        if (is_dir('config')) {
-            rmdir('config');
-        }
-
-        // remove the dummy .env file
-        if (file_exists('.env')) {
-            unlink('.env');
-        }
-
         $this->dropTestTable('test_models');
     }
 

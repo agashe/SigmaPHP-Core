@@ -8,103 +8,7 @@ use SigmaPHP\Core\App\Kernel;
  * Helper Test
  */
 class HelperTest extends TestCase
-{
-    /**
-     * HelperTest SetUp
-     *
-     * @return void
-     */
-    public function setUp(): void
-    {
-        // initialize new app
-        new Kernel();
-
-        // create dummy config file
-        if (!is_dir('config')) {
-            mkdir('config');
-        }
-
-        if (!file_exists('config/app.php')) {
-            file_put_contents(
-                'config/app.php', 
-                '<?php return [' .
-                    '"api" => ["version" => "1.0.0"],' .
-                    '"views_path" => "templates/",' .
-                    '"routes_path" => "routes/"' . 
-                '];'
-            );
-        }
-
-        // create dummy .env file
-        if (!file_exists('.env')) {
-            file_put_contents('.env', 'APP_ENV="development"');
-        }
-
-        // create dummy routes file
-        if (!is_dir('routes')) {
-            mkdir('routes');
-        }
-        
-        if (!file_exists('web.php')) {
-            file_put_contents(
-                'routes/web.php', 
-                '<?php return [["path" => "/test", "name" => "test"]];'
-            );
-        }
-
-        // create dummy template file
-        if (!is_dir('templates')) {
-            mkdir('templates');
-        }
-        
-        if (!file_exists('index.template.html')) {
-            file_put_contents(
-                'templates/index.template.html', 
-                '<h1>hello {{ $name }}</h1>'
-            );
-        }
-    }
-
-    /**
-     * HelperTest TearDown
-     *
-     * @return void
-     */
-    public function tearDown(): void
-    {
-        // remove the dummy config file
-        if (file_exists('config/app.php')) {
-            unlink('config/app.php');
-        }
-
-        if (is_dir('config')) {
-            rmdir('config');
-        }
-
-        // remove the dummy .env file
-        if (file_exists('.env')) {
-            unlink('.env');
-        }
-        
-        // remove the dummy routes file
-        if (file_exists('routes/web.php')) {
-            unlink('routes/web.php');
-        }
-
-        if (is_dir('routes')) {
-            rmdir('routes');
-        }
-        
-        // remove the dummy template file
-        if (file_exists('templates/index.template.html')) {
-            unlink('templates/index.template.html');
-        }
-
-        if (is_dir('templates')) {
-            rmdir('templates');
-        }
-    }
-    
+{   
     /**
      * Test get framework version.
      *
@@ -277,7 +181,7 @@ class HelperTest extends TestCase
      */
     public function testCustomTemplateDirectives()
     {
-        if (!file_exists('index.template.html')) {
+        if (file_exists('templates/index.template.html')) {
             file_put_contents(
                 'templates/index.template.html', 
                 '<h1>{% greeting("Omar") %}</h1>'

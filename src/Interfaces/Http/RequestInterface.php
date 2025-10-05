@@ -30,4 +30,25 @@ interface RequestInterface
      * @return mixed
      */
     public function files($key);
+
+    /**
+     * Get current URL.
+     * 
+     * @return string
+     */
+    public function current();
+    
+    /**
+     * Get request method.
+     * 
+     * @return string
+     */
+    public function method();
+    
+    /**
+     * Get request headers.
+     * 
+     * @return string
+     */
+    public function headers();
 }
