@@ -103,7 +103,7 @@ class BaseController implements BaseControllerInterface
      * 
      * @return SigmaPHP\Core\Http\Response
      */
-    public function back()
+    final public function back()
     {
         return container('response')->redirect(
             container('request')->previous()
