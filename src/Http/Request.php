@@ -67,7 +67,8 @@ class Request implements RequestInterface
      */
     public function current()
     {
-        return baseUrl() . $_SERVER['REQUEST_URI'];
+        return rtrim(baseUrl(), '/') . '/' . 
+            ltrim($_SERVER['REQUEST_URI'], '/');
     }
     
     /**
