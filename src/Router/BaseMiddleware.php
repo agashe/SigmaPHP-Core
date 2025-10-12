@@ -1,6 +1,6 @@
 <?php
 
-namespace SigmaPHP\Core\Controllers;
+namespace SigmaPHP\Core\Router;
 
 use SigmaPHP\Core\Interfaces\Router\BaseMiddlewareInterface;
 
