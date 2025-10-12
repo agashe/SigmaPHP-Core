@@ -59,4 +59,11 @@ interface BaseMiddlewareInterface
      * @return SigmaPHP\Core\Http\FileUpload
      */
     public function file();
+    
+    /**
+     * Get the current request.
+     * 
+     * @return SigmaPHP\Core\Http\Request
+     */
+    public function request();
 }

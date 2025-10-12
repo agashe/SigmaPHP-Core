@@ -72,5 +72,15 @@ abstract class BaseMiddleware implements BaseMiddlewareInterface
     public function file()
     {
         return container('file');
-    }    
+    }
+
+    /**
+     * Get the current request.
+     * 
+     * @return SigmaPHP\Core\Http\Request
+     */
+    public function request()
+    {
+        return container('request');
+    }
 }
