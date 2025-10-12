@@ -83,6 +83,14 @@ class ConsoleManager
                 $this->createView($argument);
                 break;
             
+            case 'create:service-provider':
+                $this->createServiceProvider($argument);
+                break;
+
+            case 'create:middleware':
+                $this->createMiddleware($argument);
+                break;
+            
             case 'create:uploads':
                 $this->createUploadsFolder();
                 break;
@@ -212,6 +220,8 @@ class ConsoleManager
                 Clear views cache.
             create:controller {controller name}
                 Create controller.
+            create:middleware {middleware name}
+                Create middleware.
             create:migration {migration name}
                 Create migration file.
             create:model {model name}
@@ -221,6 +231,8 @@ class ConsoleManager
                 Generate app secret key , and save it into .env file.
             create:seeder {seeder name}
                 Create seeder file. 
+            create:service-provider {service provider name}
+                Create service provider.
             create:uploads
                 Create uploads folder.
             create:view {view name}
@@ -564,6 +576,68 @@ class ConsoleManager
         }
 
         $this->createFile($path, $viewName . '.template.html', '');
+    }
+
+    /**
+     * Create new service provider.
+     * 
+     * @param string $serviceProviderName
+     * @return void
+     */
+    private function createServiceProvider($serviceProviderName)
+    {
+        $appPath = root_path('app/');
+        $path = $appPath . 'Providers';
+
+        // check that service provider's name is not empty
+        if (empty($serviceProviderName)) {
+            throw new \InvalidArgumentException(
+                "Service Provider's name can't be empty"
+            );
+        }
+
+        // check that service providers path does exist
+        // and if not , create it
+        if (!is_dir($path)) {
+            mkdir($path);
+        }
+
+        $this->createFile($path, $serviceProviderName . '.php', str_replace(
+            '$serviceProviderName',
+            $serviceProviderName,
+            file_get_contents(__DIR__ . '/templates/provider.php.dist')
+        ));
+    }
+    
+    /**
+     * Create new middleware.
+     * 
+     * @param string $middlewareName
+     * @return void
+     */
+    private function createMiddleware($middlewareName)
+    {
+        $appPath = root_path('app/');
+        $path = $appPath . 'Providers';
+
+        // check that middleware's name is not empty
+        if (empty($middlewareName)) {
+            throw new \InvalidArgumentException(
+                "Service Provider's name can't be empty"
+            );
+        }
+
+        // check that middlewares path does exist
+        // and if not , create it
+        if (!is_dir($path)) {
+            mkdir($path);
+        }
+
+        $this->createFile($path, $middlewareName . '.php', str_replace(
+            '$middlewareName',
+            $middlewareName,
+            file_get_contents(__DIR__ . '/templates/middleware.php.dist')
+        ));
     }
 
     /**

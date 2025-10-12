@@ -8,7 +8,7 @@ use SigmaPHP\DB\ORM\Model;
 /**
  * Core Base Model Class
  */
-class BaseModel extends Model implements BaseModelInterface
+abstract class BaseModel extends Model implements BaseModelInterface
 {
     /**
      * BaseModel Constructor

@@ -7,8 +7,8 @@ use SigmaPHP\Core\Interfaces\Router\BaseMiddlewareInterface;
 /**
  * Base Middleware Class
  */
-class BaseMiddleware implements BaseMiddlewareInterface
-{   
+abstract class BaseMiddleware implements BaseMiddlewareInterface
+{
     /**
      * Redirect to an URL.
      * 

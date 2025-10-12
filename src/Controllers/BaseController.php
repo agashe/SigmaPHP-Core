@@ -7,7 +7,7 @@ use SigmaPHP\Core\Interfaces\Controllers\BaseControllerInterface;
 /**
  * Base Controller Class
  */
-class BaseController implements BaseControllerInterface
+abstract class BaseController implements BaseControllerInterface
 {
     /**
      * Return new response.

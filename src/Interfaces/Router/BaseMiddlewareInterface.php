@@ -8,6 +8,13 @@ namespace SigmaPHP\Core\Interfaces\Router;
 interface BaseMiddlewareInterface
 {
     /**
+     * Handle the incoming request.
+     * 
+     * @return mixed
+     */
+    public function handle();
+
+    /**
      * Redirect to an URL.
      * 
      * @param string $url
