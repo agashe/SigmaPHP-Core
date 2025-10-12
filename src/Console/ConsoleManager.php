@@ -587,7 +587,7 @@ class ConsoleManager
     private function createServiceProvider($serviceProviderName)
     {
         $appPath = root_path('app/');
-        $path = $appPath . 'Providers';
+        $path = $appPath . 'Providers/';
 
         // check that service provider's name is not empty
         if (empty($serviceProviderName)) {
