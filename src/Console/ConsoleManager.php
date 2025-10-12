@@ -618,7 +618,7 @@ class ConsoleManager
     private function createMiddleware($middlewareName)
     {
         $appPath = root_path('app/');
-        $path = $appPath . 'Providers/';
+        $path = $appPath . 'Middlewares/';
 
         // check that middleware's name is not empty
         if (empty($middlewareName)) {
