@@ -5,7 +5,7 @@ namespace App\Providers;
 use SigmaPHP\Container\Interfaces\ServiceProviderInterface;
 use SigmaPHP\Container\Container;
 
-class $providerName implements ServiceProviderInterface
+class $serviceProviderName implements ServiceProviderInterface
 {
     /**
      * The boot method , will be called after all 
