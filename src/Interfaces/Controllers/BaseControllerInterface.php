@@ -76,6 +76,14 @@ interface BaseControllerInterface
     public function route($routeName, $parameters = []);
 
     /**
+     * Redirect to previous URL.
+     * 
+     * @param string $url
+     * @return SigmaPHP\Core\Http\Response
+     */
+    public function back();
+
+    /**
      * Handle cookies.
      * 
      * @return SigmaPHP\Core\Http\Cookie

@@ -124,4 +124,14 @@ class Request implements RequestInterface
         
         return $headers;
     }
+
+    /**
+     * Get previous URL.
+     * 
+     * @return string
+     */
+    public function previous()
+    {
+        return $_SERVER['HTTP_REFERER'];
+    }
 }

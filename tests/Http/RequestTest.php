@@ -201,4 +201,19 @@ class RequestTest extends TestCase
             'My-Custom-Header' => '123'
         ], $this->request->headers());
     }
+
+    /**
+     * Test returns the previous full URL.
+     *
+     * @return void
+     */
+    public function testReturnsThePreviousFullUrl()
+    {
+        $_SERVER['HTTP_REFERER'] = 'https://example.com/posts';
+        
+        $this->assertEquals(
+            'https://example.com/posts', 
+            $this->request->previous()
+        );
+    }
 }

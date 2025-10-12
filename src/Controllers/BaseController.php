@@ -99,6 +99,18 @@ class BaseController implements BaseControllerInterface
     }
 
     /**
+     * Redirect to previous URL.
+     * 
+     * @return SigmaPHP\Core\Http\Response
+     */
+    public function back()
+    {
+        return container('response')->redirect(
+            container('request')->previous()
+        );
+    }
+
+    /**
      * Handle cookies.
      * 
      * @return SigmaPHP\Core\Http\Cookie
