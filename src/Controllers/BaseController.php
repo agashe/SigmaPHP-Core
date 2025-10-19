@@ -154,9 +154,16 @@ abstract class BaseController implements BaseControllerInterface
         // serialize to JSON , and save to session
         // 
         // Upon retrieval we load all these into the view , then clear !
-        $messages = json_decode(container('session')->get('_sigma_flash_'));
-
-        $messages[$name] = $value;
+        $messages = json_decode(
+            container('session')->get('_sigma_flash_'),
+            true
+        );
+     
+        if ($messages == null) {
+            $messages = [$name => $value];
+        } else {
+            $messages[$name] = $value;
+        }
 
         container('session')->set('_sigma_flash_', json_encode($messages));
     }
