@@ -3,6 +3,7 @@
 namespace SigmaPHP\Core\Router;
 
 use SigmaPHP\Router\Interfaces\RunnerInterface;
+use SigmaPHP\Core\Exceptions\InvalidActionException;
 use SigmaPHP\Router\Exceptions\ActionNotFoundException;
 use SigmaPHP\Router\Exceptions\ControllerNotFoundException;
 
@@ -19,6 +20,8 @@ class CoreActionRunner implements RunnerInterface
      */
     public function execute($route)
     {
+        $return = null;
+
         if (!isset($route['controller']) || empty($route['controller'])) {
             if (!function_exists($route['action'])) {
                 throw new ActionNotFoundException("
@@ -26,7 +29,7 @@ class CoreActionRunner implements RunnerInterface
                 ");
             }
 
-            call_user_func($route['action'],...$route['parameters']);
+            $return = call_user_func($route['action'],...$route['parameters']);
         } else {
             if (!class_exists($route['controller'])) {
                 throw new ControllerNotFoundException("
@@ -97,11 +100,24 @@ class CoreActionRunner implements RunnerInterface
             // if the parameter is a class , the container will take care 
             // otherwise we prepare all the primitive parameters in the
             // $arguments and then pass it
-            container()->call(
+            $return = container()->call(
                 $route['controller'],
                 $route['action'],
                 $arguments
             );
+
+            // here we check if the action returned object of type Response !
+            // if not we throw the following exception
+            //  
+            // Please note : currently $return might looks meaningless , but 
+            // in future when the architecture will be revamped , this variable
+            // will play key role !!
+            if (!($return instanceof \SigmaPHP\Core\Http\Response)) {
+                throw new InvalidActionException(
+                    "The action '{$route['action']}'" . 
+                    "doesn't return valid Response !"
+                );
+            }
         }
     }
 }
