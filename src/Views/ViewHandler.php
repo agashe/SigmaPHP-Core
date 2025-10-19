@@ -14,6 +14,11 @@ class ViewHandler implements ViewHandlerInterface
      * @var SigmaPHP\Template\Engine $templateEngine
      */
     private $templateEngine;
+    
+    /**
+     * @var array $httpDirectives
+     */
+    private $httpDirectives;
 
     /**
      * ViewHandler Constructor
@@ -24,6 +29,7 @@ class ViewHandler implements ViewHandlerInterface
     public function __construct($viewsPath, $cachePath)
     {
         $this->templateEngine = new Engine($viewsPath, $cachePath);
+        $this->httpDirectives = require('directives/http.php');
     }
 
     /**
@@ -41,7 +47,7 @@ class ViewHandler implements ViewHandlerInterface
 
         $templateDirectives = array_merge(
             container('custom_template_directives'),
-            require('custom_directives.php')
+            $this->httpDirectives
         );
         
         foreach ($templateDirectives as $name => $callback)

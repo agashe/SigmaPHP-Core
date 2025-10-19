@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * This file contains definitions for all HTTP based Template Engine Directives  
+ */
 return [
     'current' => function() {
         return container('request')->current();
