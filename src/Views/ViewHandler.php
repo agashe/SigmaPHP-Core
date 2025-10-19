@@ -51,7 +51,7 @@ class ViewHandler implements ViewHandlerInterface
 
         $this->templateEngine->setSharedVariables(array_merge(
             container('shared_template_variables'),
-            $flashMessages
+            ['flashMessages' => $flashMessages]
         ));
 
         $templateDirectives = array_merge(
