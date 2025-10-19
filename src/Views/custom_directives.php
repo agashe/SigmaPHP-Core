@@ -1,16 +1,16 @@
 <?php
 
 return [
-    'request' => function() {
-        return container('request');
+    'current' => function() {
+        return container('request')->current();
     },
-    'cookie' => function() {
-        return container('cookie');
+    'previous' => function() {
+        return container('request')->previous();
     },
-    'session' => function() {
-        return container('session');
+    'cookie' => function($name) {
+        return container('cookie')->get($name);
     },
-    'file' => function() {
-        return container('file');
+    'session' => function($name) {
+        return container('session')->get($name);
     },
 ];

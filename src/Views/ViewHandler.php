@@ -39,7 +39,12 @@ class ViewHandler implements ViewHandlerInterface
             container('shared_template_variables')
         );
 
-        foreach (container('custom_template_directives') as $name => $callback)
+        $templateDirectives = array_merge(
+            container('custom_template_directives'),
+            require('custom_directives.php')
+        );
+        
+        foreach ($templateDirectives as $name => $callback)
         {
             $this->templateEngine->registerCustomDirective($name, $callback);
         }

@@ -73,10 +73,7 @@ class Kernel implements KernelInterface
         self::$container->set('shared_template_variables', []);
 
         // define custom template directives in the container
-        self::$container->set(
-            'custom_template_directives', 
-            require(__DIR__ . '../Views/custom_directives.php')
-        );
+        self::$container->set('custom_template_directives', []);
 
         // enable the autowiring for all classes
         self::$container->autowire();

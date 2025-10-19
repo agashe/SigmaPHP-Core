@@ -70,6 +70,16 @@ class Request implements RequestInterface
         return rtrim(baseUrl(), '/') . '/' . 
             ltrim($_SERVER['REQUEST_URI'], '/');
     }
+
+    /**
+     * Get previous URL.
+     * 
+     * @return string
+     */
+    public function previous()
+    {
+        return $_SERVER['HTTP_REFERER'] ?? $this->current();
+    }
     
     /**
      * Get request method.
@@ -123,15 +133,5 @@ class Request implements RequestInterface
         }
         
         return $headers;
-    }
-
-    /**
-     * Get previous URL.
-     * 
-     * @return string
-     */
-    public function previous()
-    {
-        return $_SERVER['HTTP_REFERER'];
     }
 }

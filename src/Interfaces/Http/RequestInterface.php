@@ -39,6 +39,13 @@ interface RequestInterface
     public function current();
     
     /**
+     * Get previous URL.
+     * 
+     * @return string
+     */
+    public function previous();
+    
+    /**
      * Get request method.
      * 
      * @return string
@@ -51,11 +58,4 @@ interface RequestInterface
      * @return string
      */
     public function headers();
-
-    /**
-     * Get previous URL.
-     * 
-     * @return string
-     */
-    public function previous();
 }
