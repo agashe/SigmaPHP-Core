@@ -138,5 +138,26 @@ abstract class BaseController implements BaseControllerInterface
     final public function file()
     {
         return container('file');
-    }    
+    }
+
+    /**
+     * Save Flash messages.
+     * 
+     * @param string $name
+     * @param string $value
+     * @return void
+     */
+    final public function flash($name, $value)
+    {
+        // we will use "_sigma_flash_" as a  global container for the flash
+        // messages , we basically save the key/value into any associated array
+        // serialize to JSON , and save to session
+        // 
+        // Upon retrieval we load all these into the view , then clear !
+        $messages = json_decode(container('session')->get('_sigma_flash_'));
+
+        $messages[$name] = $value;
+
+        container('session')->set('_sigma_flash_', json_encode($messages));
+    }
 }

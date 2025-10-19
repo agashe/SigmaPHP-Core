@@ -103,4 +103,13 @@ interface BaseControllerInterface
      * @return SigmaPHP\Core\Http\FileUpload
      */
     public function file();
+    
+    /**
+     * Save Flash messages.
+     * 
+     * @param string $name
+     * @param string $value
+     * @return void
+     */
+    public function flash($name, $value);
 }

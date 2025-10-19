@@ -41,9 +41,18 @@ class ViewHandler implements ViewHandlerInterface
      */
     final public function render($templateName = '', $variables = [])
     {
-        $this->templateEngine->setSharedVariables(
-            container('shared_template_variables')
+        $flashMessages = json_decode(
+            container('session')->get('_sigma_flash_')
         );
+
+        // clear the flash messages !
+        container('session')->delete('_sigma_flash_');
+
+
+        $this->templateEngine->setSharedVariables(array_merge(
+            container('shared_template_variables'),
+            $flashMessages
+        ));
 
         $templateDirectives = array_merge(
             container('custom_template_directives'),
