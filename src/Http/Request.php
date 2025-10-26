@@ -78,7 +78,10 @@ class Request implements RequestInterface
      */
     public function previous()
     {
-        return $_SERVER['HTTP_REFERER'] ?? $this->current();
+        $previous = container('session')->get('_sigma_previous_url_')
+            ?? $_SERVER['HTTP_REFERER'];
+            
+        return $previous ?? $this->current();
     }
     
     /**

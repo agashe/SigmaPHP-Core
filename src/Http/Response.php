@@ -83,6 +83,12 @@ class Response implements ResponseInterface
             </html>
         HTML;
 
+        // save current session as a previous_url
+        container('session')->set(
+            '_sigma_previous_url_', 
+            container('request')->current()
+        );
+
         return $this->responseData(
             $redirectContent, 
             'text/html', 
