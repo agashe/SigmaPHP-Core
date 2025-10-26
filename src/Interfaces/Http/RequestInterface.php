@@ -53,6 +53,20 @@ interface RequestInterface
     public function method();
     
     /**
+     * Get request port.
+     * 
+     * @return string
+     */
+    public function port();
+    
+    /**
+     * Check is the connection is HTTPS.
+     * 
+     * @return bool
+     */
+    public function isSecure();
+    
+    /**
      * Get request headers.
      * 
      * @return string

@@ -79,7 +79,7 @@ class Request implements RequestInterface
     public function previous()
     {
         $previous = container('session')->get('_sigma_previous_url_')
-            ?? $_SERVER['HTTP_REFERER'];
+            ?: $_SERVER['HTTP_REFERER'];
             
         return $previous ?? $this->current();
     }
@@ -92,6 +92,26 @@ class Request implements RequestInterface
     public function method()
     {
         return $_SERVER['REQUEST_METHOD'];
+    }
+
+    /**
+     * Get request port.
+     * 
+     * @return string
+     */
+    public function port()
+    {
+        return $_SERVER['SERVER_PORT'];
+    }
+    
+    /**
+     * Check is the connection is HTTPS.
+     * 
+     * @return bool
+     */
+    public function isSecure()
+    {
+        return isset($_SERVER['HTTPS']);
     }
     
     /**

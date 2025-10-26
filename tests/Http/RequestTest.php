@@ -216,4 +216,32 @@ class RequestTest extends TestCase
             $this->request->previous()
         );
     }
+
+    /**
+     * Test returns the server's port.
+     *
+     * @return void
+     */
+    public function testReturnsTheServerPort()
+    {
+        $_SERVER['HTTP_HOST'] = 'example.com';
+        $_SERVER['SERVER_PORT'] = '7070';
+        
+        $this->assertEquals('7070', $this->request->port());
+    }
+
+    /**
+     * Test returns can check if current connection is secure.
+     *
+     * @return void
+     */
+    public function testReturnsCanCheckIfCurrentConnectionIsSecure()
+    {
+        // fake url
+        $_SERVER['HTTPS'] = 'on';
+        $_SERVER['HTTP_HOST'] = 'example.com';
+        $_SERVER['REQUEST_URI'] = 'api/v1/user?name=ahmed';
+        
+        $this->assertTrue($this->request->isSecure());
+    }
 }
