@@ -22,6 +22,9 @@ class CoreActionRunner implements RunnerInterface
     {
         $return = null;
 
+        // ensure that the session has started before any execution
+        session_start();
+
         if (!isset($route['controller']) || empty($route['controller'])) {
             if (!function_exists($route['action'])) {
                 throw new ActionNotFoundException("
