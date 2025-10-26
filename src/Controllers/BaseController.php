@@ -167,4 +167,21 @@ abstract class BaseController implements BaseControllerInterface
 
         container('session')->set('_sigma_flash_', json_encode($messages));
     }
+
+    /**
+     * Save old submitted values for both GET and POST requests.
+     * 
+     * @return void
+     */
+    public function saveOldValues()
+    {
+        // save old form values
+        container('session')->set(
+            '_sigma_old_values_', 
+            json_encode(array_merge(
+                container('request')->post(),
+                container('request')->get(),
+            ) ?? [])
+        );
+    }
 }

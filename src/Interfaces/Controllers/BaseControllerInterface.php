@@ -112,4 +112,11 @@ interface BaseControllerInterface
      * @return void
      */
     public function flash($name, $value);
+
+    /**
+     * Save old submitted values for both GET and POST requests.
+     * 
+     * @return void
+     */
+    public function saveOldValues();
 }

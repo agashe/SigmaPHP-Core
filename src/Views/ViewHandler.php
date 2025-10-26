@@ -41,26 +41,35 @@ class ViewHandler implements ViewHandlerInterface
      */
     final public function render($templateName = '', $variables = [])
     {
+        // load the flash messages !
         $flashMessages = [];
-
+        
         if (container('session')->get('_sigma_flash_') != false) {
             $flashMessages = json_decode(
                 container('session')->get('_sigma_flash_'),
                 true
             );
+
+            container('session')->delete('_sigma_flash_');
         }
         
-        // clear the flash messages !
-        container('session')->delete('_sigma_flash_');
-
-        // old post values (for form case)
-        $oldFormValues = container('request')->post() ?? [];
-
+        // load the old values !
+        $oldValues = [];
+        
+        if (container('session')->get('_sigma_old_values_') != false) {
+            $oldValues = json_decode(
+                container('session')->get('_sigma_old_values_'),
+                true
+            );
+            
+            container('session')->delete('_sigma_old_values_');
+        }
+        
         $this->templateEngine->setSharedVariables(array_merge(
             container('shared_template_variables'),
             [
                 'flashMessages' => $flashMessages,
-                'oldFormValues' => $oldFormValues
+                'oldValues' => $oldValues
             ]
         ));
 
