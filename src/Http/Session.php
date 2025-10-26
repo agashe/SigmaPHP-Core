@@ -11,6 +11,18 @@ use SigmaPHP\Core\Interfaces\Http\SessionInterface;
 class Session implements SessionInterface
 {
     /**
+     * Start new session.
+     * 
+     * @return void
+     */
+    final public static function start()
+    {
+        if (session_status() !== PHP_SESSION_ACTIVE) {
+            @session_start();
+        }
+    }
+
+    /**
      * Create Session.
      * 
      * @param string $name
@@ -29,7 +41,7 @@ class Session implements SessionInterface
             return false;
         }
 
-        @session_start();
+        self::start();
 
         $_SESSION[$name] = $value;
 
@@ -44,7 +56,7 @@ class Session implements SessionInterface
      */
     final public function get($name = null)
     {
-        @session_start();
+        self::start();
 
         if (empty($name) || !isset($_SESSION[$name])) {
             return false;
@@ -61,7 +73,7 @@ class Session implements SessionInterface
      */
     final public function delete($name = null)
     {
-        @session_start();
+        self::start();
 
         if (empty($name) || !isset($_SESSION[$name])) {
             return false;

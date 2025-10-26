@@ -2,6 +2,7 @@
 
 namespace SigmaPHP\Core\Router;
 
+use SigmaPHP\Core\Http\Session;
 use SigmaPHP\Router\Interfaces\RunnerInterface;
 use SigmaPHP\Core\Exceptions\InvalidActionException;
 use SigmaPHP\Router\Exceptions\ActionNotFoundException;
@@ -23,7 +24,7 @@ class CoreActionRunner implements RunnerInterface
         $return = null;
 
         // ensure that the session has started before any execution
-        session_start();
+        Session::start();
 
         if (!isset($route['controller']) || empty($route['controller'])) {
             if (!function_exists($route['action'])) {

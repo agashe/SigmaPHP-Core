@@ -8,6 +8,13 @@ namespace SigmaPHP\Core\Interfaces\Http;
 interface SessionInterface
 {
     /**
+     * Start new session.
+     * 
+     * @return void
+     */
+    public static function start();
+
+    /**
      * Create Session.
      * 
      * @param string $name
