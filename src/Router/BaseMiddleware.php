@@ -67,7 +67,7 @@ abstract class BaseMiddleware implements BaseMiddlewareInterface
     /**
      * Handle files.
      * 
-     * @return SigmaPHP\Core\Http\FileUpload
+     * @return SigmaPHP\Core\Http\File
      */
     public function file()
     {

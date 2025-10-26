@@ -100,7 +100,7 @@ interface BaseControllerInterface
     /**
      * Handle files.
      * 
-     * @return SigmaPHP\Core\Http\FileUpload
+     * @return SigmaPHP\Core\Http\File
      */
     public function file();
     

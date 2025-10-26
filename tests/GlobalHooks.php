@@ -89,6 +89,19 @@ class GlobalHooks implements BeforeFirstTestHook, AfterLastTestHook
                 '<?php return [["path" => "/test", "name" => "test"]];'
             );
         }
+
+        // create dummy file storage
+        if (!is_dir('uploads')) {
+            mkdir('uploads');
+        }
+
+        if (!file_exists('file12345')) {
+            file_put_contents('file12345', 'hello world');
+        }
+        
+        if (!file_exists('uploads/book.txt')) {
+            file_put_contents('uploads/book.txt', 'My Book');
+        }
     }
 
     /**
@@ -144,6 +157,23 @@ class GlobalHooks implements BeforeFirstTestHook, AfterLastTestHook
 
         if (is_dir('routes')) {
             rmdir('routes');
+        }
+
+        // remove the dummy file storage
+        if (file_exists('uploads/test.txt')) {
+            unlink('uploads/test.txt');
+        }
+
+        if (file_exists('file12345')) {
+            unlink('file12345');
+        }
+        
+        if (file_exists('uploads/book.txt')) {
+            unlink('uploads/book.txt');
+        }
+        
+        if (is_dir('uploads')) {
+            rmdir('uploads');
         }
     }
 }

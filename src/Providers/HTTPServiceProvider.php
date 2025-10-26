@@ -8,7 +8,7 @@ use SigmaPHP\Core\Http\Request;
 use SigmaPHP\Core\Http\Response;
 use SigmaPHP\Core\Http\Cookie;
 use SigmaPHP\Core\Http\Session;
-use SigmaPHP\Core\Http\FileUpload;
+use SigmaPHP\Core\Http\File;
 
 /**
  * HTTP Service Provider Class
@@ -52,14 +52,7 @@ class HTTPServiceProvider implements ServiceProviderInterface
         });
 
         $container->set('file', function (Container $container) {
-            // get config manager
-            $configManager = $container->get('config');
-
-            $fileUpload = new FileUpload(
-                $configManager->get('app.upload_path')
-            );
-
-            return $fileUpload;
+            return new File($container->get('config')->get('app.upload_path'));
         });
     }
 }
