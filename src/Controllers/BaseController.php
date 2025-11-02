@@ -135,7 +135,7 @@ abstract class BaseController implements BaseControllerInterface
      * 
      * @return SigmaPHP\Core\Http\File
      */
-    final public function file()
+    final public function files()
     {
         return container('file');
     }

@@ -72,4 +72,12 @@ interface RequestInterface
      * @return string
      */
     public function headers();
+
+    /**
+     * Check if a key exists in $_GET , $_POST or $_FILES.
+     * 
+     * @param string $key 
+     * @return bool
+     */
+    public function has($key);
 }

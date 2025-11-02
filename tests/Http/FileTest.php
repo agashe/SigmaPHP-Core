@@ -50,7 +50,7 @@ class FileTest extends TestCase
      */
     public function testFileIsSavedToStorage()
     {
-        $this->file->save($this->testFile);
+        $this->file->save($_FILES[$this->testFile]);
         $this->assertTrue(file_exists('uploads/test.txt'));
     }
 
@@ -95,6 +95,23 @@ class FileTest extends TestCase
     }
 
     /**
+     * Test throws exception if invalid file was provided for save.
+     *
+     * @runInSeparateProcess
+     * @return void
+     */
+    public function testThrowsExceptionIfInvalidFileWasProvidedForSave()
+    {
+        $this->expectException(FileNotFoundException::class);
+        $this->file->save([
+            'name' => 'test.txt',
+            'type' => 'text/plain',
+            'size' => 11,
+            'error' => UPLOAD_ERR_OK
+        ]);
+    }
+
+    /**
      * Test throws exception if no file was provided for save.
      *
      * @runInSeparateProcess
@@ -102,7 +119,7 @@ class FileTest extends TestCase
      */
     public function testThrowsExceptionIfNoFileWasProvidedForSave()
     {
-        $this->expectException(FileNotFoundException::class);
+        $this->expectException(InvalidArgumentException::class);
         $this->file->save(null);
     }
 
@@ -114,7 +131,7 @@ class FileTest extends TestCase
      */
     public function testThrowsExceptionIfFileCouldNotBeSaved()
     {
-        $this->expectException(FileNotFoundException::class);
+        $this->expectException(InvalidArgumentException::class);
 
         $this->file->save('not_found');
     }

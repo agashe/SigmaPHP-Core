@@ -157,4 +157,17 @@ class Request implements RequestInterface
         
         return $headers;
     }
+
+    /**
+     * Check if a key exists in $_GET , $_POST or $_FILES.
+     * 
+     * @param string $key
+     * @return bool
+     */
+    public function has($key)
+    {
+        return isset($_GET[$key]) || 
+            isset($_POST[$key]) || 
+            isset($_FILES[$key]);
+    }
 }

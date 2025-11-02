@@ -102,7 +102,7 @@ interface BaseControllerInterface
      * 
      * @return SigmaPHP\Core\Http\File
      */
-    public function file();
+    public function files();
     
     /**
      * Save Flash messages.

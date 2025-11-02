@@ -244,4 +244,20 @@ class RequestTest extends TestCase
         
         $this->assertTrue($this->request->isSecure());
     }
+    
+    /**
+     * Test check if key exists.
+     *
+     * @return void
+     */
+    public function testCheckIfKeyExists()
+    {
+        $_GET['one'] = 1;
+        $_POST['two'] = 2;
+        $_FILES['three'] = 3;
+
+        $this->assertTrue($this->request->has('one'));
+        $this->assertTrue($this->request->has('two'));
+        $this->assertTrue($this->request->has('three'));
+    }
 }

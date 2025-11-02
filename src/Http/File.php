@@ -43,24 +43,28 @@ class File implements FileInterface
     /**
      * Save file to storage.
      * 
-     * @param string $fileName
+     * @param array $fileData
      * @return bool
      */
-    public function save($fileName)
+    public function save($fileData)
     {
-        if (empty($fileName) || empty(container('request')->files($fileName))) {
-            throw new FileNotFoundException("File {$fileName} doesn't exist");
+        if (!is_array($fileData)) {
+            throw new InvalidArgumentException(
+                "Invalid file upload was provided !"
+            );
         }
 
-        $fileObject = container('request')->files($fileName);
-
-        if (!file_exists($fileObject["tmp_name"])) {
-            throw new FileNotFoundException("File {$fileName} doesn't exist");
+        if (!isset($fileData["tmp_name"]) ||
+            !file_exists($fileData["tmp_name"])
+        ) {
+            throw new FileNotFoundException(
+                "The file you are trying to upload is invalid or doesn't exist"
+            );
         }
 
         return rename(
-            $fileObject["tmp_name"],
-            $this->storagePath . '/' . $fileObject["name"]
+            $fileData["tmp_name"],
+            $this->storagePath . '/' . $fileData["name"]
         );
     }
 
