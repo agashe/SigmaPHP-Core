@@ -16,4 +16,7 @@ return [
     'session' => function($name) {
         return container('session')->get($name);
     },
+    'method' => function($method) {
+        return '<input type="hidden" value="_' . strtolower($method) . '" />';
+    },
 ];

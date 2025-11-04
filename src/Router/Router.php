@@ -112,7 +112,11 @@ class Router implements RouterInterface
      * @return void
      */
     public function start()
-    {        
+    {
+        if (config('app.allow_http_method_override')) {
+            $this->routerEngine->enableHttpMethodOverride();    
+        }
+
         $this->routerEngine->setActionRunner(CoreActionRunner::class);
         $this->routerEngine->run();
     }
