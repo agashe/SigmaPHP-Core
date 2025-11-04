@@ -203,16 +203,53 @@ class RequestTest extends TestCase
     }
 
     /**
-     * Test returns the previous full URL.
+     * Test returns the previous URL.
      *
      * @return void
      */
-    public function testReturnsThePreviousFullUrl()
+    public function testReturnsThePreviousUrl()
     {
-        $_SERVER['HTTP_REFERER'] = 'https://example.com/posts';
+        $_SESSION['_sigma_previous_url_'] = 'http://example.com/products';
+
+        $this->assertEquals(
+            'http://example.com/products',
+            $this->request->previous()
+        );
+
+        unset($_SESSION['_sigma_previous_url_']);
+    }
+    
+    /**
+     * Test returns the previous URL using referer.
+     *
+     * @return void
+     */
+    public function testReturnsThePreviousUrlUsingReferer()
+    {
+        $_SERVER['HTTP_REFERER'] = 'http://example.com/posts';
         
         $this->assertEquals(
-            'https://example.com/posts', 
+            'http://example.com/posts', 
+            $this->request->previous()
+        );
+
+        unset($_SERVER['HTTP_REFERER']);
+    }
+    
+    /**
+     * Test returns the current URL as previous URL , if neither the stored 
+     * session nor the referer worked.
+     *
+     * @return void
+     */
+    public function testURLCurrentAsPreviousIfNeitherStoredNorTheRefererWorked()
+    {
+        $_SERVER['HTTPS'] = false;
+        $_SERVER['HTTP_HOST'] = 'example.com';
+        $_SERVER['REQUEST_URI'] = 'test';
+        
+        $this->assertEquals(
+            'http://example.com/test', 
             $this->request->previous()
         );
     }
