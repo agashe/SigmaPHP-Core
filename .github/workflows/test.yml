@@ -45,6 +45,9 @@ jobs:
       - name: Install Composer dependencies
         run: composer install --no-interaction --prefer-dist
 
+      - name: Create testing directories
+        run: mkdir config templates cache routes uploads
+
       - name: Write phpunit.xml
         run: |
           cat > phpunit.xml << 'EOF'
