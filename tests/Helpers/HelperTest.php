@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 use PHPUnit\Framework\TestCase;
 
@@ -8,7 +8,7 @@ use SigmaPHP\Core\App\Kernel;
  * Helper Test
  */
 class HelperTest extends TestCase
-{   
+{
     /**
      * Test get framework version.
      *
@@ -31,7 +31,7 @@ class HelperTest extends TestCase
             container()
         );
     }
-    
+
     /**
      * Test get class instance from the container.
      *
@@ -66,7 +66,7 @@ class HelperTest extends TestCase
     public function testEnvFunctionWillReturnTheDefaultValue()
     {
         $this->assertEquals(
-            'default_value', 
+            'default_value',
             env('unknown', 'default_value')
         );
     }
@@ -93,7 +93,7 @@ class HelperTest extends TestCase
     public function testConfigFunctionWillReturnTheDefaultValue()
     {
         $this->assertEquals(
-            'default_value', 
+            'default_value',
             config('unknown', 'default_value')
         );
     }
@@ -121,7 +121,7 @@ class HelperTest extends TestCase
 
         $this->assertEquals($expected, url('test'));
     }
-    
+
     /**
      * Test encrypt text.
      *
@@ -138,7 +138,7 @@ class HelperTest extends TestCase
             encrypt('test', base64_encode('1234567890'))
         );
     }
-    
+
     /**
      * Test decrypt text.
      *
@@ -169,11 +169,11 @@ class HelperTest extends TestCase
         shareTemplateVariable(['name' => 'world']);
 
         $this->assertEquals(
-            '<h1>hello world</h1>', 
+            '<h1>hello world</h1>',
             container('view')->render('index')
         );
     }
-    
+
     /**
      * Test custom template directives.
      *
@@ -183,7 +183,7 @@ class HelperTest extends TestCase
     {
         if (file_exists('templates/index.template.html')) {
             file_put_contents(
-                'templates/index.template.html', 
+                'templates/index.template.html',
                 '<h1>{% greeting("Omar") %}</h1>'
             );
         }
@@ -193,7 +193,7 @@ class HelperTest extends TestCase
         });
 
         $this->assertEquals(
-            '<h1> Hi, Omar </h1>', 
+            '<h1> Hi, Omar </h1>',
             container('view')->render('index')
         );
     }
@@ -207,7 +207,7 @@ class HelperTest extends TestCase
     {
         $_SERVER['HTTP_HOST'] = 'localhost';
 
-        $expected = 'http://localhost/';
+        $expected = 'http://localhost';
 
         $this->assertEquals($expected, baseUrl());
     }
