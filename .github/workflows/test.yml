@@ -66,6 +66,10 @@ jobs:
                   <var name="DB_NAME" value="db_test" />
                   <var name="DB_PORT" value="3306" />
               </php>
+
+              <extensions>
+                  <extension class="GlobalHooks" />
+              </extensions>
           </phpunit>
           EOF
 
