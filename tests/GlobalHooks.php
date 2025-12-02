@@ -10,11 +10,14 @@ class GlobalHooks implements BeforeFirstTestHook, AfterLastTestHook
 {
     /**
      * Execute before first test PHPUnit Hook.
-     * 
+     *
      * @return void
      */
     public function executeBeforeFirstTest(): void
     {
+        // set SCRIPT_NAME for all test cases
+        $_SERVER['SCRIPT_NAME'] = '/index.php';
+
         // create and initialize new Kernel instance
         new \SigmaPHP\Core\App\Kernel();
 
@@ -26,22 +29,22 @@ class GlobalHooks implements BeforeFirstTestHook, AfterLastTestHook
         // create dummy config directory and dummy config files
         if (!is_dir('config')) {
             mkdir('config');
-        } 
+        }
 
         if (!file_exists('config/app.php')) {
             file_put_contents(
-                'config/app.php', 
+                'config/app.php',
                 '<?php return [' .
                     '"api" => ["version" => "1.0.0"],' .
                     '"views_path" => "templates/",' .
-                    '"routes_path" => "routes/"' . 
+                    '"routes_path" => "routes/"' .
                 '];'
             );
         }
 
         if (!file_exists('config/database.php')) {
             file_put_contents(
-                'config/database.php', 
+                'config/database.php',
                 <<<CONFIG
                 <?php
 
@@ -73,7 +76,7 @@ class GlobalHooks implements BeforeFirstTestHook, AfterLastTestHook
 
         if (!file_exists('templates/index.template.html')) {
             file_put_contents(
-                'templates/index.template.html', 
+                'templates/index.template.html',
                 '<h1>hello {{ $name }}</h1>'
             );
         }
@@ -85,7 +88,7 @@ class GlobalHooks implements BeforeFirstTestHook, AfterLastTestHook
 
         if (!file_exists('web.php')) {
             file_put_contents(
-                'routes/web.php', 
+                'routes/web.php',
                 '<?php return [["path" => "/test", "name" => "test"]];'
             );
         }
@@ -98,7 +101,7 @@ class GlobalHooks implements BeforeFirstTestHook, AfterLastTestHook
         if (!file_exists('file12345')) {
             file_put_contents('file12345', 'hello world');
         }
-        
+
         if (!file_exists('uploads/book.txt')) {
             file_put_contents('uploads/book.txt', 'My Book');
         }
@@ -106,7 +109,7 @@ class GlobalHooks implements BeforeFirstTestHook, AfterLastTestHook
 
     /**
      * Execute after last test PHPUnit Hook.
-     * 
+     *
      * @return void
      */
     public function executeAfterLastTest(): void
@@ -139,13 +142,13 @@ class GlobalHooks implements BeforeFirstTestHook, AfterLastTestHook
         }
 
         $cacheFiles = glob('cache/*');
-        
+
         foreach ($cacheFiles as $cacheFile) {
             if (file_exists($cacheFile)) {
                 unlink($cacheFile);
             }
         }
-        
+
         if (is_dir('cache')) {
             rmdir('cache');
         }
@@ -167,11 +170,11 @@ class GlobalHooks implements BeforeFirstTestHook, AfterLastTestHook
         if (file_exists('file12345')) {
             unlink('file12345');
         }
-        
+
         if (file_exists('uploads/book.txt')) {
             unlink('uploads/book.txt');
         }
-        
+
         if (is_dir('uploads')) {
             rmdir('uploads');
         }
