@@ -15,7 +15,7 @@ class Kernel implements KernelInterface
     /**
      * @var string framework version
      */
-    const SIGMAPHP_FRAMEWORK_VERSION = '0.1.1';
+    const SIGMAPHP_FRAMEWORK_VERSION = '0.1.2';
 
     /**
      * @var Container $container
@@ -37,10 +37,10 @@ class Kernel implements KernelInterface
 
         // Please note , since the config manager still not registered in the
         // container , it's nearly impossible to read the service providers
-        // path from the config file , maybe in the future we can find a 
+        // path from the config file , maybe in the future we can find a
         // solution for this issue , but as for now we will hardcoded it !
         $userDefinedProvidersPath = '/app/Providers';
-        
+
         // user defined providers (App\Providers)
         $userDefinedProvidersPath = Config::getFullPath(
             $userDefinedProvidersPath
@@ -52,10 +52,10 @@ class Kernel implements KernelInterface
             if ($handle = opendir($userDefinedProvidersPath)) {
                 while (($file = readdir($handle))) {
                     if (in_array($file, ['.', '..'])) continue;
-                    $userDefinedProviders[] = ("App\\Providers\\" . 
+                    $userDefinedProviders[] = ("App\\Providers\\" .
                     (str_replace('.php', '', $file)));
                 }
-                
+
                 closedir($handle);
             }
         }
@@ -81,19 +81,19 @@ class Kernel implements KernelInterface
 
     /**
      * Get the DI container instance from the Kernel.
-     * 
+     *
      * @return Container
      */
     final public static function getContainer()
     {
-        return !is_null(self::$container) ? 
+        return !is_null(self::$container) ?
             self::$container :
             (new self)::$container;
     }
 
     /**
      * Load configs, routes then run the app.
-     * 
+     *
      * @return void
      */
     final public function init()
