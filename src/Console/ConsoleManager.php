@@ -13,7 +13,7 @@ class ConsoleManager
 {
     /**
      * Execute console commands.
-     * 
+     *
      * @param string $input
      * @return void
      */
@@ -66,7 +66,7 @@ class ConsoleManager
             case 'seed':
                 $this->seed($argument);
                 break;
-            
+
             case 'truncate':
                 $this->truncate();
                 break;
@@ -82,7 +82,7 @@ class ConsoleManager
             case 'create:view':
                 $this->createView($argument);
                 break;
-            
+
             case 'create:service-provider':
                 $this->createServiceProvider($argument);
                 break;
@@ -90,7 +90,7 @@ class ConsoleManager
             case 'create:middleware':
                 $this->createMiddleware($argument);
                 break;
-            
+
             case 'create:uploads':
                 $this->createUploadsFolder();
                 break;
@@ -111,7 +111,7 @@ class ConsoleManager
 
     /**
      * Print text to terminal and support colors.
-     * 
+     *
      * @param string $message
      * @param string $type
      * @return void
@@ -119,8 +119,8 @@ class ConsoleManager
     private function output($message, $type = '')
     {
         // check if terminal supports color
-        if (exec('tput colors') == -1 || 
-            !stream_isatty(STDOUT) || 
+        if (exec('tput colors') == -1 ||
+            !stream_isatty(STDOUT) ||
             isset($_SERVER['NO_COLOR'])
         ) {
             $type = '';
@@ -146,7 +146,7 @@ class ConsoleManager
 
         print($message . PHP_EOL);
     }
-    
+
     /**
      * Execute the command and print its output.
      *
@@ -156,8 +156,8 @@ class ConsoleManager
      * @return bool
      */
     private function executeCommand(
-        $command, 
-        $printOutput = false, 
+        $command,
+        $printOutput = false,
         $skipFirstLine = false
     ) {
         $output = [];
@@ -183,7 +183,7 @@ class ConsoleManager
 
     /**
      * Default error message.
-     * 
+     *
      * @return void
      */
     private function commandNotFound()
@@ -198,17 +198,17 @@ class ConsoleManager
 
     /**
      * Print framework version.
-     * 
+     *
      * @return void
      */
     private function version()
     {
         $this->output("SigmaPHP framework version " . version());
     }
-    
+
     /**
      * Print help menu.
-     * 
+     *
      * @return void
      */
     private function help()
@@ -230,7 +230,7 @@ class ConsoleManager
             create:secret-key
                 Generate app secret key , and save it into .env file.
             create:seeder {seeder name}
-                Create seeder file. 
+                Create seeder file.
             create:service-provider {service provider name}
                 Create service provider.
             create:uploads
@@ -272,13 +272,13 @@ class ConsoleManager
 
     /**
      * Run PHP built-in server.
-     * 
+     *
      * @param int $port
      * @return void
      */
     private function runServer($port = 8888)
     {
-        // check if server 
+        // check if server
         if (!empty($port) && !preg_match('/[0-9]{4}/', $port)) {
             throw new \InvalidArgumentException(
                 "Invalid port number {$port}"
@@ -292,12 +292,14 @@ class ConsoleManager
             );
         }
 
-        $this->executeCommand("php -S localhost:$port -t public/", true);
+        $this->executeCommand(
+            "php -S localhost:$port -t public public/index.php", true
+        );
     }
 
     /**
      * Generate secure key.
-     * 
+     *
      * @return void
      */
     private function generateAppSecretKey()
@@ -319,11 +321,11 @@ class ConsoleManager
 
         try {
             $envFile = file_get_Contents(root_path('.env'));
-            
+
             if (strpos($envFile, 'APP_SECRET_KEY=""')) {
                 $emptySecretKey = 'APP_SECRET_KEY=""';
                 $secretKey = 'APP_SECRET_KEY="' . $key . '"';
-                
+
                 $envFile = str_replace($emptySecretKey, $secretKey, $envFile);
             }
             else if (!empty(env('APP_SECRET_KEY'))) {
@@ -334,14 +336,14 @@ class ConsoleManager
             }
             else {
                 $envFile = str_replace(
-                    'APP_SECRET_KEY=', 
-                    'APP_SECRET_KEY=' . $key, 
+                    'APP_SECRET_KEY=',
+                    'APP_SECRET_KEY=' . $key,
                     $envFile
                 );
             }
 
             file_put_contents(root_path('.env'), $envFile);
-            
+
             $this->output(
                 'App secret key was generated successfully',
                 'success'
@@ -353,20 +355,20 @@ class ConsoleManager
 
     /**
      * Return the CLI command for the database handler.
-     * 
+     *
      * @param string $command
      * @return string
      */
     private function dbConsoleCommand($command)
     {
-        return 
+        return
             "./vendor/bin/sigma-db {$command} " .
             "--config=" . root_path('config/database.php');
     }
-    
+
     /**
      * Create new migration file.
-     * 
+     *
      * @param string $fileName
      * @return void
      */
@@ -380,7 +382,7 @@ class ConsoleManager
 
     /**
      * Create new seeder.
-     * 
+     *
      * @param string $seederName
      * @return void
      */
@@ -394,7 +396,7 @@ class ConsoleManager
 
     /**
      * Drop all tables in the database.
-     * 
+     *
      * @return void
      */
     private function drop()
@@ -411,7 +413,7 @@ class ConsoleManager
 
     /**
      * Drop all tables in the database then migrate and seed.
-     * 
+     *
      * @return void
      */
     private function fresh()
@@ -425,10 +427,10 @@ class ConsoleManager
         $this->executeCommand(
             "echo {$answer} | " . $this->dbConsoleCommand("fresh"), true, true);
     }
-    
+
     /**
      * Migrate the database.
-     * 
+     *
      * @param string $migrationName
      * @return void
      */
@@ -442,7 +444,7 @@ class ConsoleManager
 
     /**
      * Rollback the database.
-     * 
+     *
      * @param string $date
      * @return void
      */
@@ -453,7 +455,7 @@ class ConsoleManager
 
     /**
      * Seed the database.
-     * 
+     *
      * @param string $seederName
      * @return void
      */
@@ -467,7 +469,7 @@ class ConsoleManager
 
     /**
      * Truncate the database.
-     * 
+     *
      * @return void
      */
     private function truncate()
@@ -477,15 +479,15 @@ class ConsoleManager
         $this->output($message, 'warning');
 
         $answer = stream_get_line(STDIN, 16, PHP_EOL);
-        
+
         $this->executeCommand(
-            "echo {$answer} | " . 
+            "echo {$answer} | " .
             $this->dbConsoleCommand("truncate"), true, true);
     }
 
     /**
      * Create new file.
-     * 
+     *
      * @param string $path
      * @param string $name
      * @param string $content
@@ -500,7 +502,7 @@ class ConsoleManager
                 return;
             }
 
-            file_put_contents($path . $name, $content);
+            file_put_contents($path . '/' . $name, $content);
             $this->output("{$name} was created successfully", 'success');
         } catch (\Exception $e) {
             $this->output($e, 'error');
@@ -509,14 +511,14 @@ class ConsoleManager
 
     /**
      * Create new controller.
-     * 
+     *
      * @param string $controllerName
      * @return void
      */
     private function createController($controllerName)
     {
         $path = root_path(config('app.controllers_path'));
-        
+
         // check that controllers path does exist
         if (!file_exists($path)) {
             throw new DirectoryNotFoundException(
@@ -531,6 +533,12 @@ class ConsoleManager
             );
         }
 
+        // add 'Controller' automatically if the name doesn't have it
+        // and if does , then ignore
+        if (stripos($controllerName, 'Controller') === false) {
+            $controllerName .= 'Controller';
+        }
+
         $this->createFile($path, $controllerName . '.php', str_replace(
             '$controllerName',
             $controllerName,
@@ -540,20 +548,38 @@ class ConsoleManager
 
     /**
      * Create new data model.
-     * 
+     *
      * @param string $modelName
      * @return void
      */
     private function createModel($modelName)
     {
-        $this->executeCommand(
-            $this->dbConsoleCommand("create:model $modelName")
-        );
+        $path = root_path(config('database.path_to_models'));
+
+        // check that models path does exist
+        if (!file_exists($path)) {
+            throw new DirectoryNotFoundException(
+                "The path to models {$path} doesn't exist"
+            );
+        }
+
+        // check that model's name is not empty
+        if (empty($modelName)) {
+            throw new \InvalidArgumentException(
+                "Model's name can't be empty"
+            );
+        }
+
+        $this->createFile($path, $modelName . '.php', str_replace(
+            '$modelName',
+            $modelName,
+            file_get_contents(__DIR__ . '/templates/model.php.dist')
+        ));
     }
 
     /**
      * Create new html view.
-     * 
+     *
      * @param string $viewName
      * @return void
      */
@@ -580,7 +606,7 @@ class ConsoleManager
 
     /**
      * Create new service provider.
-     * 
+     *
      * @param string $serviceProviderName
      * @return void
      */
@@ -602,16 +628,22 @@ class ConsoleManager
             mkdir($path);
         }
 
+        // add 'Provider' automatically if the name doesn't have it
+        // and if does , then ignore
+        if (stripos($serviceProviderName, 'Provider') === false) {
+            $serviceProviderName .= 'Provider';
+        }
+
         $this->createFile($path, $serviceProviderName . '.php', str_replace(
             '$serviceProviderName',
             $serviceProviderName,
             file_get_contents(__DIR__ . '/templates/provider.php.dist')
         ));
     }
-    
+
     /**
      * Create new middleware.
-     * 
+     *
      * @param string $middlewareName
      * @return void
      */
@@ -633,6 +665,12 @@ class ConsoleManager
             mkdir($path);
         }
 
+        // add 'Middleware' automatically if the name doesn't have it
+        // and if does , then ignore
+        if (stripos($middlewareName, 'Middleware') === false) {
+            $middlewareName .= 'Middleware';
+        }
+
         $this->createFile($path, $middlewareName . '.php', str_replace(
             '$middlewareName',
             $middlewareName,
@@ -642,7 +680,7 @@ class ConsoleManager
 
     /**
      * Create uploads folder.
-     * 
+     *
      * @return void
      */
     private function createUploadsFolder()
@@ -663,7 +701,7 @@ class ConsoleManager
 
                 if ($result) {
                     $this->output(
-                        'Uploads folder was created successfully', 
+                        'Uploads folder was created successfully',
                         'success'
                     );
                 }
@@ -677,7 +715,7 @@ class ConsoleManager
 
     /**
      * Clear views cache.
-     * 
+     *
      * @return void
      */
     private function clearCache()
@@ -697,7 +735,7 @@ class ConsoleManager
                     if (in_array($file, ['.', '..'])) continue;
                     unlink($path . '/'. $file);
                 }
-                
+
                 closedir($handle);
             }
 
@@ -709,7 +747,7 @@ class ConsoleManager
 
     /**
      * Run test units.
-     * 
+     *
      * @return void
      */
     private function runTests()
