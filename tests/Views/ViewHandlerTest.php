@@ -15,7 +15,7 @@ class ViewHandlerTest extends TestCase
     private $viewHandler;
 
     /**
-     * ConfigTest SetUp
+     * ViewHandlerTest SetUp
      *
      * @return void
      */
