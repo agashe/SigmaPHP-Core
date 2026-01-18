@@ -15,18 +15,62 @@ class GlobalHooks implements BeforeFirstTestHook, AfterLastTestHook
      */
     public function executeBeforeFirstTest(): void
     {
-        // set SCRIPT_NAME for all test cases
-        $_SERVER['SCRIPT_NAME'] = '/index.php';
+        $this->setScriptName();
 
         // create and initialize new Kernel instance
         new \SigmaPHP\Core\App\Kernel();
 
-        // create dummy .env file
+        $this->createEnvFile();
+        $this->createConfigFiles();
+        $this->createTemplates();
+        $this->createRoutes();
+        $this->createFileStorage();
+    }
+
+    /**
+     * Execute after last test PHPUnit Hook.
+     *
+     * @return void
+     */
+    public function executeAfterLastTest(): void
+    {
+        $this->removeEnvFile();
+        $this->removeConfigFiles();
+        $this->removeTemplates();
+        $this->removeRoutes();
+        $this->removeFileStorage();
+    }
+
+    /**
+     * Set SCRIPT_NAME for all test cases.
+     *
+     * @param string $scriptName
+     * @return void
+     */
+    private function setScriptName($scriptName = '/index.php')
+    {
+        $_SERVER['SCRIPT_NAME'] = $scriptName;
+    }
+
+    /**
+     * Create dummy .env file.
+     *
+     * @return void
+     */
+    private function createEnvFile()
+    {
         if (!file_exists('.env')) {
             file_put_contents('.env', 'APP_ENV="development"');
         }
+    }
 
-        // create dummy config directory and dummy config files
+    /**
+     * Create dummy config directory and dummy config files.
+     *
+     * @return void
+     */
+    private function createConfigFiles()
+    {
         if (!is_dir('config')) {
             mkdir('config');
         }
@@ -65,8 +109,15 @@ class GlobalHooks implements BeforeFirstTestHook, AfterLastTestHook
                 CONFIG
             );
         }
+    }
 
-        // create dummy templates
+    /**
+     * Create dummy templates.
+     *
+     * @return void
+     */
+    private function createTemplates()
+    {
         if (!is_dir('templates')) {
             mkdir('templates');
         }
@@ -81,8 +132,15 @@ class GlobalHooks implements BeforeFirstTestHook, AfterLastTestHook
                 '<h1>hello {{ $name }}</h1>'
             );
         }
+    }
 
-        // create dummy routes file
+    /**
+     * Create dummy routes file.
+     *
+     * @return void
+     */
+    private function createRoutes()
+    {
         if (!is_dir('routes')) {
             mkdir('routes');
         }
@@ -93,8 +151,15 @@ class GlobalHooks implements BeforeFirstTestHook, AfterLastTestHook
                 '<?php return [["path" => "/test", "name" => "test"]];'
             );
         }
+    }
 
-        // create dummy file storage
+    /**
+     * Create dummy file storage.
+     *
+     * @return void
+     */
+    private function createFileStorage()
+    {
         if (!is_dir('uploads')) {
             mkdir('uploads');
         }
@@ -109,18 +174,24 @@ class GlobalHooks implements BeforeFirstTestHook, AfterLastTestHook
     }
 
     /**
-     * Execute after last test PHPUnit Hook.
+     * Remove the dummy .env file.
      *
      * @return void
      */
-    public function executeAfterLastTest(): void
+    private function removeEnvFile()
     {
-        // remove the dummy .env file
         if (file_exists('.env')) {
             unlink('.env');
         }
+    }
 
-        // remove the testing config files
+    /**
+     * Remove the dummy config files.
+     *
+     * @return void
+     */
+    private function removeConfigFiles()
+    {
         if (file_exists('config/app.php')) {
             unlink('config/app.php');
         }
@@ -132,8 +203,15 @@ class GlobalHooks implements BeforeFirstTestHook, AfterLastTestHook
         if (is_dir('config')) {
             rmdir('config');
         }
+    }
 
-        // remove the dummy templates and cache
+    /**
+     * Remove the dummy templates and cache.
+     *
+     * @return void
+     */
+    private function removeTemplates()
+    {
         if (file_exists('templates/index.template.html')) {
             unlink('templates/index.template.html');
         }
@@ -153,8 +231,15 @@ class GlobalHooks implements BeforeFirstTestHook, AfterLastTestHook
         if (is_dir('cache')) {
             rmdir('cache');
         }
+    }
 
-        // remove the dummy routes file
+    /**
+     * Remove the dummy routes file.
+     *
+     * @return void
+     */
+    private function removeRoutes()
+    {
         if (file_exists('routes/web.php')) {
             unlink('routes/web.php');
         }
@@ -162,8 +247,15 @@ class GlobalHooks implements BeforeFirstTestHook, AfterLastTestHook
         if (is_dir('routes')) {
             rmdir('routes');
         }
+    }
 
-        // remove the dummy file storage
+    /**
+     * Remove the dummy file storage.
+     *
+     * @return void
+     */
+    private function removeFileStorage()
+    {
         if (file_exists('uploads/test.txt')) {
             unlink('uploads/test.txt');
         }
