@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 use PHPUnit\Framework\TestCase;
 
@@ -30,7 +30,7 @@ class FileTest extends TestCase
     {
         // input field
         $this->testFile = 'user_notes';
-        
+
         $_FILES[$this->testFile] = [
             'name' => 'test.txt',
             'type' => 'text/plain',
@@ -41,7 +41,7 @@ class FileTest extends TestCase
 
         $this->file = new File('uploads');
     }
-   
+
     /**
      * Test file is saved to storage.
      *
@@ -69,6 +69,17 @@ class FileTest extends TestCase
     }
 
     /**
+     * Test check if file exists in the storage.
+     *
+     * @runInSeparateProcess
+     * @return void
+     */
+    public function testCheckIfFileExistsInTheStorage()
+    {
+        $this->assertTrue($this->file->has('book.txt'));
+    }
+
+    /**
      * Test throws exception if no path was provided to the file service.
      *
      * @runInSeparateProcess
@@ -77,10 +88,10 @@ class FileTest extends TestCase
     public function testThrowsExceptionIfNoPathWasProvidedToFileService()
     {
         $this->expectException(InvalidArgumentException::class);
-        
+
         $testFile = new File(null);
     }
-    
+
     /**
      * Test throws exception if invalid path was provided to the file service.
      *
@@ -90,7 +101,7 @@ class FileTest extends TestCase
     public function testThrowsExceptionIfInvalidPathWasProvidedToFileService()
     {
         $this->expectException(InvalidArgumentException::class);
-        
+
         $testFile = new File('xyz/');
     }
 
@@ -135,7 +146,7 @@ class FileTest extends TestCase
 
         $this->file->save('not_found');
     }
-    
+
     /**
      * Test throws exception if trying to get content of non exists file.
      *

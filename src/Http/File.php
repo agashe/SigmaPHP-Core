@@ -18,7 +18,7 @@ class File implements FileInterface
 
     /**
      * File Constructor
-     * 
+     *
      * @param string $storagePath
      */
     public function __construct($storagePath)
@@ -28,9 +28,9 @@ class File implements FileInterface
                 "No storage path was provided"
             );
         }
-        
+
         $storageFullPath = root_path($storagePath);
-        
+
         if (!file_exists($storageFullPath)) {
             throw new InvalidArgumentException(
                 "Storage path {$storageFullPath} doesn't exists"
@@ -42,7 +42,7 @@ class File implements FileInterface
 
     /**
      * Save file to storage.
-     * 
+     *
      * @param array $fileData
      * @return bool
      */
@@ -69,8 +69,19 @@ class File implements FileInterface
     }
 
     /**
+     * Check if file exists in the storage.
+     *
+     * @param string $fileName
+     * @return bool
+     */
+    public function has($fileName)
+    {
+        return file_exists($this->storagePath . '/' . ltrim($fileName, '/'));
+    }
+
+    /**
      * Retrieve file's content from storage.
-     * 
+     *
      * @param string $fileName
      * @return mixed
      */
@@ -82,8 +93,6 @@ class File implements FileInterface
             throw new FileNotFoundException("File {$fileName} doesn't exist");
         }
 
-        return file_get_contents(
-            $this->storagePath . '/' . ltrim($fileName, '/')
-        );
+        return file_get_contents($fileFullPath);
     }
 }
