@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 use PHPUnit\Framework\TestCase;
 
@@ -33,7 +33,7 @@ class ViewHandlerTest extends TestCase
     {
         if (file_exists('templates/index.template.html')) {
             file_put_contents(
-                'templates/index.template.html', 
+                'templates/index.template.html',
                 '<h1>hello {{ $name }}</h1>'
             );
         }

@@ -37,7 +37,8 @@ class GlobalHooks implements BeforeFirstTestHook, AfterLastTestHook
                 '<?php return [' .
                     '"api" => ["version" => "1.0.0"],' .
                     '"views_path" => "templates/",' .
-                    '"routes_path" => "routes/"' .
+                    '"routes_path" => "routes/",' .
+                    '"static_assets_route" => "static"' .
                 '];'
             );
         }

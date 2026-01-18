@@ -1,7 +1,7 @@
 <?php
 
 /**
- * This file contains definitions for all HTTP based Template Engine Directives  
+ * This file contains definitions for all HTTP based Template Engine Directives
  */
 return [
     'current' => function() {
@@ -17,7 +17,11 @@ return [
         return container('session')->get($name);
     },
     'method' => function($method) {
-        return '<input type="hidden" name="_method" value="' . 
+        return '<input type="hidden" name="_method" value="' .
             strtolower($method) . '" />';
+    },
+    'asset' => function($name) {
+        return baseUrl() . '/' .
+            trim(config('app.static_assets_route'), '/') . '/' . $name;
     },
 ];
