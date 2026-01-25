@@ -64,7 +64,7 @@ class RouterServiceProvider implements ServiceProviderInterface
             );
 
             // set static assets route handler
-            $router->setStaticAssetsRouteHandler(StaticAssetsHandler::class);
+            $router->setStaticAssetsRouteHandler(new StaticAssetsHandler());
 
             return $router;
         });
