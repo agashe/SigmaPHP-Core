@@ -2,10 +2,12 @@
 
 namespace SigmaPHP\Core\Router\StaticAssets;
 
+use SigmaPHP\Router\Interfaces\StaticAssetsHandlerInterface;
+
 /**
  * Static Assets Handler Class
  */
-class Handler
+class Handler implements StaticAssetsHandlerInterface
 {
     /**
      * Serve static assets files.
@@ -13,7 +15,7 @@ class Handler
      * @param string $resourcePath
      * @return resource
      */
-    public static function handle($resourcePath)
+    public function handle($resourcePath)
     {
         $resourcePath = root_path('public/' . $resourcePath);
 

@@ -23,10 +23,10 @@ class Router implements RouterInterface
      * @var array $routes
      */
     private $routes;
-    
+
     /**
      * Router Constructor
-     * 
+     *
      * @param string $routeFilesPath
      */
     public function __construct($routeFilesPath)
@@ -37,7 +37,7 @@ class Router implements RouterInterface
 
     /**
      * Set the router engine (the actual Router).
-     * 
+     *
      * @param object $routerEngine
      * @return void
      */
@@ -48,7 +48,7 @@ class Router implements RouterInterface
 
     /**
      * Load routes from all routes files.
-     * 
+     *
      * @return void
      */
     public function loadRoutes()
@@ -58,14 +58,14 @@ class Router implements RouterInterface
                 if (in_array($file, ['.', '..'])) continue;
                 $this->routes += require $this->routeFilesPath . '/' . $file;
             }
-        
+
             closedir($handle);
         }
     }
 
     /**
      * List all registered routes.
-     * 
+     *
      * @return array
      */
     public function listRoutes()
@@ -75,7 +75,7 @@ class Router implements RouterInterface
 
     /**
      * Generate URL from route's name.
-     * 
+     *
      * @param string $routeName
      * @param array $parameters
      * @return string
@@ -87,8 +87,8 @@ class Router implements RouterInterface
 
     /**
      * Set page not found handler.
-     * 
-     * @param string|array $handler 
+     *
+     * @param string|array $handler
      * @return void
      */
     public function setPageNotFoundHandler($handler)
@@ -98,14 +98,36 @@ class Router implements RouterInterface
 
     /**
      * Get base URL.
-     * 
+     *
      * @return string
      */
     public function getBaseUrl()
     {
         return $this->routerEngine->getBaseUrl();
     }
-    
+
+    /**
+     * Set static assets route path.
+     *
+     * @param string $path
+     * @return void
+     */
+    public function setStaticAssetsRoutePath($path)
+    {
+        return $this->routerEngine->setStaticAssetsRouteName($path);
+    }
+
+    /**
+     * Set static assets route handler.
+     *
+     * @param StaticAssetsHandlerInterface $handler
+     * @return void
+     */
+    public function setStaticAssetsRouteHandler($handler)
+    {
+        return $this->routerEngine->setStaticAssetsRouteHandler($handler);
+    }
+
     /**
      * Start the router execution.
      *
@@ -114,7 +136,7 @@ class Router implements RouterInterface
     public function start()
     {
         if (config('app.allow_http_method_override')) {
-            $this->routerEngine->enableHttpMethodOverride();    
+            $this->routerEngine->enableHttpMethodOverride();
         }
 
         $this->routerEngine->setActionRunner(CoreActionRunner::class);
