@@ -15,7 +15,7 @@ class Kernel implements KernelInterface
     /**
      * @var string framework version
      */
-    const SIGMAPHP_FRAMEWORK_VERSION = '0.1.2';
+    const SIGMAPHP_FRAMEWORK_VERSION = '0.1.3';
 
     /**
      * @var Container $container
