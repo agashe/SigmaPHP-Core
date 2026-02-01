@@ -29,7 +29,7 @@ class Handler implements StaticAssetsHandlerInterface
 
         return container()->get('response')->responseData(
             file_get_contents($resourcePath),
-            mime_content_type($resourcePath),
+            pathinfo($resourcePath, PATHINFO_EXTENSION),
             200,
             [
                 'Content-Disposition' => 'inline;'
