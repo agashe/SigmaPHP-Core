@@ -54,9 +54,7 @@ class RouterServiceProvider implements ServiceProviderInterface
             ));
 
             // register default 404 - page not found handler
-            $router->setPageNotFoundHandler(
-                [PageNotFoundHandler::class, 'handle']
-            );
+            $router->setPageNotFoundHandler(PageNotFoundHandler::class);
 
             // set static assets route path
             $router->setStaticAssetsRoutePath(
@@ -64,7 +62,7 @@ class RouterServiceProvider implements ServiceProviderInterface
             );
 
             // set static assets route handler
-            $router->setStaticAssetsRouteHandler(new StaticAssetsHandler());
+            $router->setStaticAssetsRouteHandler(StaticAssetsHandler::class);
 
             return $router;
         });

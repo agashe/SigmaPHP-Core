@@ -88,7 +88,7 @@ class Router implements RouterInterface
     /**
      * Set page not found handler.
      *
-     * @param string|array $handler
+     * @param PageNotFoundHandlerInterface $handler
      * @return void
      */
     public function setPageNotFoundHandler($handler)
@@ -114,7 +114,7 @@ class Router implements RouterInterface
      */
     public function setStaticAssetsRoutePath($path)
     {
-        return $this->routerEngine->setStaticAssetsRouteName($path);
+        return $this->routerEngine->setStaticAssetsRoutePath($path);
     }
 
     /**
