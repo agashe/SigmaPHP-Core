@@ -69,6 +69,13 @@ interface RouterInterface
      */
     public function setStaticAssetsRouteHandler($handler);
 
+    /**
+     * Set default middleware method's name.
+     *
+     * @param string $method
+     * @return void
+     */
+    public function setDefaultMiddlewareMethodName($method);
 
     /**
      * Start the router.

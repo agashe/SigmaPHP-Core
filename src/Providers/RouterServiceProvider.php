@@ -61,6 +61,9 @@ class RouterServiceProvider implements ServiceProviderInterface
                 $configManager->get('app.static_assets_route')
             );
 
+            // set default middlewares handler's method name
+            $router->setDefaultMiddlewareMethodName('handle');
+
             // set static assets route handler
             $router->setStaticAssetsRouteHandler(StaticAssetsHandler::class);
 

@@ -129,6 +129,17 @@ class Router implements RouterInterface
     }
 
     /**
+     * Set default middleware method's name.
+     *
+     * @param string $method
+     * @return void
+     */
+    public function setDefaultMiddlewareMethodName($method)
+    {
+        return $this->routerEngine->setDefaultMiddlewareMethodName($method);
+    }
+
+    /**
      * Start the router execution.
      *
      * @return void
