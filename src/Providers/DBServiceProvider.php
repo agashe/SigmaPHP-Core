@@ -5,6 +5,7 @@ namespace SigmaPHP\Core\Providers;
 use SigmaPHP\Container\Interfaces\ServiceProviderInterface;
 use SigmaPHP\Container\Container;
 use SigmaPHP\DB\Connectors\Connector;
+use SigmaPHP\DB\QueryBuilders\QueryBuilder;
 
 /**
  * DB Service Provider Class
@@ -12,9 +13,9 @@ use SigmaPHP\DB\Connectors\Connector;
 class DBServiceProvider implements ServiceProviderInterface
 {
     /**
-     * The boot method , will be called after all 
+     * The boot method , will be called after all
      * dependencies were defined in the container.
-     * 
+     *
      * @param Container $container
      * @return void
      */
@@ -25,7 +26,7 @@ class DBServiceProvider implements ServiceProviderInterface
 
     /**
      * Add a definition to the container.
-     * 
+     *
      * @param Container $container
      * @return void
      */
@@ -41,6 +42,18 @@ class DBServiceProvider implements ServiceProviderInterface
             $connection = $connector->connect();
 
             return $connection;
+        });
+
+        $container->set('query_builder', function (Container $container) {
+            // get config manager
+            $configManager = $container->get('config');
+            $dbConfigs = $configManager->get('database.database_connection');
+
+            // create new DB connection
+            $connector = new Connector($dbConfigs);
+            $connection = $connector->connect();
+
+            return new QueryBuilder($connection);
         });
     }
 }
