@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 use PHPUnit\Framework\TestCase;
 
@@ -23,7 +23,7 @@ class SessionTest extends TestCase
     {
         $this->session = new Session();
     }
-   
+
     /**
      * Test session is set.
      *
@@ -83,7 +83,7 @@ class SessionTest extends TestCase
     {
         $this->assertFalse($this->session->get());
     }
-    
+
     /**
      * Test get session returns false if the session does not exist.
      *
@@ -119,7 +119,7 @@ class SessionTest extends TestCase
     {
         $this->assertFalse($this->session->delete());
     }
-    
+
     /**
      * Test delete session returns false if the session does not exist.
      *
@@ -129,5 +129,19 @@ class SessionTest extends TestCase
     public function testDeleteSessionReturnsFalseIfTheSessionDoesNotExist()
     {
         $this->assertFalse($this->session->delete('foo'));
+    }
+
+    /**
+     * Test has session.
+     *
+     * @runInSeparateProcess
+     * @return void
+     */
+    public function testHasSession()
+    {
+        @session_start();
+        $_SESSION['hello'] = 'world';
+
+        $this->assertTrue($this->session->has('hello'));
     }
 }

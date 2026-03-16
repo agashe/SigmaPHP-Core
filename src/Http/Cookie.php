@@ -12,14 +12,14 @@ class Cookie implements CookieInterface
 {
     /**
      * Create Cookie.
-     * 
+     *
      * @param string $name
      * @param string $value
      * @param int $expireAt
      * @param array $options
      * @return bool
      */
-    final public function set(
+    public function set(
         $name = null,
         $value = null,
         $expireAt = 0,
@@ -27,11 +27,11 @@ class Cookie implements CookieInterface
     ) {
         if (empty($name) || empty($value)) {
             $property = empty($name)? 'name': 'value';
-            
+
             throw new InvalidArgumentException(
                 "Error : Create new cookie , {$property} is empty"
             );
-            
+
             return false;
         }
 
@@ -43,25 +43,24 @@ class Cookie implements CookieInterface
 
     /**
      * Get Cookie Value.
-     * 
+     *
      * @param string $name
-     * @return string
+     * @return string|bool
      */
-    final public function get($name = null)
+    public function get($name = null)
     {
-        return (!empty($name) && isset($_COOKIE[$name])) ?
-            $_COOKIE[$name] : false;        
+        return $this->has($name) ? $_COOKIE[$name] : false;
     }
 
     /**
      * Delete Cookie.
-     * 
+     *
      * @param string $name
      * @return bool
      */
-    final public function delete($name = null)
+    public function delete($name = null)
     {
-        if (empty($name) || !isset($_COOKIE[$name])) {
+        if (!$this->has($name)) {
             return false;
         }
 
@@ -69,5 +68,16 @@ class Cookie implements CookieInterface
             'expires' => (time() - 3600),
             'path' => '/'
         ]);
+    }
+
+    /**
+     * Check Cookie.
+     *
+     * @param string $name
+     * @return bool
+     */
+    public function has($name)
+    {
+        return (!empty($name) && isset($_COOKIE[$name]));
     }
 }

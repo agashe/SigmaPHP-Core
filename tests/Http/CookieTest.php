@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 use PHPUnit\Framework\TestCase;
 
@@ -23,7 +23,7 @@ class CookieTest extends TestCase
     {
         $this->cookie = new Cookie();
     }
-   
+
     /**
      * Test cookie is set.
      *
@@ -82,7 +82,7 @@ class CookieTest extends TestCase
     {
         $this->assertFalse($this->cookie->get());
     }
-    
+
     /**
      * Test get cookie returns false if the cookie does not exist.
      *
@@ -117,7 +117,7 @@ class CookieTest extends TestCase
     {
         $this->assertFalse($this->cookie->delete());
     }
-    
+
     /**
      * Test delete cookie returns false if the cookie does not exist.
      *
@@ -127,5 +127,18 @@ class CookieTest extends TestCase
     public function testDeleteCookieReturnsFalseIfTheCookieDoesNotExist()
     {
         $this->assertFalse($this->cookie->delete('foo'));
+    }
+
+    /**
+     * Test has cookie.
+     *
+     * @runInSeparateProcess
+     * @return void
+     */
+    public function testHasCookie()
+    {
+        $_COOKIE['hello'] = 'world';
+
+        $this->assertTrue($this->cookie->has('hello'));
     }
 }
