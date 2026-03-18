@@ -628,10 +628,10 @@ class ConsoleManager
             mkdir($path);
         }
 
-        // add 'Provider' automatically if the name doesn't have it
+        // add 'ServiceProvider' automatically if the name doesn't have it
         // and if does , then ignore
-        if (stripos($serviceProviderName, 'Provider') === false) {
-            $serviceProviderName .= 'Provider';
+        if (stripos($serviceProviderName, 'ServiceProvider') === false) {
+            $serviceProviderName .= 'ServiceProvider';
         }
 
         $this->createFile($path, $serviceProviderName . '.php', str_replace(
