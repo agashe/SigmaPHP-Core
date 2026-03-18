@@ -227,12 +227,12 @@ class ConsoleManager
             create:model {model name}
                 Create model. This command will generate
                 in addition a new migration file automatically.
-            create:secret-key
+            create:provider {service provider name}
+                Create service provider.
+            create:secret
                 Generate app secret key , and save it into .env file.
             create:seeder {seeder name}
                 Create seeder file.
-            create:service-provider {service provider name}
-                Create service provider.
             create:uploads
                 Create uploads folder.
             create:view {view name}
