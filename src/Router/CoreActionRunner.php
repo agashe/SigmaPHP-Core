@@ -135,7 +135,7 @@ class CoreActionRunner implements RunnerInterface
 
             // clear whatever was sent
             if (ob_get_length() !== false) {
-                ob_end_clean();
+                ob_end_flush();
             }
         } catch (\Throwable $t) {
             // clear whatever was sent
