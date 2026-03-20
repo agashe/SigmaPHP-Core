@@ -3,6 +3,7 @@
 namespace SigmaPHP\Core\Views;
 
 use SigmaPHP\Core\Interfaces\Views\ViewHandlerInterface;
+use SigmaPHP\Core\Exceptions\HttpException;
 use SigmaPHP\Template\Engine;
 
 /**
@@ -14,7 +15,7 @@ class ViewHandler implements ViewHandlerInterface
      * @var SigmaPHP\Template\Engine $templateEngine
      */
     private $templateEngine;
-    
+
     /**
      * @var array $httpDirectives
      */
@@ -22,7 +23,7 @@ class ViewHandler implements ViewHandlerInterface
 
     /**
      * ViewHandler Constructor
-     * 
+     *
      * @param string $viewsPath
      * @param string $cachePath
      */
@@ -34,16 +35,16 @@ class ViewHandler implements ViewHandlerInterface
 
     /**
      * Render html template.
-     * 
+     *
      * @param string $templateName
      * @param array $variables
      * @return string
      */
-    final public function render($templateName = '', $variables = [])
+    public function render($templateName = '', $variables = [])
     {
         // load the flash messages !
         $flashMessages = [];
-        
+
         if (container('session')->get('_sigma_flash_') != false) {
             $flashMessages = json_decode(
                 container('session')->get('_sigma_flash_'),
@@ -52,19 +53,19 @@ class ViewHandler implements ViewHandlerInterface
 
             container('session')->delete('_sigma_flash_');
         }
-        
+
         // load the old values !
         $oldValues = [];
-        
+
         if (container('session')->get('_sigma_old_values_') != false) {
             $oldValues = json_decode(
                 container('session')->get('_sigma_old_values_'),
                 true
             );
-            
+
             container('session')->delete('_sigma_old_values_');
         }
-        
+
         $this->templateEngine->setSharedVariables(array_merge(
             container('shared_template_variables'),
             [
@@ -77,12 +78,24 @@ class ViewHandler implements ViewHandlerInterface
             container('custom_template_directives'),
             $this->httpDirectives
         );
-        
-        foreach ($templateDirectives as $name => $callback)
-        {
+
+        foreach ($templateDirectives as $name => $callback) {
             $this->templateEngine->registerCustomDirective($name, $callback);
         }
 
         return $this->templateEngine->render($templateName, $variables);
+    }
+
+    /**
+     * Check if template exists.
+     *
+     * @param string $templateName
+     * @return bool
+     */
+    public function templateExists($templateName)
+    {
+        return file_exists(
+            config('app.views_path') . str_replace('.', '/', $templateName)
+        );
     }
 }

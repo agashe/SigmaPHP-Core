@@ -4,10 +4,10 @@ namespace SigmaPHP\Core\Providers;
 
 use SigmaPHP\Container\Interfaces\ServiceProviderInterface;
 use SigmaPHP\Container\Container;
+use SigmaPHP\Core\Router\PageNotFoundHandler;
 use SigmaPHP\Core\Router\Router;
 use SigmaPHP\Router\Router as RouterEngine;
-use SigmaPHP\Core\Router\PageNotFound\Handler as PageNotFoundHandler;
-use SigmaPHP\Core\Router\StaticAssets\Handler as StaticAssetsHandler;
+use SigmaPHP\Core\Router\StaticAssetsHandler;
 
 /**
  * Router Service Provider Class
@@ -60,9 +60,6 @@ class RouterServiceProvider implements ServiceProviderInterface
             $router->setStaticAssetsRoutePath(
                 $configManager->get('app.static_assets_route')
             );
-
-            // set default middlewares handler's method name
-            $router->setDefaultMiddlewareMethodName('handle');
 
             // set static assets route handler
             $router->setStaticAssetsRouteHandler(StaticAssetsHandler::class);

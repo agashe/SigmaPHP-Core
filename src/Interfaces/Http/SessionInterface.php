@@ -9,14 +9,14 @@ interface SessionInterface
 {
     /**
      * Start new session.
-     *
+     * 
      * @return void
      */
     public static function start();
 
     /**
      * Create Session.
-     *
+     * 
      * @param string $name
      * @param mixed $value
      * @return bool
@@ -25,7 +25,7 @@ interface SessionInterface
 
     /**
      * Get Session Value.
-     *
+     * 
      * @param string $name
      * @return mixed
      */
@@ -33,17 +33,9 @@ interface SessionInterface
 
     /**
      * Delete Session.
-     *
+     * 
      * @param string $name
      * @return bool
      */
     public function delete($name);
-
-    /**
-     * Check Session.
-     *
-     * @param string $name
-     * @return bool
-     */
-    public function has($name);
 }

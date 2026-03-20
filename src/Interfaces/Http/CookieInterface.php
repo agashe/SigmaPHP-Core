@@ -9,7 +9,7 @@ interface CookieInterface
 {
     /**
      * Create Cookie.
-     *
+     * 
      * @param string $name
      * @param string $value
      * @param int $expireAt
@@ -20,25 +20,17 @@ interface CookieInterface
 
     /**
      * Get Cookie Value.
-     *
+     * 
      * @param string $name
-     * @return string|bool
+     * @return string
      */
     public function get($name);
 
     /**
      * Delete Cookie.
-     *
+     * 
      * @param string $name
      * @return bool
      */
     public function delete($name);
-
-    /**
-     * Check Cookie.
-     *
-     * @param string $name
-     * @return bool
-     */
-    public function has($name);
 }

@@ -129,17 +129,6 @@ class Router implements RouterInterface
     }
 
     /**
-     * Set default middleware method's name.
-     *
-     * @param string $method
-     * @return void
-     */
-    public function setDefaultMiddlewareMethodName($method)
-    {
-        return $this->routerEngine->setDefaultMiddlewareMethodName($method);
-    }
-
-    /**
      * Start the router execution.
      *
      * @return void
@@ -151,6 +140,7 @@ class Router implements RouterInterface
         }
 
         $this->routerEngine->setActionRunner(CoreActionRunner::class);
+
         $this->routerEngine->run();
     }
 }

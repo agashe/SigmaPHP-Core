@@ -1,13 +1,13 @@
 <?php
 
-namespace SigmaPHP\Core\Router\StaticAssets;
+namespace SigmaPHP\Core\Router;
 
 use SigmaPHP\Router\Interfaces\StaticAssetsHandlerInterface;
 
 /**
  * Static Assets Handler Class
  */
-class Handler implements StaticAssetsHandlerInterface
+class StaticAssetsHandler implements StaticAssetsHandlerInterface
 {
     /**
      * Serve static assets files.

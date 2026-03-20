@@ -227,12 +227,12 @@ class ConsoleManager
             create:model {model name}
                 Create model. This command will generate
                 in addition a new migration file automatically.
-            create:provider {service provider name}
-                Create service provider.
-            create:secret
+            create:secret-key
                 Generate app secret key , and save it into .env file.
             create:seeder {seeder name}
                 Create seeder file.
+            create:service-provider {service provider name}
+                Create service provider.
             create:uploads
                 Create uploads folder.
             create:view {view name}
@@ -628,10 +628,10 @@ class ConsoleManager
             mkdir($path);
         }
 
-        // add 'ServiceProvider' automatically if the name doesn't have it
+        // add 'Provider' automatically if the name doesn't have it
         // and if does , then ignore
-        if (stripos($serviceProviderName, 'ServiceProvider') === false) {
-            $serviceProviderName .= 'ServiceProvider';
+        if (stripos($serviceProviderName, 'Provider') === false) {
+            $serviceProviderName .= 'Provider';
         }
 
         $this->createFile($path, $serviceProviderName . '.php', str_replace(

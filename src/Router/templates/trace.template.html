@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>SigmaPHP - Error</title>
+    <style>
+        :root {
+            --brand: #ffa500;
+            --bg: #1a1a1a;
+            --text: #e0e0e0;
+            --muted: #b5b5b5;
+            --border: #2a2a2a;
+        }
+
+        body {
+            margin: 0;
+            padding: 20px;
+            background: var(--bg);
+            color: var(--text);
+            font-family: monospace;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: auto;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 20px;
+            background: #111;
+        }
+
+        h1 {
+            margin-top: 0;
+            font-size: 20px;
+            word-break: break-word;
+        }
+
+        .title {
+            color: var(--brand);
+            margin-bottom: 5px;
+        }
+
+        .code {
+            display: inline-block;
+            padding: 2px 6px;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            color: var(--brand);
+            margin-left: 2px;
+            font-size: 15px;
+        }
+
+        .brand {
+            color: var(--brand);
+        }
+
+        .trace {
+            margin-top: 20px;
+            padding-left: 20px;
+            list-style: none;
+            font-size: 15px; /* 👈 increased */
+        }
+
+        .trace li {
+            margin-bottom: 12px;
+            line-height: 1.6; /* 👈 better readability */
+            border-left: 2px solid var(--border);
+            padding-left: 12px;
+        }
+
+        .trace small {
+            color: var(--muted);
+            font-size: 13px; /* 👈 slightly bigger */
+        }
+
+        hr {
+            border: none;
+            border-top: 1px solid var(--border);
+            margin: 20px 0;
+        }
+
+        .footer {
+            margin-top: 25px;
+            text-align: center;
+            font-size: 13px;
+            color: var(--muted);
+        }
+
+        .footer span {
+            color: var(--brand);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>
+            <div class="brand">
+                {{ $thrown['message'] ?? 'Unknown error' }}
+            </div>
+
+            <br>
+
+            <div class="code">Error Code : {{ $thrown['code'] }}</div>
+        </h1>
+
+        <hr>
+
+        <h2 style="font-size:16px; margin-bottom:10px;">Trace</h2>
+
+        <ul class="trace">
+            {% for $trace in $thrown['trace'] %}
+                <li>
+                    <strong>
+                        {{ $trace['class'] }}
+                    </strong>
+                    <br>
+                    <small>
+                        {{ $trace['file'] }}
+                    </small>
+                </li>
+            {% end_for %}
+        </ul>
+    </div>
+
+    <div class="footer">
+        <span><b>SigmaPHP</b></span>
+    </div>
+</body>
+
+</html>

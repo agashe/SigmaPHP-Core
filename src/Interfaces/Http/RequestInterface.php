@@ -9,7 +9,7 @@ interface RequestInterface
 {
     /**
      * Get HTTP GET Request Data.
-     * 
+     *
      * @param string $key
      * @return mixed
      */
@@ -17,7 +17,7 @@ interface RequestInterface
 
     /**
      * Get HTTP POST Request Data.
-     * 
+     *
      * @param string $key
      * @return mixed
      */
@@ -25,7 +25,7 @@ interface RequestInterface
 
     /**
      * Get HTTP Request Uploaded Files.
-     * 
+     *
      * @param string $key
      * @return mixed
      */
@@ -33,51 +33,58 @@ interface RequestInterface
 
     /**
      * Get current URL.
-     * 
+     *
      * @return string
      */
     public function current();
-    
+
     /**
      * Get previous URL.
-     * 
+     *
      * @return string
      */
     public function previous();
-    
+
     /**
      * Get request method.
-     * 
+     *
      * @return string
      */
     public function method();
-    
+
     /**
      * Get request port.
-     * 
+     *
      * @return string
      */
     public function port();
-    
+
     /**
      * Check is the connection is HTTPS.
-     * 
+     *
      * @return bool
      */
     public function isSecure();
-    
+
     /**
      * Get request headers.
-     * 
+     *
      * @return string
      */
     public function headers();
 
     /**
      * Check if a key exists in $_GET , $_POST or $_FILES.
-     * 
-     * @param string $key 
+     *
+     * @param string $key
      * @return bool
      */
     public function has($key);
+
+    /**
+     * Check if the content's type is JSON.
+     *
+     * @return bool
+     */
+    public function isJson();
 }

@@ -11,7 +11,7 @@ class Response implements ResponseInterface
 {
     /**
      * Return Response.
-     * 
+     *
      * @param string $data
      * @param string $type
      * @param int $code
@@ -19,14 +19,14 @@ class Response implements ResponseInterface
      * @return self
      */
     final public function responseData(
-        $data, 
-        $type = 'text/html', 
-        $code = 200, 
+        $data,
+        $type = 'text/html',
+        $code = 200,
         $headers = []
     ) {
         if (!headers_sent()) {
             header("Content-Type: $type");
-    
+
             foreach ($headers as $key => $val) {
                 header("$key: $val");
             }
@@ -34,18 +34,14 @@ class Response implements ResponseInterface
 
         http_response_code($code);
 
-        ob_start();
-
         echo $data;
-
-        ob_end_flush();
 
         return $this;
     }
 
     /**
      * Return JSON Response.
-     * 
+     *
      * @param array $data
      * @param int $code
      * @param array $headers
@@ -53,19 +49,19 @@ class Response implements ResponseInterface
      */
     final public function responseJSON($data, $code = 200, $headers = []) {
         return $this->responseData(
-            json_encode($data), 
-            'application/json', 
-            $code, 
+            json_encode($data),
+            'application/json',
+            $code,
             $headers
         );
     }
-    
+
     /**
      * Redirect to an URL.
-     * 
+     *
      * This method will create dummy html to handle the the redirect with
      * HTTP status code 302
-     * 
+     *
      * @param string $url
      * @return self
      */
@@ -85,13 +81,13 @@ class Response implements ResponseInterface
 
         // save current session as a previous_url
         container('session')->set(
-            '_sigma_previous_url_', 
+            '_sigma_previous_url_',
             container('request')->current()
         );
 
         return $this->responseData(
-            $redirectContent, 
-            'text/html', 
+            $redirectContent,
+            'text/html',
             302,
             [
                 'Location' => $url
@@ -101,7 +97,7 @@ class Response implements ResponseInterface
 
     /**
      * Redirect to a route.
-     * 
+     *
      * @param string $routeName
      * @param array $parameters
      * @return self

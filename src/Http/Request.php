@@ -11,7 +11,7 @@ class Request implements RequestInterface
 {
     /**
      * Search array for value.
-     * 
+     *
      * @param array $source
      * @param string $key
      * @return mixed
@@ -29,7 +29,7 @@ class Request implements RequestInterface
 
     /**
      * Get HTTP Request Data.
-     * 
+     *
      * @param string $key
      * @return mixed
      */
@@ -40,7 +40,7 @@ class Request implements RequestInterface
 
     /**
      * Get HTTP Request Data.
-     * 
+     *
      * @param string $key
      * @return mixed
      */
@@ -51,7 +51,7 @@ class Request implements RequestInterface
 
     /**
      * Get HTTP Request Uploaded Files.
-     * 
+     *
      * @param string $key
      * @return mixed
      */
@@ -62,18 +62,18 @@ class Request implements RequestInterface
 
     /**
      * Get current URL.
-     * 
+     *
      * @return string
      */
     public function current()
     {
-        return rtrim(baseUrl(), '/') . '/' . 
+        return rtrim(baseUrl(), '/') . '/' .
             ltrim($_SERVER['REQUEST_URI'], '/');
     }
 
     /**
      * Get previous URL.
-     * 
+     *
      * @return string
      */
     public function previous()
@@ -83,13 +83,13 @@ class Request implements RequestInterface
         if (!$previous && isset($_SERVER['HTTP_REFERER'])) {
             $previous = $_SERVER['HTTP_REFERER'];
         }
-            
+
         return $previous ?: $this->current();
     }
-    
+
     /**
      * Get request method.
-     * 
+     *
      * @return string
      */
     public function method()
@@ -99,27 +99,27 @@ class Request implements RequestInterface
 
     /**
      * Get request port.
-     * 
+     *
      * @return string
      */
     public function port()
     {
         return $_SERVER['SERVER_PORT'];
     }
-    
+
     /**
      * Check is the connection is HTTPS.
-     * 
+     *
      * @return bool
      */
     public function isSecure()
     {
         return isset($_SERVER['HTTPS']);
     }
-    
+
     /**
      * Get request headers.
-     * 
+     *
      * @return string
      */
     public function headers()
@@ -155,22 +155,45 @@ class Request implements RequestInterface
             }
             else if ($key == "CONTENT_LENGTH") {
                 $headers["Content-Length"] = $value;
-            } 
+            }
         }
-        
+
         return $headers;
     }
 
     /**
      * Check if a key exists in $_GET , $_POST or $_FILES.
-     * 
+     *
      * @param string $key
      * @return bool
      */
     public function has($key)
     {
-        return isset($_GET[$key]) || 
-            isset($_POST[$key]) || 
+        return isset($_GET[$key]) ||
+            isset($_POST[$key]) ||
             isset($_FILES[$key]);
+    }
+
+    /**
+     * Check if the content's type is JSON.
+     *
+     * @return bool
+     */
+    public function isJson()
+    {
+        $contentType = '';
+        $headers = getallheaders();
+
+        if (isset($_SERVER['CONTENT_TYPE'])) {
+            $contentType = $_SERVER['CONTENT_TYPE'];
+        }
+        else if (isset($headers['content-type'])) {
+            $contentType = $headers['content-type'];
+        }
+        else if (isset($headers['Content-Type'])) {
+            $contentType = $headers['Content-Type'];
+        }
+
+        return (in_array($contentType, ['application/json', 'text/json']));
     }
 }

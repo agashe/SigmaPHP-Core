@@ -3,6 +3,7 @@
 namespace SigmaPHP\Core\Controllers;
 
 use SigmaPHP\Core\Interfaces\Controllers\BaseControllerInterface;
+use SigmaPHP\Core\Exceptions\HttpException;
 
 /**
  * Base Controller Class
@@ -11,7 +12,7 @@ abstract class BaseController implements BaseControllerInterface
 {
     /**
      * Return new response.
-     * 
+     *
      * @param string $data
      * @param string $type
      * @param int $code
@@ -19,9 +20,9 @@ abstract class BaseController implements BaseControllerInterface
      * @return SigmaPHP\Core\Http\Response
      */
     final public function response(
-        $data, 
-        $type = 'text/html', 
-        $code = 200, 
+        $data,
+        $type = 'text/html',
+        $code = 200,
         $headers = []
     ) {
         return container('response')->responseData(
@@ -30,7 +31,7 @@ abstract class BaseController implements BaseControllerInterface
 
     /**
      * Return new JSON response.
-     * 
+     *
      * @param array $data
      * @param int $code
      * @param array $headers
@@ -42,7 +43,7 @@ abstract class BaseController implements BaseControllerInterface
 
     /**
      * Render html template and return new Response.
-     * 
+     *
      * @param string $templateName
      * @param array $variables
      * @param int $code
@@ -50,9 +51,9 @@ abstract class BaseController implements BaseControllerInterface
      * @return SigmaPHP\Core\Http\Response
      */
     final public function render(
-        $templateName, 
-        $variables = [], 
-        $code = 200, 
+        $templateName,
+        $variables = [],
+        $code = 200,
         $headers = []
     ) {
         return $this->response(
@@ -65,7 +66,7 @@ abstract class BaseController implements BaseControllerInterface
 
     /**
      * Render html template and return the content as string.
-     * 
+     *
      * @param string $templateName
      * @param array $variables
      * @return string html content
@@ -74,10 +75,10 @@ abstract class BaseController implements BaseControllerInterface
     {
         return container('view')->render($templateName, $variables);
     }
-    
+
     /**
      * Redirect to an URL.
-     * 
+     *
      * @param string $url
      * @return SigmaPHP\Core\Http\Response
      */
@@ -85,10 +86,10 @@ abstract class BaseController implements BaseControllerInterface
     {
         return container('response')->redirect($url);
     }
-    
+
     /**
      * Redirect to a route.
-     * 
+     *
      * @param string $routeName
      * @param array $parameters
      * @return SigmaPHP\Core\Http\Response
@@ -100,7 +101,7 @@ abstract class BaseController implements BaseControllerInterface
 
     /**
      * Redirect to previous URL.
-     * 
+     *
      * @return SigmaPHP\Core\Http\Response
      */
     final public function back()
@@ -112,27 +113,27 @@ abstract class BaseController implements BaseControllerInterface
 
     /**
      * Handle cookies.
-     * 
+     *
      * @return SigmaPHP\Core\Http\Cookie
      */
     final public function cookie()
     {
         return container('cookie');
     }
-    
+
     /**
      * Handle sessions.
-     * 
+     *
      * @return SigmaPHP\Core\Http\Session
      */
     final public function session()
     {
         return container('session');
     }
-    
+
     /**
      * Handle files.
-     * 
+     *
      * @return SigmaPHP\Core\Http\File
      */
     final public function files()
@@ -142,7 +143,7 @@ abstract class BaseController implements BaseControllerInterface
 
     /**
      * Save Flash messages.
-     * 
+     *
      * @param string $name
      * @param string $value
      * @return void
@@ -152,13 +153,13 @@ abstract class BaseController implements BaseControllerInterface
         // we will use "_sigma_flash_" as a  global container for the flash
         // messages , we basically save the key/value into any associated array
         // serialize to JSON , and save to session
-        // 
+        //
         // Upon retrieval we load all these into the view , then clear !
         $messages = json_decode(
             container('session')->get('_sigma_flash_'),
             true
         );
-     
+
         if ($messages == null) {
             $messages = [$name => $value];
         } else {
@@ -170,18 +171,30 @@ abstract class BaseController implements BaseControllerInterface
 
     /**
      * Save old submitted values for both GET and POST requests.
-     * 
+     *
      * @return void
      */
     public function saveOldValues()
     {
         // save old form values
         container('session')->set(
-            '_sigma_old_values_', 
+            '_sigma_old_values_',
             json_encode(array_merge(
                 container('request')->post(),
                 container('request')->get(),
             ) ?? [])
         );
+    }
+
+    /**
+     * Abort execution and show error page.
+     *
+     * @param int $code
+     * @throws HttpException
+     */
+    public function error($code)
+    {
+        http_response_code($code);
+        throw new HttpException();
     }
 }

@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 use PHPUnit\Framework\TestCase;
 
@@ -27,7 +27,7 @@ class ResponseTest extends TestCase
 
     /**
      * Get all headers helper
-     * 
+     *
      * @param string $headerName to get specific header
      * @return array|string|null
      */
@@ -54,7 +54,7 @@ class ResponseTest extends TestCase
 
     /**
      * Fake response.
-     * 
+     *
      * To test response headers.
      *
      * @param array $data
@@ -64,9 +64,9 @@ class ResponseTest extends TestCase
      * @return void
      */
     final public function fakeResponse(
-        $data = [], 
-        $type = 'text/html', 
-        $statusCode = 200, 
+        $data = [],
+        $type = 'text/html',
+        $statusCode = 200,
         $headers = []
     ) {
         $this->response->responseData(
@@ -105,14 +105,16 @@ class ResponseTest extends TestCase
      */
     public function testHttpResponseReturnsTheContentType()
     {
+        ob_start();
+
         $this->fakeResponse('hello world', 'text/xml');
+
+        ob_end_clean();
 
         $this->assertEquals(
             'text/xml',
             $this->getAllHeadersHelper('Content-Type')
         );
-
-        ob_clean(); // clear output
     }
 
     /**
@@ -123,11 +125,13 @@ class ResponseTest extends TestCase
      */
     public function testHttpResponseReturnsTheStatusCode()
     {
+        ob_start();
+
         $this->response->responseData('hello world', 'text/plain', 201);
-        
+
+        ob_end_clean();
+
         $this->assertEquals(201, http_response_code());
-        
-        ob_clean(); // clear output
     }
 
     /**
@@ -143,10 +147,10 @@ class ResponseTest extends TestCase
         ];
 
         $this->response->responseJSON(json_encode($message));
-        
-        $this->expectOutputString('"{\"data\":\"hello world\"}"');        
+
+        $this->expectOutputString('"{\"data\":\"hello world\"}"');
     }
-    
+
     /**
      * Test redirect.
      *
@@ -155,9 +159,11 @@ class ResponseTest extends TestCase
      */
     public function testRedirect()
     {
+        ob_start();
+
         $this->response->redirect('http://test.com');
-        
-        ob_clean(); // clear output
+
+        ob_end_clean();
 
         $this->assertEquals(302, http_response_code());
     }
