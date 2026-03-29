@@ -78,12 +78,17 @@ class GlobalHooks implements BeforeFirstTestHook, AfterLastTestHook
         if (!file_exists('config/app.php')) {
             file_put_contents(
                 'config/app.php',
-                '<?php return [' .
-                    '"api" => ["version" => "1.0.0"],' .
-                    '"views_path" => "templates/",' .
-                    '"routes_path" => "routes/",' .
-                    '"static_assets_route" => "static"' .
-                '];'
+                <<<CONFIG
+                <?php
+
+                return [
+                    "api" => ["version" => "1.0.0"],
+                    "views_path" => "templates/",
+                    "routes_path" => "routes/",
+                    "static_assets_route" => "static",
+                    "timezone" => "UTC",
+                ];
+                CONFIG
             );
         }
 

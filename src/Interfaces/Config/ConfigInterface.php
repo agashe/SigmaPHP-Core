@@ -8,9 +8,9 @@ namespace SigmaPHP\Core\Interfaces\Config;
 interface ConfigInterface
 {
     /**
-     * Get full path for file/folder , relevant to 
+     * Get full path for file/folder , relevant to
      * the framework base path (outside vendor).
-     * 
+     *
      * @param string $dis
      * @return string
      */
@@ -18,21 +18,21 @@ interface ConfigInterface
 
     /**
      * Load all config files.
-     * 
+     *
      * @return array
      */
     public function load();
 
     /**
      * Get all config values.
-     * 
+     *
      * @return array
      */
     public function getAll();
 
     /**
      * Get config value.
-     * 
+     *
      * @param string $key
      * @param string $default
      * @return mixed
@@ -41,7 +41,7 @@ interface ConfigInterface
 
     /**
      * Set config value.
-     * 
+     *
      * @param string $key
      * @param mixed $val
      * @return bool
@@ -50,7 +50,7 @@ interface ConfigInterface
 
     /**
      * Check if config value exists.
-     * 
+     *
      * @param string $key
      * @return bool
      */
@@ -58,9 +58,17 @@ interface ConfigInterface
 
     /**
      * Set errors display.
-     * 
+     *
      * @param string $env
      * @return bool
      */
     public function setErrorsDisplay($env);
+
+    /**
+     * Set timezone.
+     *
+     * @param string $timezoneId
+     * @return bool
+     */
+    public function setTimezone($timezoneId);
 }

@@ -12,9 +12,9 @@ use SigmaPHP\Core\Config\Config;
 class ConfigServiceProvider implements ServiceProviderInterface
 {
     /**
-     * The boot method , will be called after all 
+     * The boot method , will be called after all
      * dependencies were defined in the container.
-     * 
+     *
      * @param Container $container
      * @return void
      */
@@ -25,7 +25,7 @@ class ConfigServiceProvider implements ServiceProviderInterface
 
     /**
      * Add a definition to the container.
-     * 
+     *
      * @param Container $container
      * @return void
      */
@@ -34,14 +34,15 @@ class ConfigServiceProvider implements ServiceProviderInterface
         $container->set('config', function () {
             // create new config manager
             $configManager = new Config();
-            
+
             // load all config files
             $configManager->load();
-            
+
             // set error display
-            $configManager->setErrorsDisplay(
-                $configManager->get('app.env')
-            );
+            $configManager->setErrorsDisplay($configManager->get('app.env'));
+
+            // set timezone
+            $configManager->setTimezone($configManager->get('app.timezone'));
 
             return $configManager;
         });

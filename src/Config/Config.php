@@ -23,9 +23,9 @@ class Config implements ConfigInterface
     }
 
     /**
-     * Get full path for file/folder , relevant to 
+     * Get full path for file/folder , relevant to
      * the framework base path (outside vendor).
-     * 
+     *
      * @param string $dis
      * @return string
      */
@@ -42,7 +42,7 @@ class Config implements ConfigInterface
 
     /**
      * Load all config files.
-     * 
+     *
      * @return array
      */
     public function load()
@@ -52,17 +52,17 @@ class Config implements ConfigInterface
         if ($handle = opendir($path)) {
             while (($file = readdir($handle))) {
                 if (in_array($file, ['.', '..'])) continue;
-                $this->configs[str_replace('.php', '', $file)] = 
+                $this->configs[str_replace('.php', '', $file)] =
                     require $path . '/' . $file;
             }
-        
+
             closedir($handle);
         }
     }
 
     /**
      * Get all config values.
-     * 
+     *
      * @return array
      */
     public function getAll()
@@ -72,7 +72,7 @@ class Config implements ConfigInterface
 
     /**
      * Get config value , and support dot notation.
-     * 
+     *
      * @param string $key
      * @param string $default
      * @return mixed
@@ -90,7 +90,7 @@ class Config implements ConfigInterface
 
     /**
      * Set config value.
-     * 
+     *
      * @param string $key
      * @param mixed $val
      * @return bool
@@ -102,7 +102,7 @@ class Config implements ConfigInterface
 
     /**
      * Check if config value exists.
-     * 
+     *
      * @param string $key
      * @return bool
      */
@@ -113,14 +113,25 @@ class Config implements ConfigInterface
 
     /**
      * Set errors display.
-     * 
+     *
      * @param string $env
      * @return bool
      */
     public function setErrorsDisplay($env)
-    {        
+    {
         ini_set('display_errors', ($env != 'production'));
         ini_set('display_startup_errors', ($env != 'production'));
         error_reporting(($env == 'production')? 0 : E_ALL);
+    }
+
+    /**
+     * Set timezone.
+     *
+     * @param string $timezoneId
+     * @return bool
+     */
+    public function setTimezone($timezoneId)
+    {
+        return date_default_timezone_set($timezoneId);
     }
 }
