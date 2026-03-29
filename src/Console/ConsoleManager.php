@@ -249,8 +249,9 @@ class ConsoleManager
             rollback {date}
                 Rollback latest migration. or choose specific date
                 to rollback to.
-            run
-                Run the app with PHP built in server on port 8888.
+            run {port}
+                Run the app with PHP built in server on the provided
+                port number or otherwise the default 8888 port.
             seed {seeder name}
                 Run seeder/s.
             test
@@ -278,22 +279,42 @@ class ConsoleManager
      */
     private function runServer($port = 8888)
     {
-        // check if server
+        // get port from .env
+        $port = env('APP_PORT', $port);
+
+        // check if port is valid 4-digits
         if (!empty($port) && !preg_match('/[0-9]{4}/', $port)) {
             throw new \InvalidArgumentException(
                 "Invalid port number {$port}"
             );
         }
 
-        // check that pubic/ dir is exist
+        // check that pubic/ dir does exist
         if (!file_exists('public/')) {
             throw new DirectoryNotFoundException(
                 "The public/ directory doesn't exist"
             );
         }
 
+        // check if the port is open
+        $connection = @fsockopen('localhost', $port);
+        $healthyPort = $port;
+
+        while (is_resource($connection)) {
+            $port += 1;
+
+            $this->output(
+                "The port {$healthyPort} is in use," .
+                " {$port} will be used instead!",
+                'warning'
+            );
+
+            $connection = @fsockopen('localhost', $port);
+            $healthyPort = $port;
+        }
+
         $this->executeCommand(
-            "php -S localhost:$port -t public public/index.php", true
+            "php -S localhost:$healthyPort -t public public/index.php", true
         );
     }
 
