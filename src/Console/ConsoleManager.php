@@ -279,8 +279,8 @@ class ConsoleManager
      */
     private function runServer($port = 8888)
     {
-        // get port from .env
-        $port = env('APP_PORT', $port);
+        // get port from app config/.env
+        $port = config('app.port', $port);
 
         // check if port is valid 4-digits
         if (!empty($port) && !preg_match('/[0-9]{4}/', $port)) {
