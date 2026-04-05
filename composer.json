@@ -24,11 +24,11 @@
         }
     ],
     "require": {
-        "agashe/sigmaphp-container": "^0.1",
-        "agashe/sigmaphp-db": "^0.1",
-        "agashe/sigmaphp-router": "^0.1",
+        "sigmaphp/sigmaphp-container": "^0.1",
+        "sigmaphp/sigmaphp-db": "^0.1",
+        "sigmaphp/sigmaphp-router": "^0.1",
+        "sigmaphp/sigmaphp-template": "^0.1",
         "agashe/passgen": "^1",
-        "agashe/sigmaphp-template": "^0.1",
         "agashe/env-parser": "^1",
         "agashe/var-dumper": "^0.1"
     },
