@@ -1,5 +1,5 @@
 {
-    "name": "agashe/sigmaphp-core",
+    "name": "sigmaphp/sigmaphp-core",
     "description": "SigmaPHP Framework Core Components",
 	"keywords": ["SigmaPHP", "framework"],
     "type": "library",
