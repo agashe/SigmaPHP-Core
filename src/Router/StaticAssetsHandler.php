@@ -17,6 +17,7 @@ class StaticAssetsHandler implements StaticAssetsHandlerInterface
      */
     public function handle($resourcePath)
     {
+        $resourcePath = str_replace(config('app.base_path'), '', $resourcePath);
         $resourcePath = root_path('public/' . $resourcePath);
 
         if (!file_exists($resourcePath)) {

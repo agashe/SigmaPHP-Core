@@ -87,6 +87,7 @@ class GlobalHooks implements BeforeFirstTestHook, AfterLastTestHook
                     "routes_path" => "routes/",
                     "static_assets_route" => "static",
                     "timezone" => "UTC",
+                    "base_path" => "",
                 ];
                 CONFIG
             );
